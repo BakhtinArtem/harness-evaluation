@@ -1,0 +1,27 @@
+{
+    "endpoint": "http://127.0.0.1:8000/hello",
+    "output_dir": "logs/",
+    "load_testing":{
+        "lua_script": "helloworld.lua",
+        "connections": 1,
+        "threads": 1,
+        "startup":{
+            "iterations": 10,
+            "cmd_app_prefix": ["taskset", "-c", "0-3"]
+        },
+        "warmup":{
+            "iterations": 9,
+            "iteration_time_seconds": 10
+        },
+        "throughput":{
+            "iterations": 1,
+            "iteration_time_seconds": 60
+        },
+        "latency_measurement":{
+            "iterations": 1,
+            "iteration_time_seconds": 60,
+            "search_strategy": "FIXED",
+            "rates": 15000
+        }
+    }
+}
