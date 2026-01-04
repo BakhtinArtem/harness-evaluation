@@ -1,3 +1,22 @@
+# Prerequisites
+
+Before using this evaluation harness, you should have the following prerequisites already installed:
+
+## Will be installed by `install_prerequisites.sh`:
+- **Python 3** - Will be installed automatically if not found
+- **wrk** - Will be built from source and installed
+- **wrk2** - Will be built from source and installed (automatically renamed from `wrk` to `wrk2`)
+- **Build tools** - Will be installed automatically if needed (`make`, `gcc`, `git`, `build-essential`)
+
+## Must be installed manually (NOT installed by script):
+- **Java/GraalVM** - JAVA_HOME environment variable must be set
+  - For **JVM mode**: Requires a JVM with `java` executable
+  - For **native mode**: Requires GraalVM with `native-image` tool
+  - The script only checks for Java/GraalVM and provides setup instructions
+  - Download from: https://www.graalvm.org/downloads/ or install OpenJDK
+- **Docker** (optional) - Required only for running containerized benchmarks
+  - Install from: https://docs.docker.com/get-docker/
+
 # Installing Prerequisites
 
 Before running the barista benchmark scripts, you need to install the required prerequisites. An automated installation script is provided:
