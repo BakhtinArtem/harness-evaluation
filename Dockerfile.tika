@@ -1,0 +1,109 @@
+# Dockerfile for Quarkus Tika Benchmark
+# This container runs the barista quarkus-tika benchmark with a dummy background process
+
+# Build wrk2 using multi-stage build with ARM compatibility
+FROM ubuntu:jammy AS wrk2-builder
+
+RUN \
+    # Install build dependencies
+    apt-get update && \
+    apt-get install -y build-essential git libssl-dev libz-dev zlib1g-dev && \
+    apt-get clean && \
+    # Clone repo at the commit ID we expect to patch:
+    git clone https://github.com/giltene/wrk2.git /tmp/wrk2 && \
+    # Update LuaJIT to an ARM-compatible version:
+    git clone https://luajit.org/git/luajit.git /tmp/luajit && \
+    cd /tmp/luajit && \
+    git reset --hard 224129a8e64bfa219d35cd03055bf03952f167f6 && \
+    cp -ar /tmp/luajit/* /tmp/wrk2/deps/luajit/
+
+WORKDIR /tmp/wrk2
+RUN \
+    # Patch files to make them ARM-compatible:
+    sed -ri 's/#include <x86intrin.h>//g' src/hdr_histogram.c && \
+    sed -ri 's/\bluaL_reg\b/luaL_Reg/g' src/script.c && \
+    # Install additional libs
+    apt-get install luarocks -y && apt-get install libyaml-dev -y && apt-get clean && \
+    mkdir /root/.luarocks/ && \
+    export LUAJIT_LIB=/tmp/wrk2/deps/luajit && luarocks config variables.LUAJIT_LIB $LUAJIT_LIB && \
+    luarocks install luaposix && luarocks --server=http://rocks.moonscript.org install lyaml && \
+    make && cp /tmp/wrk2/wrk /usr/local/bin/wrk2
+
+# Main image
+FROM ubuntu:22.04
+
+# Avoid interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    build-essential \
+    git \
+    curl \
+    ca-certificates \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install GraalVM (for both JVM and native modes)
+ARG GRAALVM_VERSION=22.3.2
+ARG JAVA_VERSION=17
+ENV GRAALVM_HOME=/opt/graalvm
+ENV JAVA_HOME=${GRAALVM_HOME}
+ENV PATH=${JAVA_HOME}/bin:${PATH}
+
+RUN mkdir -p /opt && \
+    cd /opt && \
+    curl -L -o graalvm.tar.gz "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${GRAALVM_VERSION}/graalvm-ce-java${JAVA_VERSION}-linux-amd64-${GRAALVM_VERSION}.tar.gz" && \
+    tar -xzf graalvm.tar.gz && \
+    mv graalvm-ce-java${JAVA_VERSION}-${GRAALVM_VERSION} graalvm && \
+    rm graalvm.tar.gz && \
+    ${GRAALVM_HOME}/bin/gu install native-image || true
+
+# Build and install wrk
+RUN cd /tmp && \
+    git clone https://github.com/wg/wrk.git && \
+    cd wrk && \
+    make && \
+    cp wrk /usr/local/bin/ && \
+    cd / && \
+    rm -rf /tmp/wrk
+
+# Copy wrk2 from builder stage
+COPY --from=wrk2-builder /usr/local/bin/wrk2 /usr/local/bin/wrk2
+
+# Set working directory
+WORKDIR /app
+
+# Copy barista directory
+COPY barista/ /app/barista/
+
+# Build the quarkus-tika application (JAR for JVM mode)
+RUN cd /app/barista/benchmarks/quarkus-tika && \
+    ./build.sh --skip-nib-generation
+
+# Copy benchmark script
+COPY run_tika_benchmark.sh /app/run_tika_benchmark.sh
+RUN chmod +x /app/run_tika_benchmark.sh
+
+# Copy dummy workload script
+COPY dummy_workload.sh /app/dummy_workload.sh
+RUN chmod +x /app/dummy_workload.sh
+
+# Copy entrypoint script
+COPY docker-entrypoint-tika.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Create results directory
+RUN mkdir -p /app/results-tika
+
+# Set environment variables for dummy workload
+ENV DUMMY_CPU_INTENSITY=0.1
+ENV DUMMY_MEMORY_MB=100
+ENV DUMMY_INTERVAL=1
+
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+# Default command (can be overridden)
+CMD ["1", "--no-output"]

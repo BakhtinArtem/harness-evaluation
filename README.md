@@ -1,11 +1,3 @@
-# Running DeathStarBench benchmarking
-
-Navigate into `DeathStarBench/mediaMicroservices` and run `docker compose up`.
-This would would statred media microservices benchmarking application. After that
-navigate into `/DeathStarBench/wrk2` directory and execute `make` to build wrk
-executable. Copy wrk executable to the root folder by executing `mv wrk ../../`
-Navigate back to root folder. And run following script to benchmark media microservices `./run_media_benchmark.sh`
-
 # Installing Prerequisites
 
 Before running the barista benchmark scripts, you need to install the required prerequisites. An automated installation script is provided:
@@ -37,140 +29,74 @@ export PATH="$PATH:$(pwd)/.prerequisites/wrk"
 export PATH="$PATH:$(pwd)/.prerequisites/wrk2"
 ```
 
-# Barista Benchmark Runners
+# Running Barista
 
-This repository contains three benchmark runner scripts for barista benchmarks:
-- `run_petclinic_benchmark.sh` - Spring PetClinic benchmark
-- `run_shopcart_benchmark.sh` - Micronaut Shopcart benchmark  
-- `run_tika_benchmark.sh` - Quarkus Tika benchmark
+Barista can be benchmarked in two ways: using the default method or with 
+dummy process simulation. The following configuration shows the default settings
+used for all Barista benchmarks participating in the evaluation:
 
-## Barista Shopcart Benchmark Runner
+```json
+{
+    "endpoint": "http://127.0.0.1:8006",
+    "output_dir": "logs/",
+    "load_testing":{
+        "lua_script": "mixed-requests.lua",
+        "connections": 16,
+        "threads": 16,
+        "startup":{
+            "iterations": 10,
+            "timeout": 300,
+            "cmd_app_prefix": ["taskset", "-c", "0-3"]
+        },
+        "warmup":{
+            "iterations": 0,
+            "iteration_time_seconds": 15
+        },
+        "throughput":{
+            "iterations": 0,
+            "iteration_time_seconds": 30
+        },
+        "latency_measurement":{
+            "iterations": 1,
+            "iteration_time_seconds": 30,
+            "search_strategy": "FIXED",
+            "rates": 3000
+        }
+    }
+}
+```
 
-This script runs the barista shopcart benchmark with mixed requests and saves results in separate timestamped folders.
-
-## Prerequisites
-
-The script automatically checks for all required prerequisites before running:
-
-- **Python 3**: Required to run the barista harness
-- **Java/GraalVM**: JAVA_HOME environment variable must be set
-  - For **JVM mode**: Requires a JVM with `java` executable
-  - For **native mode**: Requires GraalVM with `native-image` tool
-- **wrk**: Load testing tool for throughput measurements
-- **wrk2**: Latency testing tool (must be renamed from `wrk` to `wrk2`)
-- **Barista directory**: The barista benchmark suite must be present
-- **Application artifacts**: 
-  - **JVM mode**: Application JAR file (will be built automatically if missing)
-  - **native mode**: Native executable or NIB file (will be built automatically if missing)
-- **Disk space**: At least 1GB free space recommended (more for native mode builds)
-
-If any critical prerequisites are missing, the script will exit with an error message. Warnings (like missing JAR/native image) will prompt for confirmation before continuing.
-
-## Usage
+Startup configuration remains unchanged. The warmup phase is disabled (set to zero)
+in order to focus on measuring the time required for a serverless application to
+scale up. The throughput phase is also set to zero, as it was previously measured
+with an older version of wrk and overlaps with what the latency measurement—performed
+with wrk2—now provides. Finally, the benchmark runs a latency phase using wrk2
+for 30 seconds, with 16 threads, 16 connections, and a request rate of 3000
+requests per second.
 
 ```bash
-# Run benchmark once in JVM mode (default)
-./run_shopcart_benchmark.sh
-
-# Run benchmark 3 times in JVM mode
-./run_shopcart_benchmark.sh 3
-
-# Run benchmark 5 times in native mode
+(cd ./barista/benc && ./build micronout-shopcart quarkus-tika spring-petclinic) 
 ./run_shopcart_benchmark.sh 5 --mode native
-
-# Run benchmark 5 times without outputting results to stdout (faster)
-./run_shopcart_benchmark.sh 5 --no-output
-
-# Run in native mode without stdout output
-./run_shopcart_benchmark.sh 3 --mode native --no-output
-
-# Show help
-./run_shopcart_benchmark.sh --help
+./run_shopcart_benchmark.sh 5 --mode jvm
+(cd ./barista/benc && ./build micronout-shopcart quarkus-tika spring-petclinic) 
+./run_tika_benchmark.sh 5 --mode native
 ```
+## Deafult way
 
-## Arguments
+## Process simulation
 
-- `number_of_runs` (optional): Number of times to run the benchmark (default: 1)
-- `--mode jvm|native` (optional): Execution mode - JVM or native (default: jvm)
-- `--no-output` (optional): Skip outputting raw results to stdout, only save to files
-
-## Results Structure
-
-Each run creates a separate timestamped directory:
-
-```
-results/
-├── run_1_2026-01-03_23-30-15/
-│   ├── barista-results.json
-│   ├── barista_startup_results.csv
-│   ├── barista_warmup_results.csv
-│   ├── barista_throughput_results.csv
-│   ├── final_measurements-barista_latency_results.csv
-│   ├── barista_resource_usage.csv
-│   ├── app-dump.txt
-│   ├── barista.log
-│   ├── warmup-*.txt
-│   ├── throughput-*.txt
-│   ├── *-latency-*.txt
-│   └── run_info.txt
-├── run_2_2026-01-03_23-35-20/
-│   └── ...
-└── run_3_2026-01-03_23-40-25/
-    └── ...
-```
-
-## Output Files
-
-Each run directory contains:
-
-- **barista-results.json**: Complete JSON with all metrics
-- **barista_startup_results.csv**: Startup response times
-- **barista_warmup_results.csv**: Warmup throughput iterations
-- **barista_throughput_results.csv**: Peak throughput measurement
-- **final_measurements-barista_latency_results.csv**: Latency percentiles
-- **barista_resource_usage.csv**: Time-series resource usage (RSS, VMS, CPU)
-- **app-dump.txt**: Application output logs
-- **barista.log**: Complete benchmark execution log
-- **warmup-*.txt**: Raw wrk output for each warmup iteration
-- **throughput-*.txt**: Raw wrk output for throughput measurement
-- ***-latency-*.txt**: Raw wrk2 output for latency measurement
-- **run_info.txt**: Metadata about the run (timestamp, run number, etc.)
-
-## Examples
-
-### Single run in JVM mode (default)
 ```bash
-./run_shopcart_benchmark.sh
+docker run --rm \
+  -e DUMMY_CPU_INTENSITY=0.8 \
+  -e DUMMY_MEMORY_MB=200 \
+  shopcart-isolation-test 5 --mode native
 ```
 
-### Multiple runs in JVM mode (3 times)
-```bash
-./run_shopcart_benchmark.sh 3
-```
+# Running DeathStarBench benchmarking
 
-### Run in native mode
-```bash
-./run_shopcart_benchmark.sh --mode native
-```
-
-### Multiple runs in native mode
-```bash
-./run_shopcart_benchmark.sh 5 --mode native
-```
-
-### Multiple runs without stdout output (faster for many runs)
-```bash
-./run_shopcart_benchmark.sh 10 --no-output
-```
-
-### Native mode without stdout output
-```bash
-./run_shopcart_benchmark.sh 3 --mode native --no-output
-```
-
-## Notes
-
-- Each run is saved in a separate timestamped folder to avoid overwriting results
-- The timestamp format is: `YYYY-MM-DD_HH-MM-SS`
-- There's a 2-second delay between runs to ensure clean separation
-- All results are saved regardless of the `--no-output` flag
+Navigate into `DeathStarBench/mediaMicroservices` and run `docker compose up`.
+This would would statred media microservices benchmarking application. After that
+navigate into `/DeathStarBench/wrk2` directory and execute `make` to build wrk
+executable. Copy wrk executable to the root folder by executing `mv wrk ../../`
+Navigate back to root folder. And run following script to benchmark media 
+microservices `./run_media_benchmark.sh`

@@ -303,7 +303,8 @@ for ((run=1; run<=NUM_RUNS; run++)); do
     
     # Run the benchmark
     cd "${BARISTA_DIR}"
-    ./barista micronaut-shopcart --mode "${MODE}" --resource-usage-polling-interval 0.02
+    ./barista micronaut-shopcart --mode "${MODE}" --resource-usage-polling-interval 0.02 \
+        --startup-iteration-count 0 --warmup-iteration-count 0
     
     # Find the latest results directory from barista
     LATEST_RESULT=$(find "${BARISTA_DIR}/logs" -type d -name "*bench-*" -printf '%T@ %p\n' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-)

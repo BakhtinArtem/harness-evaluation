@@ -1,2 +1,4 @@
 media_benchmark_results/
 wrk
+results*
+.prerequisites/
