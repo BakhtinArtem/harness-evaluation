@@ -1,6 +1,0 @@
-Run Number: 4/5
-Timestamp: 2026-01-05_01-26-31
-Execution Mode: native
-Benchmark: spring-petclinic
-Source Directory: /home/bakhtinartyom1205/projects/harness-evaluation/barista/logs/2026-01-05_01-26-31-bench-71910b
-Destination Directory: /home/bakhtinartyom1205/projects/harness-evaluation/results-petclinic-native/run_4_2026-01-05_01-26-31

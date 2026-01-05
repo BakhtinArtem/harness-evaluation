@@ -1,6 +1,0 @@
-Run Number: 4/5
-Timestamp: 2026-01-05_03-46-53
-Execution Mode: jvm
-Benchmark: spring-petclinic
-Source Directory: /app/barista/logs/2026-01-05_03-46-54-bench-f97fbb
-Destination Directory: /app/results-petclinic-jvm/run_4_2026-01-05_03-46-53

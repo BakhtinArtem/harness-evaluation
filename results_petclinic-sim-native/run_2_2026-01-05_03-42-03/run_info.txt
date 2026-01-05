@@ -1,6 +1,0 @@
-Run Number: 2/5
-Timestamp: 2026-01-05_03-42-03
-Execution Mode: native
-Benchmark: spring-petclinic
-Source Directory: /app/barista/logs/2026-01-05_03-42-03-bench-fb1ef1
-Destination Directory: /app/results-petclinic-native/run_2_2026-01-05_03-42-03
