@@ -1,0 +1,312 @@
+[
+  {
+    "timestamp": "2026-01-05T20:27:45.123213403Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "199884",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:46.113563119Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "221272",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:47.111423196Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "227024",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:48.107177361Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "239328",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:49.114443748Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "243876",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:50.108584124Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "250012",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:51.108239271Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "257172",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:52.111459607Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "267308",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:53.113569843Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "279892",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:54.1103806Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "282072",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:55.105928496Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "283020",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:56.113861632Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "287100",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:57.109976549Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "274252",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:58.105500005Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "274284",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:27:59.106614852Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "274564",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:00.108494868Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "274644",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:01.106754115Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "274896",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:02.108572031Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "274960",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:03.107786057Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "274960",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:04.105765664Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "274960",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:05.109566831Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "274960",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:06.105715707Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "275036",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:07.106220644Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "275036",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:08.10677117Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "275036",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:09.106066827Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "275036",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:10.110262163Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "275036",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:11.10692473Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "275036",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:12.106321277Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "277672",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:13.107808283Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "277728",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:14.10828985Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "277788",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:28:15.107598717Z",
+    "processes": [
+      {
+        "pid": "232366",
+        "rss": "278044",
+        "args": "java -XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  }
+]

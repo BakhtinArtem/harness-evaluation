@@ -1,0 +1,24 @@
+Running 30s test @ http://e9a765-container:8001/
+  16 threads and 16 connections
+  Thread calibration: mean lat.: 1.483ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.568ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.604ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.588ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.557ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.567ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.573ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.715ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.702ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.505ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.485ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.601ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.640ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.527ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.583ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.572ms, rate sampling interval: 10ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.55ms    1.02ms  30.69ms   97.07%
+    Req/Sec    53.04     52.74   222.00     76.85%
+  23945 requests in 29.83s, 7.78MB read
+Requests/sec:    802.75
+Transfer/sec:    267.06KB

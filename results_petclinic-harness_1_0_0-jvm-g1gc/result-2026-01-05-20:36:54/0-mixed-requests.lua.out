@@ -1,0 +1,24 @@
+Running 30s test @ http://369d8c-container:8006/owners/new
+  16 threads and 16 connections
+  Thread calibration: mean lat.: 4736.828ms, rate sampling interval: 16941ms
+  Thread calibration: mean lat.: 4726.577ms, rate sampling interval: 17137ms
+  Thread calibration: mean lat.: 4717.540ms, rate sampling interval: 17481ms
+  Thread calibration: mean lat.: 4370.113ms, rate sampling interval: 16621ms
+  Thread calibration: mean lat.: 4609.479ms, rate sampling interval: 17022ms
+  Thread calibration: mean lat.: 4514.725ms, rate sampling interval: 16752ms
+  Thread calibration: mean lat.: 4631.980ms, rate sampling interval: 16908ms
+  Thread calibration: mean lat.: 4746.641ms, rate sampling interval: 17399ms
+  Thread calibration: mean lat.: 4615.269ms, rate sampling interval: 16908ms
+  Thread calibration: mean lat.: 4703.496ms, rate sampling interval: 16769ms
+  Thread calibration: mean lat.: 4709.162ms, rate sampling interval: 17465ms
+  Thread calibration: mean lat.: 4647.664ms, rate sampling interval: 16957ms
+  Thread calibration: mean lat.: 4789.554ms, rate sampling interval: 17252ms
+  Thread calibration: mean lat.: 4776.963ms, rate sampling interval: 17170ms
+  Thread calibration: mean lat.: 4879.837ms, rate sampling interval: 17219ms
+  Thread calibration: mean lat.: 4742.661ms, rate sampling interval: 17645ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.70s     5.46s   28.56s    57.53%
+    Req/Sec     8.06      0.24     9.00    100.00%
+  4146 requests in 29.86s, 560.51MB read
+Requests/sec:    138.86
+Transfer/sec:     18.77MB

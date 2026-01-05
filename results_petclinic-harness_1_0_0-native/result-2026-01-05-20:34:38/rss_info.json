@@ -1,0 +1,312 @@
+[
+  {
+    "timestamp": "2026-01-05T20:34:40.349623681Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "253228",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:41.350949232Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "246908",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:42.356109494Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "250696",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:43.337748976Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "279984",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:44.338320827Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "279516",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:45.369261298Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "263908",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:46.353323971Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "251584",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:47.344917263Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "262180",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:48.338535894Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "277488",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:49.342106636Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "275000",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:50.343866058Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "268220",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:51.360098149Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "289880",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:52.349933271Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "291492",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:53.349574253Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "331872",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:54.348681285Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "300820",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:55.349260386Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "367784",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:56.340111508Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "321780",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:57.34190421Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "314708",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:58.345027282Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "339532",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:59.343251164Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "304364",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:35:00.344675215Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "312844",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:35:01.342297108Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "342156",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:35:02.334800559Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "299132",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:35:03.351332511Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "298380",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:35:04.358607773Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "291060",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:35:05.339946955Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "285632",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:35:06.356997906Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "291200",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:35:07.336173479Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "318332",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:35:08.34644863Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "280372",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:35:09.345030502Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "266080",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:35:10.338829464Z",
+    "processes": [
+      {
+        "pid": "241835",
+        "rss": "265900",
+        "args": "./spring-petclinic -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  }
+]

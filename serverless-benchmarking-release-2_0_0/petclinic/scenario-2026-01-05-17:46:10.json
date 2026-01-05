@@ -1,0 +1,356 @@
+{
+  "vertices": {
+    "0": {
+      "path": "/owners/new",
+      "method": "POST",
+      "parameters": [],
+      "requestBody": {
+        "name": "/owners/new/POST/requestBody/application/x-www-form-urlencoded",
+        "ref": "#/components/schemas/OwnerForm",
+        "contentType": "application/x-www-form-urlencoded",
+        "fields": [
+          {
+            "name": "city",
+            "type": "string",
+            "required": true,
+            "hint": "city",
+            "path": "/owners/new/POST/requestBody/application/x-www-form-urlencoded.city"
+          },
+          {
+            "name": "firstName",
+            "type": "string",
+            "required": true,
+            "hint": "firstName",
+            "path": "/owners/new/POST/requestBody/application/x-www-form-urlencoded.firstName"
+          },
+          {
+            "name": "lastName",
+            "type": "string",
+            "required": true,
+            "hint": "lastName",
+            "path": "/owners/new/POST/requestBody/application/x-www-form-urlencoded.lastName"
+          },
+          {
+            "name": "telephone",
+            "type": "string",
+            "required": true,
+            "hint": "number",
+            "pattern": "^\\d{1,10}$",
+            "path": "/owners/new/POST/requestBody/application/x-www-form-urlencoded.telephone"
+          },
+          {
+            "name": "_method",
+            "type": "string",
+            "required": false,
+            "hint": "string",
+            "path": "/owners/new/POST/requestBody/application/x-www-form-urlencoded._method"
+          },
+          {
+            "name": "address",
+            "type": "string",
+            "required": true,
+            "hint": "city",
+            "path": "/owners/new/POST/requestBody/application/x-www-form-urlencoded.address"
+          }
+        ]
+      },
+      "responseCode": "200"
+    },
+    "1": {
+      "path": "/owners/{ownerId}/pets/new",
+      "method": "POST",
+      "parameters": [
+        {
+          "name": "ownerId",
+          "type": "integer",
+          "required": true,
+          "hint": "id",
+          "min": 1,
+          "path": "/owners/{ownerId}/pets/new/POST/parameter/ownerId",
+          "in": "path"
+        }
+      ],
+      "requestBody": {
+        "name": "/owners/{ownerId}/pets/new/POST/requestBody/application/x-www-form-urlencoded",
+        "ref": "#/components/schemas/PetForm",
+        "contentType": "application/x-www-form-urlencoded",
+        "fields": [
+          {
+            "name": "birthDate",
+            "type": "string",
+            "format": "date",
+            "required": true,
+            "hint": "date",
+            "path": "/owners/{ownerId}/pets/new/POST/requestBody/application/x-www-form-urlencoded.birthDate"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "required": true,
+            "hint": "name",
+            "path": "/owners/{ownerId}/pets/new/POST/requestBody/application/x-www-form-urlencoded.name"
+          },
+          {
+            "name": "type",
+            "type": "integer",
+            "format": "int32",
+            "required": true,
+            "hint": "string",
+            "path": "/owners/{ownerId}/pets/new/POST/requestBody/application/x-www-form-urlencoded.type"
+          }
+        ]
+      },
+      "responseCode": "200"
+    },
+    "2": {
+      "path": "/owners",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "lastName",
+          "type": "string",
+          "required": false,
+          "hint": "lastName",
+          "path": "/owners/GET/parameter/lastName",
+          "in": "query"
+        },
+        {
+          "name": "page",
+          "type": "integer",
+          "required": false,
+          "hint": "string",
+          "min": 1,
+          "path": "/owners/GET/parameter/page",
+          "in": "query"
+        }
+      ],
+      "responseCode": "200"
+    },
+    "3": {
+      "path": "/owners/{ownerId}/pets/{petId}/visits/new",
+      "method": "POST",
+      "parameters": [
+        {
+          "name": "ownerId",
+          "type": "integer",
+          "required": true,
+          "hint": "id",
+          "min": 1,
+          "path": "/owners/{ownerId}/pets/{petId}/visits/new/POST/parameter/ownerId",
+          "in": "path"
+        },
+        {
+          "name": "petId",
+          "type": "integer",
+          "required": true,
+          "hint": "id",
+          "min": 1,
+          "path": "/owners/{ownerId}/pets/{petId}/visits/new/POST/parameter/petId",
+          "in": "path"
+        }
+      ],
+      "requestBody": {
+        "name": "/owners/{ownerId}/pets/{petId}/visits/new/POST/requestBody/application/x-www-form-urlencoded",
+        "ref": "#/components/schemas/VisitForm",
+        "contentType": "application/x-www-form-urlencoded",
+        "fields": [
+          {
+            "name": "date",
+            "type": "string",
+            "format": "date",
+            "required": false,
+            "hint": "date",
+            "path": "/owners/{ownerId}/pets/{petId}/visits/new/POST/requestBody/application/x-www-form-urlencoded.date"
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "required": true,
+            "hint": "string",
+            "path": "/owners/{ownerId}/pets/{petId}/visits/new/POST/requestBody/application/x-www-form-urlencoded.description"
+          }
+        ]
+      },
+      "responseCode": "200"
+    },
+    "4": {
+      "path": "/owners",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "lastName",
+          "type": "string",
+          "required": false,
+          "hint": "lastName",
+          "path": "/owners/GET/parameter/lastName",
+          "in": "query"
+        },
+        {
+          "name": "page",
+          "type": "integer",
+          "required": false,
+          "hint": "string",
+          "min": 1,
+          "path": "/owners/GET/parameter/page",
+          "in": "query"
+        }
+      ],
+      "responseCode": "200"
+    },
+    "5": {
+      "path": "/owners/{ownerId}/edit",
+      "method": "POST",
+      "parameters": [
+        {
+          "name": "ownerId",
+          "type": "integer",
+          "required": true,
+          "hint": "id",
+          "min": 1,
+          "path": "/owners/{ownerId}/edit/POST/parameter/ownerId",
+          "in": "path"
+        }
+      ],
+      "requestBody": {
+        "name": "/owners/{ownerId}/edit/POST/requestBody/application/x-www-form-urlencoded",
+        "ref": "#/components/schemas/OwnerForm",
+        "contentType": "application/x-www-form-urlencoded",
+        "fields": [
+          {
+            "name": "lastName",
+            "type": "string",
+            "required": true,
+            "hint": "lastName",
+            "path": "/owners/{ownerId}/edit/POST/requestBody/application/x-www-form-urlencoded.lastName"
+          },
+          {
+            "name": "telephone",
+            "type": "string",
+            "required": true,
+            "hint": "number",
+            "pattern": "^\\d{1,10}$",
+            "path": "/owners/{ownerId}/edit/POST/requestBody/application/x-www-form-urlencoded.telephone"
+          },
+          {
+            "name": "_method",
+            "type": "string",
+            "required": false,
+            "hint": "string",
+            "path": "/owners/{ownerId}/edit/POST/requestBody/application/x-www-form-urlencoded._method"
+          },
+          {
+            "name": "address",
+            "type": "string",
+            "required": true,
+            "hint": "city",
+            "path": "/owners/{ownerId}/edit/POST/requestBody/application/x-www-form-urlencoded.address"
+          },
+          {
+            "name": "city",
+            "type": "string",
+            "required": true,
+            "hint": "city",
+            "path": "/owners/{ownerId}/edit/POST/requestBody/application/x-www-form-urlencoded.city"
+          },
+          {
+            "name": "firstName",
+            "type": "string",
+            "required": true,
+            "hint": "firstName",
+            "path": "/owners/{ownerId}/edit/POST/requestBody/application/x-www-form-urlencoded.firstName"
+          }
+        ]
+      },
+      "responseCode": "200"
+    },
+    "6": {
+      "path": "/owners/{ownerId}/pets/{petId}/edit",
+      "method": "POST",
+      "parameters": [
+        {
+          "name": "ownerId",
+          "type": "integer",
+          "required": true,
+          "hint": "id",
+          "min": 1,
+          "path": "/owners/{ownerId}/pets/{petId}/edit/POST/parameter/ownerId",
+          "in": "path"
+        },
+        {
+          "name": "petId",
+          "type": "integer",
+          "required": true,
+          "hint": "id",
+          "min": 1,
+          "path": "/owners/{ownerId}/pets/{petId}/edit/POST/parameter/petId",
+          "in": "path"
+        }
+      ],
+      "requestBody": {
+        "name": "/owners/{ownerId}/pets/{petId}/edit/POST/requestBody/application/x-www-form-urlencoded",
+        "ref": "#/components/schemas/PetForm",
+        "contentType": "application/x-www-form-urlencoded",
+        "fields": [
+          {
+            "name": "birthDate",
+            "type": "string",
+            "format": "date",
+            "required": true,
+            "hint": "date",
+            "path": "/owners/{ownerId}/pets/{petId}/edit/POST/requestBody/application/x-www-form-urlencoded.birthDate"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "required": true,
+            "hint": "name",
+            "path": "/owners/{ownerId}/pets/{petId}/edit/POST/requestBody/application/x-www-form-urlencoded.name"
+          },
+          {
+            "name": "type",
+            "type": "integer",
+            "format": "int32",
+            "required": true,
+            "hint": "string",
+            "path": "/owners/{ownerId}/pets/{petId}/edit/POST/requestBody/application/x-www-form-urlencoded.type"
+          }
+        ]
+      },
+      "responseCode": "200"
+    }
+  },
+  "edges": [
+    {
+      "from": 0,
+      "to": 1,
+      "mappings": {
+        "body.firstName": "body.name"
+      }
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "mappings": {}
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "mappings": {}
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "mappings": {}
+    },
+    {
+      "from": 4,
+      "to": 5,
+      "mappings": {}
+    },
+    {
+      "from": 5,
+      "to": 6,
+      "mappings": {}
+    }
+  ]
+}

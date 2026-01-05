@@ -1,0 +1,24 @@
+Running 30s test @ http://f24f1a-container:8001/
+  16 threads and 16 connections
+  Thread calibration: mean lat.: 1.473ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.513ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.473ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.305ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.524ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.417ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.299ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.307ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.328ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.355ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.394ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.316ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.397ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.369ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.345ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.295ms, rate sampling interval: 10ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.09ms  392.68us  11.06ms   71.82%
+    Req/Sec    52.89     52.56   111.00     77.70%
+  23971 requests in 29.89s, 7.79MB read
+Requests/sec:    801.90
+Transfer/sec:    266.77KB

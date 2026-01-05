@@ -1,0 +1,312 @@
+[
+  {
+    "timestamp": "2026-01-05T20:34:06.587517064Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "711128",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:07.601185006Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "770736",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:08.581750668Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "913740",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:09.589334059Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "1146420",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:10.59866169Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "1434708",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:11.594217422Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "1782412",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:12.592770463Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "2153800",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:13.592972784Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "2503336",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:14.599358806Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "2873728",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:15.594360097Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "3243904",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:16.590474449Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "3646176",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:17.59332165Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "4080752",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:18.590007132Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "4542976",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:19.595940093Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "4736820",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:20.587924865Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "4741268",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:21.592200586Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "4741508",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:22.601628687Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "4741912",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:23.588792959Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "4742492",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:24.587244131Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "4742952",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:25.587341542Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "4743720",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:26.595627613Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "4998120",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:27.595294815Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "5283528",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:28.594209537Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "5284736",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:29.611022468Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "5285160",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:30.5874909Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "5285824",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:31.592066261Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "5286524",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:32.593462043Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "5309860",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:33.607995574Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "6477044",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:34.607238386Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "7725204",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:35.599252358Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "9123092",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:34:36.57685214Z",
+    "processes": [
+      {
+        "pid": "240956",
+        "rss": "10202828",
+        "args": "java -XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true -jar app.jar"
+      }
+    ]
+  }
+]

@@ -1,0 +1,302 @@
+[
+  {
+    "timestamp": "2026-01-05T20:40:07.832839191Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "104112",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:08.833137745Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "121756",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:09.833668009Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "137292",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:10.834122321Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "139136",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:11.832567966Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "140668",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:12.834598282Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "140668",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:13.832689987Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "140928",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:14.833222141Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "142544",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:15.833516535Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "142544",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:16.832240729Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "142544",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:17.832728413Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "144964",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:18.833737527Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "144964",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:19.832323341Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "144964",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:20.832966396Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "144964",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:21.83303023Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "144964",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:22.834280103Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "144964",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:23.834473687Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "144964",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:24.835275231Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "144964",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:25.835402615Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "145228",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:26.838145549Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "145228",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:27.833404383Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "145228",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:28.833784327Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "145228",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:29.833775122Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "144472",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:30.833937545Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "144472",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:31.832592301Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "144472",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:32.833487706Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "144472",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:33.83413467Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "144472",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:34.833094013Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "143608",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:35.832817997Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "143608",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T20:40:36.834700492Z",
+    "processes": [
+      {
+        "pid": "249622",
+        "rss": "143608",
+        "args": "./shopcart -H:MaxHeapSize=2g -H:StackSize=1m"
+      }
+    ]
+  }
+]

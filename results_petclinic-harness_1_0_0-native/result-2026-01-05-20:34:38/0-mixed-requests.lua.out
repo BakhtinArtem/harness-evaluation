@@ -1,0 +1,24 @@
+Running 30s test @ http://3d97d5-container:8006/owners/new
+  16 threads and 16 connections
+  Thread calibration: mean lat.: 2642.699ms, rate sampling interval: 13934ms
+  Thread calibration: mean lat.: 2634.628ms, rate sampling interval: 13565ms
+  Thread calibration: mean lat.: 2656.593ms, rate sampling interval: 13631ms
+  Thread calibration: mean lat.: 2593.905ms, rate sampling interval: 14548ms
+  Thread calibration: mean lat.: 2824.277ms, rate sampling interval: 14581ms
+  Thread calibration: mean lat.: 2828.313ms, rate sampling interval: 14016ms
+  Thread calibration: mean lat.: 2746.721ms, rate sampling interval: 13869ms
+  Thread calibration: mean lat.: 2902.799ms, rate sampling interval: 14458ms
+  Thread calibration: mean lat.: 3167.206ms, rate sampling interval: 14311ms
+  Thread calibration: mean lat.: 2980.395ms, rate sampling interval: 14606ms
+  Thread calibration: mean lat.: 3265.859ms, rate sampling interval: 15097ms
+  Thread calibration: mean lat.: 3061.451ms, rate sampling interval: 14647ms
+  Thread calibration: mean lat.: 3226.595ms, rate sampling interval: 15007ms
+  Thread calibration: mean lat.: 3378.797ms, rate sampling interval: 15441ms
+  Thread calibration: mean lat.: 3316.107ms, rate sampling interval: 15122ms
+  Thread calibration: mean lat.: 3240.784ms, rate sampling interval: 14622ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.29s     5.48s   28.82s    58.58%
+    Req/Sec     4.00      0.00     4.00    100.00%
+  3231 requests in 30.00s, 340.83MB read
+Requests/sec:    107.71
+Transfer/sec:     11.36MB

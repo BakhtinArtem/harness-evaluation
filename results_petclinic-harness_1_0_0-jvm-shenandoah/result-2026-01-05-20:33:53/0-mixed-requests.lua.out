@@ -1,0 +1,24 @@
+Running 30s test @ http://cd1498-container:8006/owners/new
+  16 threads and 16 connections
+  Thread calibration: mean lat.: 4501.408ms, rate sampling interval: 17039ms
+  Thread calibration: mean lat.: 4486.917ms, rate sampling interval: 16769ms
+  Thread calibration: mean lat.: 4374.743ms, rate sampling interval: 17154ms
+  Thread calibration: mean lat.: 4381.059ms, rate sampling interval: 16621ms
+  Thread calibration: mean lat.: 4378.442ms, rate sampling interval: 16654ms
+  Thread calibration: mean lat.: 4072.195ms, rate sampling interval: 15712ms
+  Thread calibration: mean lat.: 4514.978ms, rate sampling interval: 16973ms
+  Thread calibration: mean lat.: 4355.508ms, rate sampling interval: 16596ms
+  Thread calibration: mean lat.: 4246.146ms, rate sampling interval: 16269ms
+  Thread calibration: mean lat.: 4393.124ms, rate sampling interval: 16072ms
+  Thread calibration: mean lat.: 4261.182ms, rate sampling interval: 16465ms
+  Thread calibration: mean lat.: 4491.400ms, rate sampling interval: 16678ms
+  Thread calibration: mean lat.: 4436.701ms, rate sampling interval: 16711ms
+  Thread calibration: mean lat.: 4369.072ms, rate sampling interval: 16293ms
+  Thread calibration: mean lat.: 4610.844ms, rate sampling interval: 16924ms
+  Thread calibration: mean lat.: 4591.062ms, rate sampling interval: 17006ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.97s     5.85s   28.98s    56.58%
+    Req/Sec     5.00      0.00     5.00    100.00%
+  3022 requests in 29.86s, 300.32MB read
+Requests/sec:    101.19
+Transfer/sec:     10.06MB

@@ -1,0 +1,802 @@
+components:
+    schemas:
+        BaseEntity:
+            description: Base entity with ID
+            properties:
+                id:
+                    description: Unique identifier
+                    format: int32
+                    readOnly: true
+                    type: integer
+                    x-user-hint: id
+            type: object
+        NamedEntity:
+            allOf:
+                - $ref: '#/components/schemas/BaseEntity'
+                - properties:
+                    name:
+                        description: Name of the entity
+                        type: string
+                        x-user-hint: name
+                  type: object
+            description: Named entity with ID and name
+            x-user-hint: string
+        Owner:
+            allOf:
+                - $ref: '#/components/schemas/Person'
+                - properties:
+                    address:
+                        description: Street address
+                        type: string
+                        x-user-hint: city
+                    city:
+                        description: City
+                        type: string
+                        x-user-hint: city
+                    pets:
+                        description: List of pets owned by this owner
+                        items:
+                            $ref: '#/components/schemas/Pet'
+                        readOnly: true
+                        type: array
+                    telephone:
+                        description: Telephone number (up to 10 digits)
+                        pattern: ^\d{1,10}$
+                        type: string
+                        x-user-hint: number
+                  required:
+                    - address
+                    - city
+                    - telephone
+                  type: object
+            description: Owner entity representing a pet owner
+        OwnerForm:
+            properties:
+                _method:
+                    description: HTTP method override (for form submissions)
+                    type: string
+                    x-user-hint: string
+                address:
+                    description: Street address
+                    type: string
+                    x-user-hint: city
+                city:
+                    description: City
+                    type: string
+                    x-user-hint: city
+                firstName:
+                    description: First name
+                    type: string
+                    x-user-hint: firstName
+                lastName:
+                    description: Last name
+                    type: string
+                    x-user-hint: lastName
+                telephone:
+                    description: Telephone number (up to 10 digits)
+                    pattern: ^\d{1,10}$
+                    type: string
+                    x-user-hint: number
+            required:
+                - firstName
+                - lastName
+                - address
+                - city
+                - telephone
+            type: object
+        OwnerInput:
+            properties:
+                address:
+                    description: Street address
+                    type: string
+                    x-user-hint: city
+                city:
+                    description: City
+                    type: string
+                    x-user-hint: city
+                firstName:
+                    description: First name
+                    type: string
+                    x-user-hint: firstName
+                lastName:
+                    description: Last name
+                    type: string
+                    x-user-hint: lastName
+                telephone:
+                    description: Telephone number (up to 10 digits)
+                    pattern: ^\d{1,10}$
+                    type: string
+                    x-user-hint: number
+            required:
+                - firstName
+                - lastName
+                - address
+                - city
+                - telephone
+            type: object
+        Person:
+            allOf:
+                - $ref: '#/components/schemas/BaseEntity'
+                - properties:
+                    firstName:
+                        description: First name
+                        type: string
+                        x-user-hint: firstName
+                    lastName:
+                        description: Last name
+                        type: string
+                        x-user-hint: lastName
+                  required:
+                    - firstName
+                    - lastName
+                  type: object
+            description: Person entity with ID, first name, and last name
+        Pet:
+            allOf:
+                - $ref: '#/components/schemas/NamedEntity'
+                - properties:
+                    birthDate:
+                        description: Date of birth (YYYY-MM-DD)
+                        format: date
+                        type: string
+                        x-user-hint: date
+                    name:
+                        description: Pet name
+                        type: string
+                        x-user-hint: name
+                    type:
+                        $ref: '#/components/schemas/PetType'
+                    visits:
+                        description: List of visits for this pet
+                        items:
+                            $ref: '#/components/schemas/Visit'
+                        readOnly: true
+                        type: array
+                  required:
+                    - name
+                    - birthDate
+                    - type
+                  type: object
+            description: Pet entity
+            x-user-hint: string
+        PetForm:
+            properties:
+                birthDate:
+                    description: Date of birth (YYYY-MM-DD)
+                    format: date
+                    type: string
+                    x-user-hint: date
+                name:
+                    description: Pet name
+                    type: string
+                    x-user-hint: name
+                type:
+                    description: Pet type ID
+                    format: int32
+                    type: integer
+                    x-user-hint: string
+            required:
+                - name
+                - birthDate
+                - type
+            type: object
+        PetInput:
+            properties:
+                birthDate:
+                    description: Date of birth (YYYY-MM-DD)
+                    format: date
+                    type: string
+                    x-user-hint: date
+                name:
+                    description: Pet name
+                    type: string
+                    x-user-hint: name
+                type:
+                    description: Pet type ID
+                    format: int32
+                    type: integer
+                    x-user-hint: string
+            required:
+                - name
+                - birthDate
+                - type
+            type: object
+        PetType:
+            allOf:
+                - $ref: '#/components/schemas/BaseEntity'
+                - properties:
+                    name:
+                        description: Name of the entity
+                        type: string
+                        x-user-hint: name
+                  type: object
+            description: Named entity with ID and name
+            x-user-hint: string
+        Specialty:
+            allOf:
+                - $ref: '#/components/schemas/BaseEntity'
+                - properties:
+                    name:
+                        description: Name of the entity
+                        type: string
+                        x-user-hint: name
+                  type: object
+            description: Named entity with ID and name
+            x-user-hint: string
+        Vet:
+            allOf:
+                - $ref: '#/components/schemas/Person'
+                - properties:
+                    specialties:
+                        description: List of specialties
+                        items:
+                            $ref: '#/components/schemas/Specialty'
+                        readOnly: true
+                        type: array
+                  type: object
+            description: Veterinarian entity
+            x-user-hint: string
+        Vets:
+            description: Container for a list of veterinarians
+            properties:
+                vetList:
+                    description: List of veterinarians
+                    items:
+                        $ref: '#/components/schemas/Vet'
+                    type: array
+            type: object
+        Visit:
+            allOf:
+                - $ref: '#/components/schemas/BaseEntity'
+                - properties:
+                    date:
+                        description: Visit date (YYYY-MM-DD). Defaults to current date if not provided.
+                        format: date
+                        type: string
+                        x-user-hint: date
+                    description:
+                        description: Visit description
+                        type: string
+                        x-user-hint: string
+                  required:
+                    - description
+                  type: object
+            description: Visit entity representing a veterinary visit
+            x-user-hint: string
+        VisitForm:
+            properties:
+                date:
+                    description: Visit date (YYYY-MM-DD). Defaults to current date if not provided.
+                    format: date
+                    type: string
+                    x-user-hint: date
+                description:
+                    description: Visit description
+                    type: string
+                    x-user-hint: string
+            required:
+                - description
+            type: object
+        VisitInput:
+            properties:
+                date:
+                    description: Visit date (YYYY-MM-DD). Defaults to current date if not provided.
+                    format: date
+                    type: string
+                    x-user-hint: date
+                description:
+                    description: Visit description
+                    type: string
+                    x-user-hint: string
+            required:
+                - description
+            type: object
+info:
+    contact:
+        name: Spring PetClinic
+        url: https://github.com/spring-projects/spring-petclinic
+    description: |
+        REST API specification for the Spring PetClinic application.
+        This application manages a pet clinic with owners, pets, visits, and veterinarians.
+    title: Spring PetClinic API
+    version: 3.0.0
+openapi: 3.0.3
+paths:
+    /:
+        get:
+            description: Returns the welcome page
+            operationId: welcome
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Welcome page HTML
+            summary: Welcome page
+            tags:
+                - System
+    /oups:
+        get:
+            description: Intentionally throws a RuntimeException for testing error handling
+            operationId: triggerException
+            responses:
+                "500":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Internal server error
+            summary: Trigger exception
+            tags:
+                - System
+    /owners:
+        get:
+            description: |
+                Search for owners by last name. Returns HTML view with search results.
+                If no lastName parameter is provided, returns all owners.
+                If exactly one owner is found, redirects to owner details.
+                If multiple owners are found, returns paginated list.
+            operationId: findOwners
+            parameters:
+                - description: Last name to search for (empty string returns all)
+                  in: query
+                  name: lastName
+                  schema:
+                    type: string
+                    x-user-hint: lastName
+                - description: Page number (default is 1)
+                  in: query
+                  name: page
+                  schema:
+                    default: 1
+                    minimum: 1
+                    type: integer
+                    x-user-hint: string
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Search results page
+                "302":
+                    description: Redirect to owner details (when exactly one owner found)
+                    headers:
+                        Location:
+                            schema:
+                                example: /owners/1
+                                type: string
+            summary: Find owners
+            tags:
+                - Owners
+    /owners/{ownerId}:
+        get:
+            description: Returns the details page for a specific owner
+            operationId: getOwner
+            parameters:
+                - description: Owner ID
+                  in: path
+                  name: ownerId
+                  required: true
+                  schema:
+                    minimum: 1
+                    type: integer
+                    x-user-hint: id
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Owner details page
+                "404":
+                    description: Owner not found
+            summary: Get owner details
+            tags:
+                - Owners
+    /owners/{ownerId}/edit:
+        get:
+            description: Returns the form to edit an existing owner
+            operationId: showEditOwnerForm
+            parameters:
+                - description: Owner ID
+                  in: path
+                  name: ownerId
+                  required: true
+                  schema:
+                    minimum: 1
+                    type: integer
+                    x-user-hint: id
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Edit owner form
+                "404":
+                    description: Owner not found
+            summary: Show edit owner form
+            tags:
+                - Owners
+        post:
+            description: Updates an existing owner with the provided information
+            operationId: updateOwner
+            parameters:
+                - description: Owner ID
+                  in: path
+                  name: ownerId
+                  required: true
+                  schema:
+                    minimum: 1
+                    type: integer
+                    x-user-hint: id
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/OwnerInput'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/OwnerForm'
+                required: true
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Form with validation errors
+                "302":
+                    description: Redirect to owner details page
+                    headers:
+                        Location:
+                            schema:
+                                example: /owners/1
+                                type: string
+                "404":
+                    description: Owner not found
+            summary: Update an owner
+            tags:
+                - Owners
+    /owners/{ownerId}/pets/{petId}/edit:
+        get:
+            description: Returns the form to edit an existing pet
+            operationId: showEditPetForm
+            parameters:
+                - description: Owner ID
+                  in: path
+                  name: ownerId
+                  required: true
+                  schema:
+                    minimum: 1
+                    type: integer
+                    x-user-hint: id
+                - description: Pet ID
+                  in: path
+                  name: petId
+                  required: true
+                  schema:
+                    minimum: 1
+                    type: integer
+                    x-user-hint: id
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Edit pet form
+                "404":
+                    description: Owner or pet not found
+            summary: Show edit pet form
+            tags:
+                - Pets
+        post:
+            description: Updates an existing pet
+            operationId: updatePet
+            parameters:
+                - description: Owner ID
+                  in: path
+                  name: ownerId
+                  required: true
+                  schema:
+                    minimum: 1
+                    type: integer
+                    x-user-hint: id
+                - description: Pet ID
+                  in: path
+                  name: petId
+                  required: true
+                  schema:
+                    minimum: 1
+                    type: integer
+                    x-user-hint: id
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PetInput'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/PetForm'
+                required: true
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Form with validation errors
+                "302":
+                    description: Redirect to owner details page
+                    headers:
+                        Location:
+                            schema:
+                                example: /owners/1
+                                type: string
+                "404":
+                    description: Owner or pet not found
+            summary: Update a pet
+            tags:
+                - Pets
+    /owners/{ownerId}/pets/{petId}/visits/new:
+        get:
+            description: Returns the form to create a new visit for a pet
+            operationId: showCreateVisitForm
+            parameters:
+                - description: Owner ID
+                  in: path
+                  name: ownerId
+                  required: true
+                  schema:
+                    minimum: 1
+                    type: integer
+                    x-user-hint: id
+                - description: Pet ID
+                  in: path
+                  name: petId
+                  required: true
+                  schema:
+                    minimum: 1
+                    type: integer
+                    x-user-hint: id
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Create visit form
+                "404":
+                    description: Owner or pet not found
+            summary: Show create visit form
+            tags:
+                - Visits
+        post:
+            description: Creates a new visit for a pet
+            operationId: createVisit
+            parameters:
+                - description: Owner ID
+                  in: path
+                  name: ownerId
+                  required: true
+                  schema:
+                    minimum: 1
+                    type: integer
+                    x-user-hint: id
+                - description: Pet ID
+                  in: path
+                  name: petId
+                  required: true
+                  schema:
+                    minimum: 1
+                    type: integer
+                    x-user-hint: id
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/VisitInput'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/VisitForm'
+                required: true
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Form with validation errors
+                "302":
+                    description: Redirect to owner details page
+                    headers:
+                        Location:
+                            schema:
+                                example: /owners/1
+                                type: string
+                "404":
+                    description: Owner or pet not found
+            summary: Create a new visit
+            tags:
+                - Visits
+    /owners/{ownerId}/pets/new:
+        get:
+            description: Returns the form to create a new pet for an owner
+            operationId: showCreatePetForm
+            parameters:
+                - description: Owner ID
+                  in: path
+                  name: ownerId
+                  required: true
+                  schema:
+                    minimum: 1
+                    type: integer
+                    x-user-hint: id
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Create pet form
+                "404":
+                    description: Owner not found
+            summary: Show create pet form
+            tags:
+                - Pets
+        post:
+            description: Creates a new pet for an owner
+            operationId: createPet
+            parameters:
+                - description: Owner ID
+                  in: path
+                  name: ownerId
+                  required: true
+                  schema:
+                    minimum: 1
+                    type: integer
+                    x-user-hint: id
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PetInput'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/PetForm'
+                required: true
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Form with validation errors
+                "302":
+                    description: Redirect to owner details page
+                    headers:
+                        Location:
+                            schema:
+                                example: /owners/1
+                                type: string
+                "404":
+                    description: Owner not found
+            summary: Create a new pet
+            tags:
+                - Pets
+    /owners/find:
+        get:
+            description: Returns the form to search for owners
+            operationId: showFindOwnersForm
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Find owners form
+            summary: Show find owners form
+            tags:
+                - Owners
+    /owners/new:
+        get:
+            description: Returns the form to create a new owner
+            operationId: showCreateOwnerForm
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Create owner form
+            summary: Show create owner form
+            tags:
+                - Owners
+        post:
+            description: Creates a new owner with the provided information
+            operationId: createOwner
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/OwnerInput'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/OwnerForm'
+                required: true
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Form with validation errors
+                "302":
+                    description: Redirect to owner details page
+                    headers:
+                        Location:
+                            schema:
+                                example: /owners/1
+                                type: string
+            summary: Create a new owner
+            tags:
+                - Owners
+    /vets:
+        get:
+            description: Returns a list of all veterinarians in JSON format
+            operationId: listVets
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Vets'
+                        application/xml:
+                            schema:
+                                $ref: '#/components/schemas/Vets'
+                    description: Successful response
+            summary: List all veterinarians
+            tags:
+                - Veterinarians
+    /vets.html:
+        get:
+            description: Returns a paginated list of veterinarians in HTML format
+            operationId: listVetsHtml
+            parameters:
+                - description: Page number (default is 1)
+                  in: query
+                  name: page
+                  schema:
+                    default: 1
+                    minimum: 1
+                    type: integer
+                    x-user-hint: string
+            responses:
+                "200":
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                    description: Successful response
+            summary: List all veterinarians (HTML)
+            tags:
+                - Veterinarians
+servers:
+    - description: Local development server
+      url: http://localhost:8006
+    - description: Default server
+      url: http://localhost:8006
+tags:
+    - description: System endpoints
+      name: System
+    - description: Owner management endpoints
+      name: Owners
+    - description: Pet management endpoints
+      name: Pets
+    - description: Visit management endpoints
+      name: Visits
+    - description: Veterinarian information endpoints
+      name: Veterinarians

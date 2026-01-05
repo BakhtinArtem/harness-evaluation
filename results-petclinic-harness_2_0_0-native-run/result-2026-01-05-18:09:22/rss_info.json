@@ -1,0 +1,322 @@
+[
+  {
+    "timestamp": "2026-01-05T18:09:24.572361701Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "270180",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:25.570182792Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "298532",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:26.568647834Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "317120",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:27.569849515Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "333940",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:28.570107146Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "353780",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:29.572380318Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "373608",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:30.57040009Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "391208",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:31.571115832Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "406184",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:32.570259164Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "416904",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:33.570838376Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "414976",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:34.569131599Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "410964",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:35.569993502Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "400328",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:36.569736144Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "395732",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:37.570580947Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "383696",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:38.569717271Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "379456",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:39.570148324Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "376484",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:40.570133647Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "368984",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:41.57379793Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "363884",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:42.574207604Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "352120",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:43.571809238Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "349580",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:44.572064203Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "346008",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:45.570225157Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "335420",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:46.570187471Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "333128",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:47.570069976Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "332616",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:48.570389651Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "318288",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:49.569899556Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "315736",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:50.57021689Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "299872",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:51.572849756Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "299372",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:52.571373301Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "299696",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:53.570789687Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "285364",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:54.568734092Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "284368",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-01-05T18:09:55.567930889Z",
+    "processes": [
+      {
+        "pid": "166859",
+        "rss": "284368",
+        "args": "./spring-petclinic -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
+      }
+    ]
+  }
+]

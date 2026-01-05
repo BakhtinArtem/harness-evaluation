@@ -1,0 +1,61 @@
+{
+  "vertices": {
+    "0": {
+      "path": "/owners/new",
+      "method": "POST",
+      "parameters": [],
+      "requestBody": {
+        "name": "/owners/new/POST/requestBody/application/x-www-form-urlencoded",
+        "ref": "#/components/schemas/OwnerForm",
+        "contentType": "application/x-www-form-urlencoded",
+        "fields": [
+          {
+            "name": "address",
+            "type": "string",
+            "required": true,
+            "hint": "city",
+            "path": "/owners/new/POST/requestBody/application/x-www-form-urlencoded.address"
+          },
+          {
+            "name": "city",
+            "type": "string",
+            "required": true,
+            "hint": "city",
+            "path": "/owners/new/POST/requestBody/application/x-www-form-urlencoded.city"
+          },
+          {
+            "name": "firstName",
+            "type": "string",
+            "required": true,
+            "hint": "firstName",
+            "path": "/owners/new/POST/requestBody/application/x-www-form-urlencoded.firstName"
+          },
+          {
+            "name": "lastName",
+            "type": "string",
+            "required": true,
+            "hint": "lastName",
+            "path": "/owners/new/POST/requestBody/application/x-www-form-urlencoded.lastName"
+          },
+          {
+            "name": "telephone",
+            "type": "string",
+            "required": true,
+            "hint": "number",
+            "pattern": "^\\d{1,10}$",
+            "path": "/owners/new/POST/requestBody/application/x-www-form-urlencoded.telephone"
+          },
+          {
+            "name": "_method",
+            "type": "string",
+            "required": false,
+            "hint": "string",
+            "path": "/owners/new/POST/requestBody/application/x-www-form-urlencoded._method"
+          }
+        ]
+      },
+      "responseCode": "200"
+    }
+  },
+  "edges": []
+}
