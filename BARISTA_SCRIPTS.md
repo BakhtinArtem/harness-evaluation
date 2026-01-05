@@ -150,17 +150,17 @@ This repository includes Dockerfiles for containerizing barista benchmarks with 
 
 ### Build PetClinic Benchmark Image
 ```bash
-docker build -f Dockerfile.petclinic -t petclinic-isolation-test .
+docker build -f Dockerfile.petclinic -t aape2k/petclinic-isolation-test:2.0.0 .
 ```
 
 ### Build Tika Benchmark Image
 ```bash
-docker build -f Dockerfile.tika -t tika-isolation-test .
+docker build -f Dockerfile.tika -t aape2k/tika-isolation-test:2.0.0 .
 ```
 
 ### Build Shopcart Benchmark Image
 ```bash
-docker build -f Dockerfile.shopcart -t shopcart-isolation-test .
+docker build -f Dockerfile.shopcart -t aape2k/shopcart-isolation-test:2.0.0 .
 ```
 
 ## Running the Containers
@@ -169,39 +169,39 @@ docker build -f Dockerfile.shopcart -t shopcart-isolation-test .
 
 Run a single benchmark in JVM mode (default):
 ```bash
-docker run --rm petclinic-isolation-test
+docker run --rm aape2k/petclinic-isolation-test:2.0.0
 ```
 
 Run multiple iterations:
 ```bash
-docker run --rm petclinic-isolation-test 5
+docker run --rm aape2k/petclinic-isolation-test:2.0.0 5
 ```
 
 Run in native mode:
 ```bash
-docker run --rm petclinic-isolation-test 3 --mode native
+docker run --rm aape2k/petclinic-isolation-test:2.0.0 3 --mode native
 ```
 
 Run without stdout output (faster):
 ```bash
-docker run --rm petclinic-isolation-test 5 --no-output
+docker run --rm aape2k/petclinic-isolation-test:2.0.0 5 --no-output
 ```
 
 ### Mounting Results Directory
 
 To persist results outside the container:
 ```bash
-docker run --rm -v $(pwd)/results:/app/results-petclinic petclinic-isolation-test 3
+docker run --rm -v $(pwd)/results:/app/results-petclinic-jvm aape2k/petclinic-isolation-test:2.0.0 3
 ```
 
 For Tika:
 ```bash
-docker run --rm -v $(pwd)/results:/app/results-tika tika-isolation-test 3
+docker run --rm -v $(pwd)/results:/app/results-tika-jvm aape2k/tika-isolation-test:2.0.0 3
 ```
 
 For Shopcart:
 ```bash
-docker run --rm -v $(pwd)/results:/app/results shopcart-isolation-test 3
+docker run --rm -v $(pwd)/results:/app/results-shopcart-jvm aape2k/shopcart-isolation-test:2.0.0 3
 ```
 
 ### Customizing Dummy Workload
@@ -217,7 +217,7 @@ Example:
 docker run --rm \
   -e DUMMY_CPU_INTENSITY=0.2 \
   -e DUMMY_MEMORY_MB=200 \
-  petclinic-isolation-test 3
+  aape2k/petclinic-isolation-test:2.0.0 3
 ```
 
 The dummy workload:
@@ -233,7 +233,7 @@ You can set resource limits to control container resources:
 docker run --rm \
   --cpus="2.0" \
   --memory="4g" \
-  petclinic-isolation-test 3
+  aape2k/petclinic-isolation-test:2.0.0 3
 ```
 
 ## Results in Docker Containers
