@@ -141,12 +141,7 @@ used for all Barista benchmarks participating in the evaluation:
             "iterations": 0,
             "iteration_time_seconds": 30
         },
-        "latency_measurement":{
-            "iterations": 1,
-            "iteration_time_seconds": 30,
-            "search_strategy": "FIXED",
-            "rates": 3000
-        }
+        ...
     }
 }
 ```
@@ -155,9 +150,8 @@ Startup configuration remains unchanged. The warmup phase is disabled (set to ze
 in order to focus on measuring the time required for a serverless application to
 scale up. The throughput phase is also set to zero, as it was previously measured
 with an older version of wrk and overlaps with what the latency measurement—performed
-with wrk2—now provides. Finally, the benchmark runs a latency phase using wrk2
-for 30 seconds, with 16 threads, 16 connections, and a request rate of 3000
-requests per second.
+with wrk2—now provides. Finally, latency_measuremnt remains default and it is
+specific for each benchmark.
 
 ```bash
 (cd ./barista/benchmarks/micronaut-shopcart/ && ./build.sh) 

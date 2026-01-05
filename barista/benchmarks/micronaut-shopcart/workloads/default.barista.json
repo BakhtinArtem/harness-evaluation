@@ -21,7 +21,7 @@
             "iterations": 1,
             "iteration_time_seconds": 30,
             "search_strategy": "FIXED",
-            "rates": 3000
+            "rates": 800
         }
     }
 }

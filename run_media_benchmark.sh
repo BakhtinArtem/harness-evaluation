@@ -6,7 +6,7 @@ CONNECTIONS=100                                           # Number of connection
 DURATION="30s"                                            # Test duration for each run
 RATE=2000                                                 # Requests per second per URL
 RUNS=5                                                    # Number of iterations for benchmarking
-OUTPUT_DIR="media_benchmark_results"
+OUTPUT_DIR="results-media"
 
 mkdir -p "$OUTPUT_DIR"
 

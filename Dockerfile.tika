@@ -79,9 +79,24 @@ WORKDIR /app
 # Copy barista directory
 COPY barista/ /app/barista/
 
-# Build the quarkus-tika application (JAR for JVM mode)
+# Build the quarkus-tika application (JAR and NIB for both modes)
 RUN cd /app/barista/benchmarks/quarkus-tika && \
-    ./build.sh --skip-nib-generation
+    ./build.sh
+
+# Pre-build native image from NIB to avoid rebuilding on each run
+RUN cd /app/barista/benchmarks/quarkus-tika && \
+    NIB_FILE=$(find target -name "tika-quickstart-*.nib" 2>/dev/null | head -1) && \
+    if [ -n "$NIB_FILE" ]; then \
+        NIB_BASENAME=$(basename "$NIB_FILE" .nib) && \
+        NIB_DIR=$(dirname "$NIB_FILE") && \
+        OUTPUT_DIR="${NIB_DIR}/${NIB_BASENAME}.output/default" && \
+        mkdir -p "${OUTPUT_DIR}" && \
+        cd "${NIB_DIR}" && \
+        ${GRAALVM_HOME}/bin/native-image --bundle-apply="${NIB_FILE}" -g -o quarkus-tika -O2 && \
+        if [ -f "${NIB_DIR}/quarkus-tika" ]; then \
+            mv "${NIB_DIR}/quarkus-tika" "${OUTPUT_DIR}/quarkus-tika"; \
+        fi; \
+    fi || echo "Native image build skipped (will be built on first run)"
 
 # Copy benchmark script
 COPY run_tika_benchmark.sh /app/run_tika_benchmark.sh
@@ -95,8 +110,8 @@ RUN chmod +x /app/dummy_workload.sh
 COPY docker-entrypoint-tika.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
-# Create results directory
-RUN mkdir -p /app/results-tika
+# Create results directories for both modes
+RUN mkdir -p /app/results-tika-jvm /app/results-tika-native
 
 # Set environment variables for dummy workload
 ENV DUMMY_CPU_INTENSITY=0.1

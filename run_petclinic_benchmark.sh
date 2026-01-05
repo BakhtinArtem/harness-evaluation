@@ -9,7 +9,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BARISTA_DIR="${SCRIPT_DIR}/barista"
-RESULTS_BASE_DIR="${SCRIPT_DIR}/results-petclinic"
+# RESULTS_BASE_DIR will be set after MODE is determined
 
 # Parse arguments
 NUM_RUNS=1
@@ -65,6 +65,9 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# Set results directory based on mode
+RESULTS_BASE_DIR="${SCRIPT_DIR}/results-petclinic-${MODE}"
 
 # ============================================================================
 # PREREQUISITE CHECKS
@@ -303,8 +306,37 @@ for ((run=1; run<=NUM_RUNS; run++)); do
     
     # Run the benchmark
     cd "${BARISTA_DIR}"
+    
+    # For native mode, check if we can reuse an existing native image
+    APP_EXECUTABLE_ARG=""
+    if [ "$MODE" == "native" ]; then
+        # Check for NIB file to determine where native image would be built
+        NIB_FILE=$(find "${PETCLINIC_DIR}/spring-petclinic-sources/target" -name "spring-petclinic-*.nib" 2>/dev/null | head -1)
+        if [ -n "$NIB_FILE" ]; then
+            # Native image is built in {nib_file}.output/default/{bench_name}
+            # The bench_name is "spring-petclinic"
+            NIB_BASENAME=$(basename "$NIB_FILE" .nib)
+            NIB_DIR=$(dirname "$NIB_FILE")
+            EXPECTED_NATIVE_IMAGE="${NIB_DIR}/${NIB_BASENAME}.output/default/spring-petclinic"
+            
+            # Check if native image exists and is newer than NIB
+            if [ -f "$EXPECTED_NATIVE_IMAGE" ]; then
+                IMAGE_MTIME=$(stat -c %Y "$EXPECTED_NATIVE_IMAGE" 2>/dev/null || stat -f %m "$EXPECTED_NATIVE_IMAGE" 2>/dev/null)
+                NIB_MTIME=$(stat -c %Y "$NIB_FILE" 2>/dev/null || stat -f %m "$NIB_FILE" 2>/dev/null)
+                if [ -n "$IMAGE_MTIME" ] && [ -n "$NIB_MTIME" ] && [ "$IMAGE_MTIME" -gt "$NIB_MTIME" ]; then
+                    echo "Reusing existing native image: $EXPECTED_NATIVE_IMAGE"
+                    APP_EXECUTABLE_ARG="--app-executable ${EXPECTED_NATIVE_IMAGE}"
+                else
+                    echo "Native image exists but is older than NIB, will rebuild"
+                fi
+            else
+                echo "Native image not found at: $EXPECTED_NATIVE_IMAGE (will be built)"
+            fi
+        fi
+    fi
+    
     ./barista spring-petclinic --mode "${MODE}" --resource-usage-polling-interval 0.02 \
-        --startup-iteration-count 0 --warmup-iteration-count 0
+        --startup-iteration-count 0 --warmup-iteration-count 0 ${APP_EXECUTABLE_ARG}
     
     # Find the latest results directory from barista
     LATEST_RESULT=$(find "${BARISTA_DIR}/logs" -type d -name "*bench-*" -printf '%T@ %p\n' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-)

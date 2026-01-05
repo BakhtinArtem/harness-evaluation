@@ -79,9 +79,24 @@ WORKDIR /app
 # Copy barista directory
 COPY barista/ /app/barista/
 
-# Build the micronaut-shopcart application (JAR for JVM mode)
+# Build the micronaut-shopcart application (JAR and NIB for both modes)
 RUN cd /app/barista/benchmarks/micronaut-shopcart && \
-    ./build.sh --skip-nib-generation
+    ./build.sh
+
+# Pre-build native image from NIB to avoid rebuilding on each run
+RUN cd /app/barista/benchmarks/micronaut-shopcart && \
+    NIB_FILE=$(find target -name "shopcart-*.nib" 2>/dev/null | head -1) && \
+    if [ -n "$NIB_FILE" ]; then \
+        NIB_BASENAME=$(basename "$NIB_FILE" .nib) && \
+        NIB_DIR=$(dirname "$NIB_FILE") && \
+        OUTPUT_DIR="${NIB_DIR}/${NIB_BASENAME}.output/default" && \
+        mkdir -p "${OUTPUT_DIR}" && \
+        cd "${NIB_DIR}" && \
+        ${GRAALVM_HOME}/bin/native-image --bundle-apply="${NIB_FILE}" -g -o micronaut-shopcart -O2 && \
+        if [ -f "${NIB_DIR}/micronaut-shopcart" ]; then \
+            mv "${NIB_DIR}/micronaut-shopcart" "${OUTPUT_DIR}/micronaut-shopcart"; \
+        fi; \
+    fi || echo "Native image build skipped (will be built on first run)"
 
 # Copy benchmark script
 COPY run_shopcart_benchmark.sh /app/run_shopcart_benchmark.sh
@@ -95,8 +110,8 @@ RUN chmod +x /app/dummy_workload.sh
 COPY docker-entrypoint-shopcart.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
-# Create results directory
-RUN mkdir -p /app/results
+# Create results directories for both modes
+RUN mkdir -p /app/results-shopcart-jvm /app/results-shopcart-native
 
 # Set environment variables for dummy workload
 ENV DUMMY_CPU_INTENSITY=0.1

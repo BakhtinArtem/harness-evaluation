@@ -79,9 +79,24 @@ WORKDIR /app
 # Copy barista directory
 COPY barista/ /app/barista/
 
-# Build the spring-petclinic application (JAR for JVM mode)
+# Build the spring-petclinic application (JAR and NIB for both modes)
 RUN cd /app/barista/benchmarks/spring-petclinic && \
-    ./build.sh --skip-nib-generation
+    ./build.sh
+
+# Pre-build native image from NIB to avoid rebuilding on each run
+RUN cd /app/barista/benchmarks/spring-petclinic && \
+    NIB_FILE=$(find spring-petclinic-sources/target -name "spring-petclinic-*.nib" 2>/dev/null | head -1) && \
+    if [ -n "$NIB_FILE" ]; then \
+        NIB_BASENAME=$(basename "$NIB_FILE" .nib) && \
+        NIB_DIR=$(dirname "$NIB_FILE") && \
+        OUTPUT_DIR="${NIB_DIR}/${NIB_BASENAME}.output/default" && \
+        mkdir -p "${OUTPUT_DIR}" && \
+        cd "${NIB_DIR}" && \
+        ${GRAALVM_HOME}/bin/native-image --bundle-apply="${NIB_FILE}" -g -o spring-petclinic -O2 && \
+        if [ -f "${NIB_DIR}/spring-petclinic" ]; then \
+            mv "${NIB_DIR}/spring-petclinic" "${OUTPUT_DIR}/spring-petclinic"; \
+        fi; \
+    fi || echo "Native image build skipped (will be built on first run)"
 
 # Copy benchmark script
 COPY run_petclinic_benchmark.sh /app/run_petclinic_benchmark.sh
@@ -95,8 +110,8 @@ RUN chmod +x /app/dummy_workload.sh
 COPY docker-entrypoint-petclinic.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
-# Create results directory
-RUN mkdir -p /app/results-petclinic
+# Create results directories for both modes
+RUN mkdir -p /app/results-petclinic-jvm /app/results-petclinic-native
 
 # Set environment variables for dummy workload
 ENV DUMMY_CPU_INTENSITY=0.1
