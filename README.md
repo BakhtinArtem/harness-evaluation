@@ -1,3 +1,34 @@
+# Machine Specification
+
+This evaluation harness has been tested on the following machine configuration:
+
+## Hardware
+- **CPU**: AMD EPYC 7B12 (4 cores, 8 threads)
+- **Architecture**: x86_64
+- **Memory**: 62 GB RAM
+- **Storage**: 9.7 GB disk space (root filesystem)
+- **Virtualization**: KVM (full virtualization)
+
+## Operating System
+- **OS**: Debian GNU/Linux 12 (bookworm)
+- **Kernel**: 6.1.0-41-cloud-amd64
+- **Hostname**: instance-20260104-231130
+
+## Installed Software
+- **Java/GraalVM**: GraalVM Community Edition 21.0.1 (OpenJDK 21.0.1)
+  - Location: `/opt/graalvm`
+  - Includes `native-image` tool for native compilation
+- **Docker**: 29.1.3
+- **Python**: 3.11.2
+- **Build Tools**: gcc, make, git, build-essential
+- **Development Libraries**: libssl-dev, zlib1g-dev
+
+## Environment Configuration
+- **JAVA_HOME**: `/opt/graalvm` (configured in `~/.bashrc`)
+- **PATH**: Includes GraalVM binaries (`$JAVA_HOME/bin`)
+
+---
+
 # Prerequisites
 
 Before using this evaluation harness, you should have the following prerequisites already installed:
@@ -129,11 +160,12 @@ for 30 seconds, with 16 threads, 16 connections, and a request rate of 3000
 requests per second.
 
 ```bash
-(cd ./barista/benc && ./build micronout-shopcart quarkus-tika spring-petclinic) 
+(cd ./barista/benchmarks/micronaut-shopcart/ && ./build.sh) 
 ./run_shopcart_benchmark.sh 5 --mode native
 ./run_shopcart_benchmark.sh 5 --mode jvm
-(cd ./barista/benc && ./build micronout-shopcart quarkus-tika spring-petclinic) 
-./run_tika_benchmark.sh 5 --mode native
+(cd ./barista/benchmarks/spring-petclinic/ && ./build.sh) 
+./run_petclinic_benchmark.sh 5 --mode native
+./run_petclinic_benchmark.sh 5 --mode jvm
 ```
 ## Deafult way
 
