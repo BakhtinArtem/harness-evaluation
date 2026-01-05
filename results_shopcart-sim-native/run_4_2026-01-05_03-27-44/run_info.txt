@@ -1,0 +1,5 @@
+Run Number: 4/5
+Timestamp: 2026-01-05_03-27-44
+Execution Mode: native
+Source Directory: /app/barista/logs/2026-01-05_03-27-44-bench-79436e
+Destination Directory: /app/results-shopcart-native/run_4_2026-01-05_03-27-44

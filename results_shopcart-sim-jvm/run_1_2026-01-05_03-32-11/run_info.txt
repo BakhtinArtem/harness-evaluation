@@ -1,0 +1,5 @@
+Run Number: 1/5
+Timestamp: 2026-01-05_03-32-11
+Execution Mode: jvm
+Source Directory: /app/barista/logs/2026-01-05_03-32-11-bench-22b426
+Destination Directory: /app/results-shopcart-jvm/run_1_2026-01-05_03-32-11

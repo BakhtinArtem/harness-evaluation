@@ -1,0 +1,39 @@
+
+
+              |\      _,,,--,,_
+             /,`.-'`'   ._  \-;;,_
+  _______ __|,4-  ) )_   .;.(__`'-'__     ___ __    _ ___ _______
+ |       | '---''(_/._)-'(_\_)   |   |   |   |  |  | |   |       |
+ |    _  |    ___|_     _|       |   |   |   |   |_| |   |       | __ _ _
+ |   |_| |   |___  |   | |       |   |   |   |       |   |       | \ \ \ \
+ |    ___|    ___| |   | |      _|   |___|   |  _    |   |      _|  \ \ \ \
+ |   |   |   |___  |   | |     |_|       |   | | |   |   |     |_    ) ) ) )
+ |___|   |_______| |___| |_______|_______|___|_|  |__|___|_______|  / / / /
+ ==================================================================/_/_/_/
+
+:: Built with Spring Boot :: 3.0.4
+
+
+[2m2026-01-05T03:44:51.147Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.s.petclinic.PetClinicApplication    [0;39m [2m:[0;39m Starting PetClinicApplication v3.0.0-SNAPSHOT using Java 23 with PID 81 (/app/barista/benchmarks/spring-petclinic/spring-petclinic-sources/target/spring-petclinic-3.0.0-SNAPSHOT.jar started by root in /app/barista)
+[2m2026-01-05T03:44:51.154Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.s.petclinic.PetClinicApplication    [0;39m [2m:[0;39m No active profile set, falling back to 1 default profile: "default"
+[2m2026-01-05T03:44:52.771Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2m2026-01-05T03:44:52.857Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Finished Spring Data repository scanning in 75 ms. Found 2 JPA repository interfaces.
+[2m2026-01-05T03:44:53.771Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat initialized with port(s): 8006 (http)
+[2m2026-01-05T03:44:53.788Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.apache.catalina.core.StandardService  [0;39m [2m:[0;39m Starting service [Tomcat]
+[2m2026-01-05T03:44:53.788Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.apache.catalina.core.StandardEngine   [0;39m [2m:[0;39m Starting Servlet engine: [Apache Tomcat/10.1.5]
+[2m2026-01-05T03:44:53.924Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring embedded WebApplicationContext
+[2m2026-01-05T03:44:53.926Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mw.s.c.ServletWebServerApplicationContext[0;39m [2m:[0;39m Root WebApplicationContext: initialization completed in 2659 ms
+[2m2026-01-05T03:44:54.304Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Starting...
+[2m2026-01-05T03:44:54.600Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.zaxxer.hikari.pool.HikariPool       [0;39m [2m:[0;39m HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:ee0074ef-e915-4507-bc03-6a59e8c5ee2a user=SA
+[2m2026-01-05T03:44:54.603Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Start completed.
+[2m2026-01-05T03:44:54.836Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.hibernate.jpa.internal.util.LogHelper [0;39m [2m:[0;39m HHH000204: Processing PersistenceUnitInfo [name: default]
+[2m2026-01-05T03:44:54.913Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.hibernate.Version                   [0;39m [2m:[0;39m HHH000412: Hibernate ORM core version 6.1.7.Final
+[2m2026-01-05T03:44:55.440Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mSQL dialect                             [0;39m [2m:[0;39m HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+[2m2026-01-05T03:44:56.613Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.h.e.t.j.p.i.JtaPlatformInitiator      [0;39m [2m:[0;39m HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2m2026-01-05T03:44:56.623Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mj.LocalContainerEntityManagerFactoryBean[0;39m [2m:[0;39m Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2m2026-01-05T03:44:58.371Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.a.e.web.EndpointLinksResolver     [0;39m [2m:[0;39m Exposing 13 endpoint(s) beneath base path '/actuator'
+[2m2026-01-05T03:44:58.487Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat started on port(s): 8006 (http) with context path ''
+[2m2026-01-05T03:44:58.505Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.s.petclinic.PetClinicApplication    [0;39m [2m:[0;39m Started PetClinicApplication in 7.979 seconds (process running for 8.716)
+[2m2026-01-05T03:44:58.576Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[nio-8006-exec-2][0;39m [36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2m2026-01-05T03:44:58.576Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[nio-8006-exec-2][0;39m [36mo.s.web.servlet.DispatcherServlet       [0;39m [2m:[0;39m Initializing Servlet 'dispatcherServlet'
+[2m2026-01-05T03:44:58.578Z[0;39m [32m INFO[0;39m [35m81[0;39m [2m---[0;39m [2m[nio-8006-exec-2][0;39m [36mo.s.web.servlet.DispatcherServlet       [0;39m [2m:[0;39m Completed initialization in 2 ms

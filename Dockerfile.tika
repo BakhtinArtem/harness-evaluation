@@ -47,19 +47,23 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install GraalVM (for both JVM and native modes)
-ARG GRAALVM_VERSION=22.3.2
-ARG JAVA_VERSION=17
+ARG GRAALVM_VERSION=23.0.0
+ARG JAVA_VERSION=21
 ENV GRAALVM_HOME=/opt/graalvm
 ENV JAVA_HOME=${GRAALVM_HOME}
 ENV PATH=${JAVA_HOME}/bin:${PATH}
 
 RUN mkdir -p /opt && \
     cd /opt && \
-    curl -L -o graalvm.tar.gz "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${GRAALVM_VERSION}/graalvm-ce-java${JAVA_VERSION}-linux-amd64-${GRAALVM_VERSION}.tar.gz" && \
+    curl -L -o graalvm.tar.gz "https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-${GRAALVM_VERSION}/graalvm-community-jdk-${GRAALVM_VERSION}_linux-x64_bin.tar.gz" && \
     tar -xzf graalvm.tar.gz && \
-    mv graalvm-ce-java${JAVA_VERSION}-${GRAALVM_VERSION} graalvm && \
+    GRAALVM_DIR=$(ls -d graalvm-* | head -1) && \
+    mv "$GRAALVM_DIR" graalvm && \
     rm graalvm.tar.gz && \
-    ${GRAALVM_HOME}/bin/gu install native-image || true
+    ${GRAALVM_HOME}/bin/gu install native-image || true && \
+    ${GRAALVM_HOME}/bin/java -version && \
+    echo "JAVA_HOME=${JAVA_HOME}" && \
+    which java
 
 # Build and install wrk
 RUN cd /tmp && \
@@ -80,7 +84,10 @@ WORKDIR /app
 COPY barista/ /app/barista/
 
 # Build the quarkus-tika application (JAR and NIB for both modes)
-RUN cd /app/barista/benchmarks/quarkus-tika && \
+RUN echo "JAVA_HOME=${JAVA_HOME}" && \
+    ${JAVA_HOME}/bin/java -version && \
+    cd /app/barista/benchmarks/quarkus-tika && \
+    export JAVA_HOME=${JAVA_HOME} && \
     ./build.sh
 
 # Pre-build native image from NIB to avoid rebuilding on each run

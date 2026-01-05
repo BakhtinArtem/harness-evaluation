@@ -50,9 +50,6 @@ Before using this evaluation harness, you should have the following prerequisite
   - **Automated installation**: Run `./install_java_docker.sh` to install Docker automatically
   - **Manual installation**: Install from https://docs.docker.com/get-docker/
 
-# Installing Prerequisites
-
-Before running the barista benchmark scripts, you need to install the required prerequisites. Automated installation scripts are provided:
 
 ## Install Java/GraalVM and Docker
 
@@ -178,19 +175,32 @@ simulation shows how other runnning processes affects results of the
 benchmarking.
 
 ```bash
-# build 
-docker build -f Dockerfile.petclinic -t aape2k/petclinic-isolation-test:2.0.0 .
-docker build -f Dockerfile.tika -t aape2k/tika-isolation-test:2.0.0 .
-docker build -f Dockerfile.shopcart -t aape2k/shopcart-isolation-test:2.0.0 .
+# can be build or can be downloaded from register
+# docker build -f Dockerfile.petclinic -t aape2k/petclinic-isolation-test:2.0.0 .
+# docker build -f Dockerfile.shopcart -t aape2k/shopcart-isolation-test:2.0.0 .
 
 docker run --rm \
   -e DUMMY_CPU_INTENSITY=0.8 \
   -e DUMMY_MEMORY_MB=200 \
+  -v $(pwd)/results_shopcart-sim-native:/app/results-shopcart-native \
   aape2k/shopcart-isolation-test:2.0.0 5 --mode native
 
 docker run --rm \
   -e DUMMY_CPU_INTENSITY=0.8 \
   -e DUMMY_MEMORY_MB=200 \
+  -v $(pwd)/results_shopcart-sim-jvm:/app/results-shopcart-jvm \
+  aape2k/shopcart-isolation-test:2.0.0 5 --mode jvm
+
+docker run --rm \
+  -e DUMMY_CPU_INTENSITY=0.8 \
+  -e DUMMY_MEMORY_MB=200 \
+  -v $(pwd)/results_petclinic-sim-native:/app/results-petclinic-native \
+  aape2k/petclinic-isolation-test:2.0.0 5 --mode native
+
+docker run --rm \
+  -e DUMMY_CPU_INTENSITY=0.8 \
+  -e DUMMY_MEMORY_MB=200 \
+  -v $(pwd)/results_petclinic-sim-jvm:/app/results-petclinic-jvm \
   aape2k/petclinic-isolation-test:2.0.0 5 --mode jvm
 ```
 
