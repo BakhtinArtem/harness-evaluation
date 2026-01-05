@@ -241,17 +241,85 @@ if [ "$SKIP_WRK" = false ]; then
             print_status "Building wrk from source..."
             
             # Check for required build tools
+            DISTRO=$(detect_distro)
+            NEED_BUILD_TOOLS=false
+            NEED_UNZIP=false
+            NEED_OPENSSL=false
+            NEED_ZLIB=false
+            
             if ! command_exists make; then
-                DISTRO=$(detect_distro)
+                NEED_BUILD_TOOLS=true
+            fi
+            
+            if ! command_exists unzip; then
+                NEED_UNZIP=true
+            fi
+            
+            # Check for OpenSSL development headers
+            if [ ! -f /usr/include/openssl/ssl.h ] && [ ! -f /usr/local/include/openssl/ssl.h ]; then
+                NEED_OPENSSL=true
+            fi
+            
+            # Check for zlib development headers
+            if [ ! -f /usr/include/zlib.h ] && [ ! -f /usr/local/include/zlib.h ]; then
+                NEED_ZLIB=true
+            fi
+            
+            if [ "$NEED_BUILD_TOOLS" = true ] || [ "$NEED_UNZIP" = true ] || [ "$NEED_OPENSSL" = true ] || [ "$NEED_ZLIB" = true ]; then
                 case "$DISTRO" in
                     ubuntu|debian)
-                        sudo apt-get install -y build-essential
+                        if [ "$NEED_BUILD_TOOLS" = true ]; then
+                            print_status "Installing build tools..."
+                            sudo apt-get install -y build-essential
+                        fi
+                        if [ "$NEED_UNZIP" = true ]; then
+                            print_status "Installing unzip..."
+                            sudo apt-get install -y unzip
+                        fi
+                        if [ "$NEED_OPENSSL" = true ]; then
+                            print_status "Installing OpenSSL development headers..."
+                            sudo apt-get install -y libssl-dev
+                        fi
+                        if [ "$NEED_ZLIB" = true ]; then
+                            print_status "Installing zlib development headers..."
+                            sudo apt-get install -y zlib1g-dev
+                        fi
                         ;;
                     fedora|rhel|centos)
-                        sudo dnf groupinstall -y "Development Tools" || sudo yum groupinstall -y "Development Tools"
+                        if [ "$NEED_BUILD_TOOLS" = true ]; then
+                            print_status "Installing build tools..."
+                            sudo dnf groupinstall -y "Development Tools" || sudo yum groupinstall -y "Development Tools"
+                        fi
+                        if [ "$NEED_UNZIP" = true ]; then
+                            print_status "Installing unzip..."
+                            sudo dnf install -y unzip || sudo yum install -y unzip
+                        fi
+                        if [ "$NEED_OPENSSL" = true ]; then
+                            print_status "Installing OpenSSL development headers..."
+                            sudo dnf install -y openssl-devel || sudo yum install -y openssl-devel
+                        fi
+                        if [ "$NEED_ZLIB" = true ]; then
+                            print_status "Installing zlib development headers..."
+                            sudo dnf install -y zlib-devel || sudo yum install -y zlib-devel
+                        fi
                         ;;
                     arch|manjaro)
-                        sudo pacman -S --noconfirm base-devel
+                        if [ "$NEED_BUILD_TOOLS" = true ]; then
+                            print_status "Installing build tools..."
+                            sudo pacman -S --noconfirm base-devel
+                        fi
+                        if [ "$NEED_UNZIP" = true ]; then
+                            print_status "Installing unzip..."
+                            sudo pacman -S --noconfirm unzip
+                        fi
+                        if [ "$NEED_OPENSSL" = true ]; then
+                            print_status "Installing OpenSSL development headers..."
+                            sudo pacman -S --noconfirm openssl
+                        fi
+                        if [ "$NEED_ZLIB" = true ]; then
+                            print_status "Installing zlib development headers..."
+                            sudo pacman -S --noconfirm zlib
+                        fi
                         ;;
                 esac
             fi
@@ -306,17 +374,85 @@ if [ "$SKIP_WRK2" = false ]; then
             print_status "Building wrk2 from source..."
             
             # Check for required build tools
+            DISTRO=$(detect_distro)
+            NEED_BUILD_TOOLS=false
+            NEED_UNZIP=false
+            NEED_OPENSSL=false
+            NEED_ZLIB=false
+            
             if ! command_exists make; then
-                DISTRO=$(detect_distro)
+                NEED_BUILD_TOOLS=true
+            fi
+            
+            if ! command_exists unzip; then
+                NEED_UNZIP=true
+            fi
+            
+            # Check for OpenSSL development headers
+            if [ ! -f /usr/include/openssl/ssl.h ] && [ ! -f /usr/local/include/openssl/ssl.h ]; then
+                NEED_OPENSSL=true
+            fi
+            
+            # Check for zlib development headers
+            if [ ! -f /usr/include/zlib.h ] && [ ! -f /usr/local/include/zlib.h ]; then
+                NEED_ZLIB=true
+            fi
+            
+            if [ "$NEED_BUILD_TOOLS" = true ] || [ "$NEED_UNZIP" = true ] || [ "$NEED_OPENSSL" = true ] || [ "$NEED_ZLIB" = true ]; then
                 case "$DISTRO" in
                     ubuntu|debian)
-                        sudo apt-get install -y build-essential
+                        if [ "$NEED_BUILD_TOOLS" = true ]; then
+                            print_status "Installing build tools..."
+                            sudo apt-get install -y build-essential
+                        fi
+                        if [ "$NEED_UNZIP" = true ]; then
+                            print_status "Installing unzip..."
+                            sudo apt-get install -y unzip
+                        fi
+                        if [ "$NEED_OPENSSL" = true ]; then
+                            print_status "Installing OpenSSL development headers..."
+                            sudo apt-get install -y libssl-dev
+                        fi
+                        if [ "$NEED_ZLIB" = true ]; then
+                            print_status "Installing zlib development headers..."
+                            sudo apt-get install -y zlib1g-dev
+                        fi
                         ;;
                     fedora|rhel|centos)
-                        sudo dnf groupinstall -y "Development Tools" || sudo yum groupinstall -y "Development Tools"
+                        if [ "$NEED_BUILD_TOOLS" = true ]; then
+                            print_status "Installing build tools..."
+                            sudo dnf groupinstall -y "Development Tools" || sudo yum groupinstall -y "Development Tools"
+                        fi
+                        if [ "$NEED_UNZIP" = true ]; then
+                            print_status "Installing unzip..."
+                            sudo dnf install -y unzip || sudo yum install -y unzip
+                        fi
+                        if [ "$NEED_OPENSSL" = true ]; then
+                            print_status "Installing OpenSSL development headers..."
+                            sudo dnf install -y openssl-devel || sudo yum install -y openssl-devel
+                        fi
+                        if [ "$NEED_ZLIB" = true ]; then
+                            print_status "Installing zlib development headers..."
+                            sudo dnf install -y zlib-devel || sudo yum install -y zlib-devel
+                        fi
                         ;;
                     arch|manjaro)
-                        sudo pacman -S --noconfirm base-devel
+                        if [ "$NEED_BUILD_TOOLS" = true ]; then
+                            print_status "Installing build tools..."
+                            sudo pacman -S --noconfirm base-devel
+                        fi
+                        if [ "$NEED_UNZIP" = true ]; then
+                            print_status "Installing unzip..."
+                            sudo pacman -S --noconfirm unzip
+                        fi
+                        if [ "$NEED_OPENSSL" = true ]; then
+                            print_status "Installing OpenSSL development headers..."
+                            sudo pacman -S --noconfirm openssl
+                        fi
+                        if [ "$NEED_ZLIB" = true ]; then
+                            print_status "Installing zlib development headers..."
+                            sudo pacman -S --noconfirm zlib
+                        fi
                         ;;
                 esac
             fi

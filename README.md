@@ -8,18 +8,53 @@ Before using this evaluation harness, you should have the following prerequisite
 - **wrk2** - Will be built from source and installed (automatically renamed from `wrk` to `wrk2`)
 - **Build tools** - Will be installed automatically if needed (`make`, `gcc`, `git`, `build-essential`)
 
-## Must be installed manually (NOT installed by script):
+## Can be installed manually or using `install_java_docker.sh`:
 - **Java/GraalVM** - JAVA_HOME environment variable must be set
   - For **JVM mode**: Requires a JVM with `java` executable
   - For **native mode**: Requires GraalVM with `native-image` tool
-  - The script only checks for Java/GraalVM and provides setup instructions
-  - Download from: https://www.graalvm.org/downloads/ or install OpenJDK
+  - The `install_prerequisites.sh` script only checks for Java/GraalVM and provides setup instructions
+  - **Automated installation**: Run `./install_java_docker.sh` to install GraalVM automatically
+  - **Manual installation**: Download from https://www.graalvm.org/downloads/ or install OpenJDK
 - **Docker** (optional) - Required only for running containerized benchmarks
-  - Install from: https://docs.docker.com/get-docker/
+  - **Automated installation**: Run `./install_java_docker.sh` to install Docker automatically
+  - **Manual installation**: Install from https://docs.docker.com/get-docker/
 
 # Installing Prerequisites
 
-Before running the barista benchmark scripts, you need to install the required prerequisites. An automated installation script is provided:
+Before running the barista benchmark scripts, you need to install the required prerequisites. Automated installation scripts are provided:
+
+## Install Java/GraalVM and Docker
+
+To install Java/GraalVM (with native-image support) and Docker:
+
+```bash
+# Install both Java/GraalVM and Docker
+./install_java_docker.sh
+
+# Install only Java/GraalVM
+./install_java_docker.sh --skip-docker
+
+# Install only Docker
+./install_java_docker.sh --skip-java
+
+# Show help
+./install_java_docker.sh --help
+```
+
+This script will:
+- Download and install GraalVM Community Edition (includes native-image)
+- Set JAVA_HOME in your `~/.bashrc`
+- Install Docker Engine and related tools
+- Add your user to the docker group
+- Start and enable Docker service
+
+**Note**: After installation, you may need to:
+- Run `source ~/.bashrc` or start a new shell for JAVA_HOME to take effect
+- Log out and log back in (or run `newgrp docker`) to use Docker without sudo
+
+## Install Other Prerequisites
+
+To install Python 3, wrk, and wrk2:
 
 ```bash
 # Install all prerequisites
