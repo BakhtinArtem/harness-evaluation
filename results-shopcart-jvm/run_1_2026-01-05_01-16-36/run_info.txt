@@ -1,0 +1,5 @@
+Run Number: 1/5
+Timestamp: 2026-01-05_01-16-36
+Execution Mode: jvm
+Source Directory: /home/bakhtinartyom1205/projects/harness-evaluation/barista/logs/2026-01-05_01-16-36-bench-825391
+Destination Directory: /home/bakhtinartyom1205/projects/harness-evaluation/results-shopcart-jvm/run_1_2026-01-05_01-16-36

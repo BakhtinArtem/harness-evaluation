@@ -1,0 +1,240 @@
+2026-01-05 01:43:41,606 [INFO] Running Barista harness with args: ['./barista.py', 'quarkus-tika', '--mode', 'jvm', '--resource-usage-polling-interval', '0.02', '--startup-iteration-count', '0', '--warmup-iteration-count', '0']
+2026-01-05 01:43:41,606 [INFO] Java home is pointing to "/opt/graalvm".
+2026-01-05 01:43:41,606 [INFO] Getting platform version information with command "/opt/graalvm/bin/java --version"
+2026-01-05 01:43:41,666 [INFO] Getting platform version information with command "/opt/graalvm/bin/native-image --version"
+2026-01-05 01:43:41,672 [INFO] Version of the available JVM at java home:
+openjdk 21.0.1 2023-10-17
+OpenJDK Runtime Environment GraalVM CE 21.0.1+12.1 (build 21.0.1+12-jvmci-23.1-b19)
+OpenJDK 64-Bit Server VM GraalVM CE 21.0.1+12.1 (build 21.0.1+12-jvmci-23.1-b19, mixed mode, sharing)
+native-image 21.0.1 2023-10-17
+GraalVM Runtime Environment GraalVM CE 21.0.1+12.1 (build 21.0.1+12-jvmci-23.1-b19)
+Substrate VM GraalVM CE 21.0.1+12.1 (build 21.0.1+12, serial gc)
+
+2026-01-05 01:43:41,672 [INFO] Locating the app build artifact with command "/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika/build.sh --get-jar"
+2026-01-05 01:43:41,672 [INFO] Running the following command in a subprocess:
+/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika/build.sh --get-jar
+2026-01-05 01:43:41,677 [INFO] Dumping the stdout of the subprocess:
+application jar file path is: /home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika/target/tika-quickstart-1.0.11-runner.jar
+
+2026-01-05 01:43:41,677 [INFO] Dumping the stderr of the subprocess:
++ '[' 1 -gt 0 ']'
++ '[' --get-jar = --help ']'
++++ dirname /home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika/build.sh
+++ cd -P /home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika
+++ pwd
++ DIR=/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika
++ VERSION=1.0.11
++ JAR=/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika/target/tika-quickstart-1.0.11-runner.jar
++ NIB=/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika/target/tika-quickstart-1.0.11.nib
++ IMAGE_NAME=tika-quickstart-1.0.11-runner
++ '[' 1 -gt 0 ']'
++ '[' --get-jar = --get-jar ']'
++ echo 'application jar file path is: /home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika/target/tika-quickstart-1.0.11-runner.jar'
++ exit 0
+
+2026-01-05 01:43:41,677 [INFO] Benchmarking of http://127.0.0.1:8004 with JVM mode
+Redirecting output to: logs/2026-01-05_01-43-41-bench-871156
+	 - Startup: Repeat 0 iterations: recording first 10 requests, timeout after 60 seconds of no response
+	 - Warmup: 0 iterations of 10 seconds with 16 threads and 16 connections (lua script: ['/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika/workloads/mixed-requests.lua'])
+	 - Throughput: 0 iterations of 30 seconds with 16 threads and 16 connections (lua script: ['/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika/workloads/mixed-requests.lua'])
+	 - Latency: 1 iterations of 30 seconds with 16 threads and 16 connections at [1000] reqs/s (lua script: ['/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika/workloads/mixed-requests.lua'])
+Total runtime: 0:01:00. Expected finish time 2026-01-05 01:44:41.677673
+
+2026-01-05 01:43:41,677 [INFO] Starting microservice with:
+/opt/graalvm/bin/java -jar /home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika/target/tika-quickstart-1.0.11-runner.jar
+2026-01-05 01:43:41,678 [INFO] Detected app process (pid=75704) with command-line:
+/opt/graalvm/bin/java -jar /home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika/target/tika-quickstart-1.0.11-runner.jar
+2026-01-05 01:43:41,678 [INFO] Running startup measurements: sending 10 GET request(s) to http://127.0.0.1:8004/
+2026-01-05 01:43:42,852 [INFO] Received response #1 in 1174.43 ms
+2026-01-05 01:43:42,855 [INFO] Received response #2 in   2.67 ms
+2026-01-05 01:43:42,858 [INFO] Received response #3 in   2.76 ms
+2026-01-05 01:43:42,860 [INFO] Received response #4 in   2.58 ms
+2026-01-05 01:43:42,862 [INFO] Received response #5 in   1.79 ms
+2026-01-05 01:43:42,864 [INFO] Received response #6 in   2.10 ms
+2026-01-05 01:43:42,866 [INFO] Received response #7 in   1.92 ms
+2026-01-05 01:43:42,868 [INFO] Received response #8 in   1.73 ms
+2026-01-05 01:43:42,870 [INFO] Received response #9 in   1.17 ms
+2026-01-05 01:43:42,871 [INFO] Received response #10 in   1.15 ms
+2026-01-05 01:43:42,871 [INFO] Monitoring memory and CPU usage of process 75704 every 20.0ms
+2026-01-05 01:43:42,872 [WARNING] Average throughput was: 0 ops/s. Setting average throughput to 1
+2026-01-05 01:43:42,874 [INFO] Average throughput: 1 ops/s
+2026-01-05 01:43:42,874 [INFO] Extracted framework startup time of 988.0 ms
+2026-01-05 01:43:42,874 [INFO] Getting fixed rates for latency
+2026-01-05 01:43:42,874 [INFO] Now measuring the latency for FIXED mode at 1000 for 1 iterations
+2026-01-05 01:43:42,874 [INFO] Running latency iteration 1/1
+2026-01-05 01:43:42,877 [INFO] Begining to measure latency
+2026-01-05 01:43:42,877 [INFO] Running latency command:
+wrk2 -d 30s -R 1000 --latency http://127.0.0.1:8004 -t 16 -c 16 --script /home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/quarkus-tika/workloads/mixed-requests.lua -- 16
+2026-01-05 01:44:12,893 [INFO] Finished measuring latency
+2026-01-05 01:44:12,896 [INFO] Dumping wrk outputs to file 'logs/2026-01-05_01-43-41-bench-871156/FIXED-1000-latency-1-dump.txt' and to stdout:
+Running 30s test @ http://127.0.0.1:8004
+  16 threads and 16 connections
+  Thread calibration: mean lat.: 135.520ms, rate sampling interval: 1212ms
+  Thread calibration: mean lat.: 116.947ms, rate sampling interval: 1026ms
+  Thread calibration: mean lat.: 118.962ms, rate sampling interval: 1052ms
+  Thread calibration: mean lat.: 140.759ms, rate sampling interval: 1084ms
+  Thread calibration: mean lat.: 146.319ms, rate sampling interval: 1145ms
+  Thread calibration: mean lat.: 148.256ms, rate sampling interval: 1217ms
+  Thread calibration: mean lat.: 140.203ms, rate sampling interval: 1215ms
+  Thread calibration: mean lat.: 136.909ms, rate sampling interval: 1157ms
+  Thread calibration: mean lat.: 147.964ms, rate sampling interval: 1262ms
+  Thread calibration: mean lat.: 136.396ms, rate sampling interval: 1162ms
+  Thread calibration: mean lat.: 132.836ms, rate sampling interval: 1148ms
+  Thread calibration: mean lat.: 153.967ms, rate sampling interval: 1196ms
+  Thread calibration: mean lat.: 134.011ms, rate sampling interval: 1158ms
+  Thread calibration: mean lat.: 146.921ms, rate sampling interval: 1173ms
+  Thread calibration: mean lat.: 140.570ms, rate sampling interval: 1161ms
+  Thread calibration: mean lat.: 113.556ms, rate sampling interval: 963ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.14ms    2.80ms  30.53ms   95.92%
+    Req/Sec    61.98      0.46    63.00     99.64%
+  Latency Distribution (HdrHistogram - Recorded Latency)
+ 50.000%    2.58ms
+ 75.000%    3.28ms
+ 90.000%    4.00ms
+ 99.000%   20.78ms
+ 99.900%   27.17ms
+ 99.990%   30.40ms
+ 99.999%   30.54ms
+100.000%   30.54ms
+
+  Detailed Percentile spectrum:
+       Value   Percentile   TotalCount 1/(1-Percentile)
+
+       1.107     0.000000            1         1.00
+       1.720     0.100000         2010         1.11
+       1.959     0.200000         4000         1.25
+       2.161     0.300000         6002         1.43
+       2.355     0.400000         8000         1.67
+       2.583     0.500000         9995         2.00
+       2.711     0.550000        10997         2.22
+       2.841     0.600000        12005         2.50
+       2.977     0.650000        12998         2.86
+       3.127     0.700000        13998         3.33
+       3.281     0.750000        14991         4.00
+       3.371     0.775000        15491         4.44
+       3.465     0.800000        15996         5.00
+       3.559     0.825000        16492         5.71
+       3.667     0.850000        16989         6.67
+       3.809     0.875000        17486         8.00
+       3.887     0.887500        17736         8.89
+       4.001     0.900000        17992        10.00
+       4.135     0.912500        18241        11.43
+       4.331     0.925000        18489        13.33
+       4.595     0.937500        18735        16.00
+       4.815     0.943750        18864        17.78
+       5.119     0.950000        18985        20.00
+       5.595     0.956250        19110        22.86
+       6.663     0.962500        19235        26.67
+       8.847     0.968750        19360        32.00
+       9.823     0.971875        19422        35.56
+      10.759     0.975000        19485        40.00
+      11.791     0.978125        19547        45.71
+      13.031     0.981250        19610        53.33
+      14.887     0.984375        19672        64.00
+      16.607     0.985938        19703        71.11
+      18.847     0.987500        19735        80.00
+      19.983     0.989062        19766        91.43
+      21.183     0.990625        19798       106.67
+      21.983     0.992188        19828       128.00
+      22.559     0.992969        19844       142.22
+      22.799     0.993750        19860       160.00
+      23.407     0.994531        19875       182.86
+      23.951     0.995313        19892       213.33
+      24.399     0.996094        19906       256.00
+      24.511     0.996484        19914       284.44
+      24.927     0.996875        19922       320.00
+      25.231     0.997266        19931       365.71
+      25.423     0.997656        19939       426.67
+      25.807     0.998047        19945       512.00
+      26.095     0.998242        19949       568.89
+      26.287     0.998437        19953       640.00
+      26.671     0.998633        19957       731.43
+      26.991     0.998828        19961       853.33
+      27.311     0.999023        19965      1024.00
+      27.743     0.999121        19967      1137.78
+      27.823     0.999219        19969      1280.00
+      28.159     0.999316        19971      1462.86
+      28.319     0.999414        19973      1706.67
+      29.279     0.999512        19975      2048.00
+      29.647     0.999561        19976      2275.56
+      29.727     0.999609        19977      2560.00
+      29.807     0.999658        19978      2925.71
+      29.823     0.999707        19979      3413.33
+      29.839     0.999756        19980      4096.00
+      29.839     0.999780        19980      4551.11
+      30.239     0.999805        19981      5120.00
+      30.239     0.999829        19981      5851.43
+      30.399     0.999854        19982      6826.67
+      30.399     0.999878        19982      8192.00
+      30.399     0.999890        19982      9102.22
+      30.479     0.999902        19983     10240.00
+      30.479     0.999915        19983     11702.86
+      30.479     0.999927        19983     13653.33
+      30.479     0.999939        19983     16384.00
+      30.479     0.999945        19983     18204.44
+      30.543     0.999951        19984     20480.00
+      30.543     1.000000        19984          inf
+#[Mean    =        3.142, StdDeviation   =        2.801]
+#[Max     =       30.528, Total count    =        19984]
+#[Buckets =           27, SubBuckets     =         2048]
+----------------------------------------------------------
+  30016 requests in 30.00s, 2.63MB read
+Requests/sec:   1000.44
+Transfer/sec:     89.88KB
+
+2026-01-05 01:44:12,896 [INFO] Saving all collected metrics to JSON file: /home/bakhtinartyom1205/projects/harness-evaluation/barista/logs/2026-01-05_01-43-41-bench-871156/barista-results.json
+2026-01-05 01:44:12,903 [INFO] Writing to csv files
+2026-01-05 01:44:12,903 [INFO] Producing final_measurements-barista_latency_results.csv
+2026-01-05 01:44:12,907 [INFO] Dumping application outputs to: logs/2026-01-05_01-43-41-bench-871156/app-dump.txt
+2026-01-05 01:44:12,907 [INFO] Benchmark done
+2026-01-05 01:44:12,978 [INFO] ================================================================================
+2026-01-05 01:44:12,978 [INFO] Barista report for benchmark 'quarkus-tika'
+2026-01-05 01:44:12,978 [INFO] Run command: python3 ./barista.py quarkus-tika --mode jvm --resource-usage-polling-interval 0.02 --startup-iteration-count 0 --warmup-iteration-count 0
+2026-01-05 01:44:12,978 [INFO] Resource usage results:
+2026-01-05 01:44:12,978 [INFO] 	Resident Set Size:
+2026-01-05 01:44:12,978 [INFO] 		              p100.0              3098.39 MB
+2026-01-05 01:44:12,978 [INFO] 		               p99.0              3094.89 MB
+2026-01-05 01:44:12,978 [INFO] 		               p98.0              3094.62 MB
+2026-01-05 01:44:12,978 [INFO] 		               p97.0              3094.53 MB
+2026-01-05 01:44:12,978 [INFO] 		               p96.0              3094.53 MB
+2026-01-05 01:44:12,978 [INFO] 		               p95.0              3094.53 MB
+2026-01-05 01:44:12,978 [INFO] 		               p90.0              3094.16 MB
+2026-01-05 01:44:12,978 [INFO] 		               p75.0              2999.91 MB
+2026-01-05 01:44:12,978 [INFO] 		               p50.0              2704.92 MB
+2026-01-05 01:44:12,978 [INFO] 		               p25.0              2208.85 MB
+2026-01-05 01:44:12,978 [INFO] 	Virtual Memory Size:
+2026-01-05 01:44:12,978 [INFO] 		              p100.0             22058.04 MB
+2026-01-05 01:44:12,979 [INFO] 		               p99.0             22056.54 MB
+2026-01-05 01:44:12,979 [INFO] 		               p98.0             22039.34 MB
+2026-01-05 01:44:12,979 [INFO] 		               p97.0             22037.04 MB
+2026-01-05 01:44:12,979 [INFO] 		               p96.0             22036.54 MB
+2026-01-05 01:44:12,979 [INFO] 		               p95.0             22036.54 MB
+2026-01-05 01:44:12,979 [INFO] 		               p90.0             22035.54 MB
+2026-01-05 01:44:12,979 [INFO] 		               p75.0             22035.04 MB
+2026-01-05 01:44:12,979 [INFO] 		               p50.0             22034.54 MB
+2026-01-05 01:44:12,979 [INFO] 		               p25.0             22033.04 MB
+2026-01-05 01:44:12,979 [INFO] 	System-wide CPU utilization:
+2026-01-05 01:44:12,979 [INFO] 		              p100.0               842.36 %
+2026-01-05 01:44:12,979 [INFO] 		               p99.0               792.64 %
+2026-01-05 01:44:12,979 [INFO] 		               p98.0               790.69 %
+2026-01-05 01:44:12,979 [INFO] 		               p97.0               790.01 %
+2026-01-05 01:44:12,979 [INFO] 		               p96.0               789.39 %
+2026-01-05 01:44:12,979 [INFO] 		               p95.0               743.01 %
+2026-01-05 01:44:12,979 [INFO] 		               p90.0               691.44 %
+2026-01-05 01:44:12,979 [INFO] 		               p75.0               395.47 %
+2026-01-05 01:44:12,979 [INFO] 		               p50.0               296.77 %
+2026-01-05 01:44:12,979 [INFO] 		               p25.0               198.30 %
+2026-01-05 01:44:12,979 [INFO] Latency results: 
+2026-01-05 01:44:12,979 [INFO] Results of final_measurements latency measurement
+2026-01-05 01:44:12,979 [INFO] 	Measures for latency iteration 1:
+2026-01-05 01:44:12,979 [INFO] 		                rate                 1000 ops/s
+2026-01-05 01:44:12,979 [INFO] 		              50.000                 2.58 ms
+2026-01-05 01:44:12,979 [INFO] 		              75.000                 3.28 ms
+2026-01-05 01:44:12,979 [INFO] 		              90.000                 4.00 ms
+2026-01-05 01:44:12,979 [INFO] 		              99.000                20.78 ms
+2026-01-05 01:44:12,979 [INFO] 		              99.900                27.17 ms
+2026-01-05 01:44:12,979 [INFO] 		              99.990                30.40 ms
+2026-01-05 01:44:12,980 [INFO] 		              99.999                30.54 ms
+2026-01-05 01:44:12,980 [INFO] 		             100.000                30.54 ms
+2026-01-05 01:44:12,980 [INFO] ================================================================================

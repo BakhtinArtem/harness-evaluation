@@ -1,0 +1,6 @@
+Run Number: 1/5
+Timestamp: 2026-01-05_01-43-41
+Execution Mode: jvm
+Benchmark: quarkus-tika
+Source Directory: /home/bakhtinartyom1205/projects/harness-evaluation/barista/logs/2026-01-05_01-43-41-bench-871156
+Destination Directory: /home/bakhtinartyom1205/projects/harness-evaluation/results-tika-jvm/run_1_2026-01-05_01-43-41

@@ -1,0 +1,216 @@
+2026-01-05 01:16:04,589 [INFO] Running Barista harness with args: ['./barista.py', 'micronaut-shopcart', '--mode', 'native', '--resource-usage-polling-interval', '0.02', '--startup-iteration-count', '0', '--warmup-iteration-count', '0', '--app-executable', '/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/micronaut-shopcart/target/shopcart-0.3.10.output/default/micronaut-shopcart']
+2026-01-05 01:16:04,589 [INFO] Java home is pointing to "/opt/graalvm".
+2026-01-05 01:16:04,589 [INFO] Getting platform version information with command "/opt/graalvm/bin/java --version"
+2026-01-05 01:16:04,652 [INFO] Getting platform version information with command "/opt/graalvm/bin/native-image --version"
+2026-01-05 01:16:04,657 [INFO] Version of the available JVM at java home:
+openjdk 21.0.1 2023-10-17
+OpenJDK Runtime Environment GraalVM CE 21.0.1+12.1 (build 21.0.1+12-jvmci-23.1-b19)
+OpenJDK 64-Bit Server VM GraalVM CE 21.0.1+12.1 (build 21.0.1+12-jvmci-23.1-b19, mixed mode, sharing)
+native-image 21.0.1 2023-10-17
+GraalVM Runtime Environment GraalVM CE 21.0.1+12.1 (build 21.0.1+12-jvmci-23.1-b19)
+Substrate VM GraalVM CE 21.0.1+12.1 (build 21.0.1+12, serial gc)
+
+2026-01-05 01:16:04,657 [INFO] Benchmarking of http://127.0.0.1:8001 with NATIVE mode
+Redirecting output to: logs/2026-01-05_01-16-04-bench-08cb98
+	 - Startup: Repeat 0 iterations: recording first 10 requests, timeout after 60 seconds of no response
+	 - Warmup: 0 iterations of 10 seconds with 16 threads and 16 connections (lua script: ['/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/micronaut-shopcart/workloads/mixed-requests.lua'])
+	 - Throughput: 0 iterations of 30 seconds with 16 threads and 16 connections (lua script: ['/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/micronaut-shopcart/workloads/mixed-requests.lua'])
+	 - Latency: 1 iterations of 30 seconds with 16 threads and 16 connections at [800] reqs/s (lua script: ['/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/micronaut-shopcart/workloads/mixed-requests.lua'])
+Total runtime: 0:01:00. Expected finish time 2026-01-05 01:17:04.657649
+
+2026-01-05 01:16:04,657 [INFO] Starting microservice with:
+/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/micronaut-shopcart/target/shopcart-0.3.10.output/default/micronaut-shopcart
+2026-01-05 01:16:04,658 [INFO] Detected app process (pid=60609) with command-line:
+/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/micronaut-shopcart/target/shopcart-0.3.10.output/default/micronaut-shopcart
+2026-01-05 01:16:04,658 [INFO] Running startup measurements: sending 10 GET request(s) to http://127.0.0.1:8001/
+2026-01-05 01:16:04,688 [INFO] Received response #1 in  30.62 ms
+2026-01-05 01:16:04,690 [INFO] Received response #2 in   1.54 ms
+2026-01-05 01:16:04,691 [INFO] Received response #3 in   1.08 ms
+2026-01-05 01:16:04,692 [INFO] Received response #4 in   1.10 ms
+2026-01-05 01:16:04,693 [INFO] Received response #5 in   1.04 ms
+2026-01-05 01:16:04,694 [INFO] Received response #6 in   1.04 ms
+2026-01-05 01:16:04,695 [INFO] Received response #7 in   1.02 ms
+2026-01-05 01:16:04,696 [INFO] Received response #8 in   0.96 ms
+2026-01-05 01:16:04,697 [INFO] Received response #9 in   0.75 ms
+2026-01-05 01:16:04,698 [INFO] Received response #10 in   0.50 ms
+2026-01-05 01:16:04,698 [INFO] Monitoring memory and CPU usage of process 60609 every 20.0ms
+2026-01-05 01:16:04,699 [WARNING] Average throughput was: 0 ops/s. Setting average throughput to 1
+2026-01-05 01:16:04,701 [INFO] Average throughput: 1 ops/s
+2026-01-05 01:16:04,701 [INFO] Getting fixed rates for latency
+2026-01-05 01:16:04,701 [INFO] Now measuring the latency for FIXED mode at 800 for 1 iterations
+2026-01-05 01:16:04,701 [INFO] Extracted framework startup time of 15.0 ms
+2026-01-05 01:16:04,701 [INFO] Running latency iteration 1/1
+2026-01-05 01:16:04,704 [INFO] Begining to measure latency
+2026-01-05 01:16:04,704 [INFO] Running latency command:
+wrk2 -d 30s -R 800 --latency http://127.0.0.1:8001 -t 16 -c 16 --script /home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/micronaut-shopcart/workloads/mixed-requests.lua -- 16
+2026-01-05 01:16:34,714 [INFO] Finished measuring latency
+2026-01-05 01:16:34,716 [INFO] Dumping wrk outputs to file 'logs/2026-01-05_01-16-04-bench-08cb98/FIXED-800-latency-1-dump.txt' and to stdout:
+Running 30s test @ http://127.0.0.1:8001
+  16 threads and 16 connections
+  Thread calibration: mean lat.: 0.919ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.883ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.873ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.858ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.898ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.843ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.868ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.850ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.836ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.864ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.847ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.849ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.831ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.840ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.834ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 0.854ms, rate sampling interval: 10ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.96ms  319.45us   5.04ms   62.91%
+    Req/Sec    52.15     51.89   111.00     83.84%
+  Latency Distribution (HdrHistogram - Recorded Latency)
+ 50.000%    0.96ms
+ 75.000%    1.21ms
+ 90.000%    1.38ms
+ 99.000%    1.54ms
+ 99.900%    1.92ms
+ 99.990%    4.33ms
+ 99.999%    5.05ms
+100.000%    5.05ms
+
+  Detailed Percentile spectrum:
+       Value   Percentile   TotalCount 1/(1-Percentile)
+
+       0.174     0.000000            1         1.00
+       0.545     0.100000         1602         1.11
+       0.655     0.200000         3199         1.25
+       0.759     0.300000         4807         1.43
+       0.860     0.400000         6401         1.67
+       0.957     0.500000         8003         2.00
+       1.004     0.550000         8792         2.22
+       1.056     0.600000         9592         2.50
+       1.106     0.650000        10393         2.86
+       1.158     0.700000        11198         3.33
+       1.210     0.750000        11998         4.00
+       1.235     0.775000        12390         4.44
+       1.262     0.800000        12798         5.00
+       1.291     0.825000        13191         5.71
+       1.322     0.850000        13588         6.67
+       1.351     0.875000        13990         8.00
+       1.365     0.887500        14203         8.89
+       1.379     0.900000        14387        10.00
+       1.393     0.912500        14594        11.43
+       1.408     0.925000        14790        13.33
+       1.422     0.937500        14988        16.00
+       1.429     0.943750        15086        17.78
+       1.439     0.950000        15191        20.00
+       1.448     0.956250        15293        22.86
+       1.458     0.962500        15396        26.67
+       1.471     0.968750        15491        32.00
+       1.477     0.971875        15540        35.56
+       1.483     0.975000        15585        40.00
+       1.491     0.978125        15638        45.71
+       1.502     0.981250        15687        53.33
+       1.514     0.984375        15737        64.00
+       1.521     0.985938        15763        71.11
+       1.528     0.987500        15786        80.00
+       1.538     0.989062        15812        91.43
+       1.551     0.990625        15837       106.67
+       1.563     0.992188        15860       128.00
+       1.571     0.992969        15874       142.22
+       1.579     0.993750        15885       160.00
+       1.591     0.994531        15898       182.86
+       1.615     0.995313        15910       213.33
+       1.636     0.996094        15922       256.00
+       1.650     0.996484        15928       284.44
+       1.662     0.996875        15935       320.00
+       1.687     0.997266        15941       365.71
+       1.719     0.997656        15947       426.67
+       1.761     0.998047        15953       512.00
+       1.779     0.998242        15956       568.89
+       1.827     0.998437        15960       640.00
+       1.858     0.998633        15963       731.43
+       1.867     0.998828        15966       853.33
+       1.923     0.999023        15969      1024.00
+       1.927     0.999121        15970      1137.78
+       2.055     0.999219        15972      1280.00
+       2.159     0.999316        15974      1462.86
+       2.211     0.999414        15975      1706.67
+       3.373     0.999512        15977      2048.00
+       3.373     0.999561        15977      2275.56
+       3.723     0.999609        15978      2560.00
+       3.769     0.999658        15979      2925.71
+       3.927     0.999707        15980      3413.33
+       4.159     0.999756        15981      4096.00
+       4.159     0.999780        15981      4551.11
+       4.159     0.999805        15981      5120.00
+       4.331     0.999829        15982      5851.43
+       4.331     0.999854        15982      6826.67
+       4.571     0.999878        15983      8192.00
+       4.571     0.999890        15983      9102.22
+       4.571     0.999902        15983     10240.00
+       4.571     0.999915        15983     11702.86
+       4.571     0.999927        15983     13653.33
+       5.047     0.999939        15984     16384.00
+       5.047     1.000000        15984          inf
+#[Mean    =        0.959, StdDeviation   =        0.319]
+#[Max     =        5.044, Total count    =        15984]
+#[Buckets =           27, SubBuckets     =         2048]
+----------------------------------------------------------
+  24016 requests in 30.00s, 7.17MB read
+Requests/sec:    800.51
+Transfer/sec:    244.80KB
+
+2026-01-05 01:16:34,716 [INFO] Saving all collected metrics to JSON file: /home/bakhtinartyom1205/projects/harness-evaluation/barista/logs/2026-01-05_01-16-04-bench-08cb98/barista-results.json
+2026-01-05 01:16:34,722 [INFO] Writing to csv files
+2026-01-05 01:16:34,723 [INFO] Producing final_measurements-barista_latency_results.csv
+2026-01-05 01:16:34,726 [INFO] Dumping application outputs to: logs/2026-01-05_01-16-04-bench-08cb98/app-dump.txt
+2026-01-05 01:16:34,726 [INFO] Benchmark done
+2026-01-05 01:16:34,747 [INFO] ================================================================================
+2026-01-05 01:16:34,747 [INFO] Barista report for benchmark 'micronaut-shopcart'
+2026-01-05 01:16:34,747 [INFO] Run command: python3 ./barista.py micronaut-shopcart --mode native --resource-usage-polling-interval 0.02 --startup-iteration-count 0 --warmup-iteration-count 0 --app-executable /home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/micronaut-shopcart/target/shopcart-0.3.10.output/default/micronaut-shopcart
+2026-01-05 01:16:34,747 [INFO] Resource usage results:
+2026-01-05 01:16:34,748 [INFO] 	Resident Set Size:
+2026-01-05 01:16:34,748 [INFO] 		              p100.0               120.73 MB
+2026-01-05 01:16:34,748 [INFO] 		               p99.0               120.73 MB
+2026-01-05 01:16:34,748 [INFO] 		               p98.0               120.73 MB
+2026-01-05 01:16:34,748 [INFO] 		               p97.0               120.73 MB
+2026-01-05 01:16:34,748 [INFO] 		               p96.0               120.73 MB
+2026-01-05 01:16:34,748 [INFO] 		               p95.0               120.73 MB
+2026-01-05 01:16:34,748 [INFO] 		               p90.0               120.73 MB
+2026-01-05 01:16:34,748 [INFO] 		               p75.0               120.73 MB
+2026-01-05 01:16:34,748 [INFO] 		               p50.0               120.73 MB
+2026-01-05 01:16:34,748 [INFO] 		               p25.0               119.82 MB
+2026-01-05 01:16:34,748 [INFO] 	Virtual Memory Size:
+2026-01-05 01:16:34,748 [INFO] 		              p100.0              1459.48 MB
+2026-01-05 01:16:34,748 [INFO] 		               p99.0              1459.48 MB
+2026-01-05 01:16:34,748 [INFO] 		               p98.0              1459.48 MB
+2026-01-05 01:16:34,748 [INFO] 		               p97.0              1459.48 MB
+2026-01-05 01:16:34,748 [INFO] 		               p96.0              1459.48 MB
+2026-01-05 01:16:34,749 [INFO] 		               p95.0              1459.48 MB
+2026-01-05 01:16:34,749 [INFO] 		               p90.0              1459.48 MB
+2026-01-05 01:16:34,749 [INFO] 		               p75.0              1459.48 MB
+2026-01-05 01:16:34,749 [INFO] 		               p50.0              1458.98 MB
+2026-01-05 01:16:34,749 [INFO] 		               p25.0              1457.48 MB
+2026-01-05 01:16:34,749 [INFO] 	System-wide CPU utilization:
+2026-01-05 01:16:34,749 [INFO] 		              p100.0                99.35 %
+2026-01-05 01:16:34,749 [INFO] 		               p99.0                49.68 %
+2026-01-05 01:16:34,749 [INFO] 		               p98.0                49.66 %
+2026-01-05 01:16:34,749 [INFO] 		               p97.0                49.66 %
+2026-01-05 01:16:34,749 [INFO] 		               p96.0                49.65 %
+2026-01-05 01:16:34,749 [INFO] 		               p95.0                49.65 %
+2026-01-05 01:16:34,749 [INFO] 		               p90.0                49.63 %
+2026-01-05 01:16:34,749 [INFO] 		               p75.0                49.50 %
+2026-01-05 01:16:34,750 [INFO] 		               p50.0                 0.00 %
+2026-01-05 01:16:34,750 [INFO] 		               p25.0                 0.00 %
+2026-01-05 01:16:34,750 [INFO] Latency results: 
+2026-01-05 01:16:34,750 [INFO] Results of final_measurements latency measurement
+2026-01-05 01:16:34,750 [INFO] 	Measures for latency iteration 1:
+2026-01-05 01:16:34,750 [INFO] 		                rate                  800 ops/s
+2026-01-05 01:16:34,750 [INFO] 		              50.000                 0.96 ms
+2026-01-05 01:16:34,750 [INFO] 		              75.000                 1.21 ms
+2026-01-05 01:16:34,750 [INFO] 		              90.000                 1.38 ms
+2026-01-05 01:16:34,750 [INFO] 		              99.000                 1.54 ms
+2026-01-05 01:16:34,750 [INFO] 		              99.900                 1.92 ms
+2026-01-05 01:16:34,750 [INFO] 		              99.990                 4.33 ms
+2026-01-05 01:16:34,750 [INFO] 		              99.999                 5.05 ms
+2026-01-05 01:16:34,750 [INFO] 		             100.000                 5.05 ms
+2026-01-05 01:16:34,750 [INFO] ================================================================================

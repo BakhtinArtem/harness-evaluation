@@ -1,0 +1,9 @@
+script,iteration,request_rate,percentile,latency
+mixed-requests.lua,0,3000,50.0,1.68
+mixed-requests.lua,0,3000,75.0,1.99
+mixed-requests.lua,0,3000,90.0,2.31
+mixed-requests.lua,0,3000,99.0,12.59
+mixed-requests.lua,0,3000,99.9,20.58
+mixed-requests.lua,0,3000,99.99,23.49
+mixed-requests.lua,0,3000,99.999,26.14
+mixed-requests.lua,0,3000,100.0,26.7

@@ -1,0 +1,226 @@
+2026-01-05 01:25:26,276 [INFO] Running Barista harness with args: ['./barista.py', 'spring-petclinic', '--mode', 'native', '--resource-usage-polling-interval', '0.02', '--startup-iteration-count', '0', '--warmup-iteration-count', '0', '--app-executable', '/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/spring-petclinic/spring-petclinic-sources/target/spring-petclinic-3.0.0-SNAPSHOT.output/default/spring-petclinic']
+2026-01-05 01:25:26,276 [INFO] Java home is pointing to "/opt/graalvm".
+2026-01-05 01:25:26,276 [INFO] Getting platform version information with command "/opt/graalvm/bin/java --version"
+2026-01-05 01:25:26,334 [INFO] Getting platform version information with command "/opt/graalvm/bin/native-image --version"
+2026-01-05 01:25:26,339 [INFO] Version of the available JVM at java home:
+openjdk 21.0.1 2023-10-17
+OpenJDK Runtime Environment GraalVM CE 21.0.1+12.1 (build 21.0.1+12-jvmci-23.1-b19)
+OpenJDK 64-Bit Server VM GraalVM CE 21.0.1+12.1 (build 21.0.1+12-jvmci-23.1-b19, mixed mode, sharing)
+native-image 21.0.1 2023-10-17
+GraalVM Runtime Environment GraalVM CE 21.0.1+12.1 (build 21.0.1+12-jvmci-23.1-b19)
+Substrate VM GraalVM CE 21.0.1+12.1 (build 21.0.1+12, serial gc)
+
+2026-01-05 01:25:26,339 [INFO] Benchmarking of http://127.0.0.1:8006 with NATIVE mode
+Redirecting output to: logs/2026-01-05_01-25-26-bench-8811e7
+	 - Startup: Repeat 0 iterations: recording first 10 requests, timeout after 300 seconds of no response
+	 - Warmup: 0 iterations of 15 seconds with 16 threads and 16 connections (lua script: ['/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/spring-petclinic/workloads/mixed-requests.lua'])
+	 - Throughput: 0 iterations of 30 seconds with 16 threads and 16 connections (lua script: ['/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/spring-petclinic/workloads/mixed-requests.lua'])
+	 - Latency: 1 iterations of 30 seconds with 16 threads and 16 connections at [3000] reqs/s (lua script: ['/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/spring-petclinic/workloads/mixed-requests.lua'])
+Total runtime: 0:01:00. Expected finish time 2026-01-05 01:26:26.339564
+
+2026-01-05 01:25:26,339 [INFO] Starting microservice with:
+/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/spring-petclinic/spring-petclinic-sources/target/spring-petclinic-3.0.0-SNAPSHOT.output/default/spring-petclinic
+2026-01-05 01:25:26,340 [INFO] Detected app process (pid=66171) with command-line:
+/home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/spring-petclinic/spring-petclinic-sources/target/spring-petclinic-3.0.0-SNAPSHOT.output/default/spring-petclinic
+2026-01-05 01:25:26,340 [INFO] Running startup measurements: sending 10 GET request(s) to http://127.0.0.1:8006/
+2026-01-05 01:25:26,648 [INFO] Received response #1 in 309.08 ms
+2026-01-05 01:25:26,650 [INFO] Received response #2 in   1.11 ms
+2026-01-05 01:25:26,651 [INFO] Received response #3 in   0.81 ms
+2026-01-05 01:25:26,651 [INFO] Received response #4 in   0.76 ms
+2026-01-05 01:25:26,652 [INFO] Received response #5 in   0.75 ms
+2026-01-05 01:25:26,653 [INFO] Received response #6 in   0.74 ms
+2026-01-05 01:25:26,654 [INFO] Received response #7 in   0.75 ms
+2026-01-05 01:25:26,655 [INFO] Received response #8 in   0.93 ms
+2026-01-05 01:25:26,656 [INFO] Received response #9 in   0.92 ms
+2026-01-05 01:25:26,657 [INFO] Received response #10 in   0.71 ms
+2026-01-05 01:25:26,657 [INFO] Monitoring memory and CPU usage of process 66171 every 20.0ms
+2026-01-05 01:25:26,658 [WARNING] Average throughput was: 0 ops/s. Setting average throughput to 1
+2026-01-05 01:25:26,660 [INFO] Average throughput: 1 ops/s
+2026-01-05 01:25:26,660 [INFO] Getting fixed rates for latency
+2026-01-05 01:25:26,660 [INFO] Now measuring the latency for FIXED mode at 3000 for 1 iterations
+2026-01-05 01:25:26,660 [INFO] Running latency iteration 1/1
+2026-01-05 01:25:26,661 [INFO] Extracted framework startup time of 262.0 ms
+2026-01-05 01:25:26,663 [INFO] Begining to measure latency
+2026-01-05 01:25:26,663 [INFO] Running latency command:
+wrk2 -d 30s -R 3000 --latency http://127.0.0.1:8006 -t 16 -c 16 --script /home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/spring-petclinic/workloads/mixed-requests.lua -- 16
+2026-01-05 01:25:56,675 [INFO] Finished measuring latency
+2026-01-05 01:25:56,676 [INFO] Dumping wrk outputs to file 'logs/2026-01-05_01-25-26-bench-8811e7/FIXED-3000-latency-1-dump.txt' and to stdout:
+Running 30s test @ http://127.0.0.1:8006
+  16 threads and 16 connections
+  Thread calibration: mean lat.: 1.864ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.885ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.897ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.881ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.874ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.855ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.887ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.862ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.882ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.839ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.874ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.868ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.880ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.905ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.861ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 1.838ms, rate sampling interval: 10ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.98ms    1.75ms  26.38ms   96.92%
+    Req/Sec   195.64     51.82   666.00     79.41%
+  Latency Distribution (HdrHistogram - Recorded Latency)
+ 50.000%    1.72ms
+ 75.000%    2.03ms
+ 90.000%    2.35ms
+ 99.000%   12.92ms
+ 99.900%   19.90ms
+ 99.990%   21.81ms
+ 99.999%   24.24ms
+100.000%   26.40ms
+
+  Detailed Percentile spectrum:
+       Value   Percentile   TotalCount 1/(1-Percentile)
+
+       0.719     0.000000            1         1.00
+       1.208     0.100000         5998         1.11
+       1.368     0.200000        12027         1.25
+       1.494     0.300000        18024         1.43
+       1.607     0.400000        23997         1.67
+       1.722     0.500000        30026         2.00
+       1.778     0.550000        33011         2.22
+       1.834     0.600000        35996         2.50
+       1.896     0.650000        39041         2.86
+       1.960     0.700000        42015         3.33
+       2.030     0.750000        45020         4.00
+       2.071     0.775000        46545         4.44
+       2.109     0.800000        47992         5.00
+       2.155     0.825000        49515         5.71
+       2.207     0.850000        51016         6.67
+       2.271     0.875000        52515         8.00
+       2.309     0.887500        53258         8.89
+       2.353     0.900000        54004        10.00
+       2.407     0.912500        54737        11.43
+       2.489     0.925000        55488        13.33
+       2.687     0.937500        56231        16.00
+       2.861     0.943750        56605        17.78
+       3.035     0.950000        56982        20.00
+       3.255     0.956250        57361        22.86
+       3.461     0.962500        57729        26.67
+       3.715     0.968750        58104        32.00
+       3.883     0.971875        58292        35.56
+       4.061     0.975000        58480        40.00
+       4.343     0.978125        58667        45.71
+       5.371     0.981250        58854        53.33
+       7.959     0.984375        59041        64.00
+       9.439     0.985938        59136        71.11
+      10.743     0.987500        59230        80.00
+      12.079     0.989062        59322        91.43
+      13.287     0.990625        59417       106.67
+      14.655     0.992188        59510       128.00
+      15.287     0.992969        59558       142.22
+      15.887     0.993750        59604       160.00
+      16.343     0.994531        59651       182.86
+      16.879     0.995313        59697       213.33
+      17.503     0.996094        59746       256.00
+      17.743     0.996484        59768       284.44
+      18.063     0.996875        59791       320.00
+      18.415     0.997266        59815       365.71
+      18.767     0.997656        59839       426.67
+      19.039     0.998047        59861       512.00
+      19.215     0.998242        59874       568.89
+      19.359     0.998437        59885       640.00
+      19.487     0.998633        59896       731.43
+      19.631     0.998828        59909       853.33
+      19.951     0.999023        59920      1024.00
+      20.031     0.999121        59927      1137.78
+      20.159     0.999219        59933      1280.00
+      20.191     0.999316        59938      1462.86
+      20.287     0.999414        59943      1706.67
+      20.431     0.999512        59949      2048.00
+      20.543     0.999561        59952      2275.56
+      20.687     0.999609        59956      2560.00
+      20.767     0.999658        59958      2925.71
+      20.911     0.999707        59961      3413.33
+      21.071     0.999756        59964      4096.00
+      21.167     0.999780        59965      4551.11
+      21.391     0.999805        59967      5120.00
+      21.439     0.999829        59968      5851.43
+      21.567     0.999854        59970      6826.67
+      21.663     0.999878        59971      8192.00
+      21.807     0.999890        59972      9102.22
+      22.383     0.999902        59973     10240.00
+      22.383     0.999915        59973     11702.86
+      22.639     0.999927        59974     13653.33
+      23.791     0.999939        59975     16384.00
+      23.791     0.999945        59975     18204.44
+      23.823     0.999951        59976     20480.00
+      23.823     0.999957        59976     23405.71
+      23.823     0.999963        59976     27306.67
+      24.239     0.999969        59977     32768.00
+      24.239     0.999973        59977     36408.89
+      24.239     0.999976        59977     40960.00
+      24.239     0.999979        59977     46811.43
+      24.239     0.999982        59977     54613.33
+      26.399     0.999985        59978     65536.00
+      26.399     1.000000        59978          inf
+#[Mean    =        1.984, StdDeviation   =        1.748]
+#[Max     =       26.384, Total count    =        59978]
+#[Buckets =           27, SubBuckets     =         2048]
+----------------------------------------------------------
+  90010 requests in 30.00s, 133.89MB read
+Requests/sec:   3000.36
+Transfer/sec:      4.46MB
+
+2026-01-05 01:25:56,677 [INFO] Saving all collected metrics to JSON file: /home/bakhtinartyom1205/projects/harness-evaluation/barista/logs/2026-01-05_01-25-26-bench-8811e7/barista-results.json
+2026-01-05 01:25:56,683 [INFO] Writing to csv files
+2026-01-05 01:25:56,683 [INFO] Producing final_measurements-barista_latency_results.csv
+2026-01-05 01:25:56,688 [INFO] Dumping application outputs to: logs/2026-01-05_01-25-26-bench-8811e7/app-dump.txt
+2026-01-05 01:25:56,688 [INFO] Benchmark done
+2026-01-05 01:25:56,731 [INFO] ================================================================================
+2026-01-05 01:25:56,731 [INFO] Barista report for benchmark 'spring-petclinic'
+2026-01-05 01:25:56,731 [INFO] Run command: python3 ./barista.py spring-petclinic --mode native --resource-usage-polling-interval 0.02 --startup-iteration-count 0 --warmup-iteration-count 0 --app-executable /home/bakhtinartyom1205/projects/harness-evaluation/barista/benchmarks/spring-petclinic/spring-petclinic-sources/target/spring-petclinic-3.0.0-SNAPSHOT.output/default/spring-petclinic
+2026-01-05 01:25:56,731 [INFO] Resource usage results:
+2026-01-05 01:25:56,732 [INFO] 	Resident Set Size:
+2026-01-05 01:25:56,732 [INFO] 		              p100.0               359.41 MB
+2026-01-05 01:25:56,732 [INFO] 		               p99.0               356.57 MB
+2026-01-05 01:25:56,732 [INFO] 		               p98.0               354.08 MB
+2026-01-05 01:25:56,732 [INFO] 		               p97.0               353.66 MB
+2026-01-05 01:25:56,732 [INFO] 		               p96.0               351.41 MB
+2026-01-05 01:25:56,732 [INFO] 		               p95.0               350.85 MB
+2026-01-05 01:25:56,732 [INFO] 		               p90.0               341.55 MB
+2026-01-05 01:25:56,732 [INFO] 		               p75.0               317.52 MB
+2026-01-05 01:25:56,732 [INFO] 		               p50.0               262.80 MB
+2026-01-05 01:25:56,732 [INFO] 		               p25.0               212.73 MB
+2026-01-05 01:25:56,732 [INFO] 	Virtual Memory Size:
+2026-01-05 01:25:56,732 [INFO] 		              p100.0              2453.17 MB
+2026-01-05 01:25:56,732 [INFO] 		               p99.0              2447.67 MB
+2026-01-05 01:25:56,732 [INFO] 		               p98.0              2445.17 MB
+2026-01-05 01:25:56,732 [INFO] 		               p97.0              2444.67 MB
+2026-01-05 01:25:56,732 [INFO] 		               p96.0              2441.67 MB
+2026-01-05 01:25:56,732 [INFO] 		               p95.0              2441.17 MB
+2026-01-05 01:25:56,732 [INFO] 		               p90.0              2431.07 MB
+2026-01-05 01:25:56,732 [INFO] 		               p75.0              2404.67 MB
+2026-01-05 01:25:56,732 [INFO] 		               p50.0              2346.67 MB
+2026-01-05 01:25:56,732 [INFO] 		               p25.0              2293.67 MB
+2026-01-05 01:25:56,732 [INFO] 	System-wide CPU utilization:
+2026-01-05 01:25:56,732 [INFO] 		              p100.0               692.19 %
+2026-01-05 01:25:56,732 [INFO] 		               p99.0               493.89 %
+2026-01-05 01:25:56,732 [INFO] 		               p98.0               396.08 %
+2026-01-05 01:25:56,732 [INFO] 		               p97.0               395.46 %
+2026-01-05 01:25:56,732 [INFO] 		               p96.0               393.55 %
+2026-01-05 01:25:56,732 [INFO] 		               p95.0               347.07 %
+2026-01-05 01:25:56,732 [INFO] 		               p90.0               346.58 %
+2026-01-05 01:25:56,732 [INFO] 		               p75.0               345.89 %
+2026-01-05 01:25:56,732 [INFO] 		               p50.0               297.01 %
+2026-01-05 01:25:56,733 [INFO] 		               p25.0               296.43 %
+2026-01-05 01:25:56,733 [INFO] Latency results: 
+2026-01-05 01:25:56,733 [INFO] Results of final_measurements latency measurement
+2026-01-05 01:25:56,733 [INFO] 	Measures for latency iteration 1:
+2026-01-05 01:25:56,733 [INFO] 		                rate                 3000 ops/s
+2026-01-05 01:25:56,733 [INFO] 		              50.000                 1.72 ms
+2026-01-05 01:25:56,733 [INFO] 		              75.000                 2.03 ms
+2026-01-05 01:25:56,733 [INFO] 		              90.000                 2.35 ms
+2026-01-05 01:25:56,733 [INFO] 		              99.000                12.92 ms
+2026-01-05 01:25:56,733 [INFO] 		              99.900                19.90 ms
+2026-01-05 01:25:56,733 [INFO] 		              99.990                21.81 ms
+2026-01-05 01:25:56,733 [INFO] 		              99.999                24.24 ms
+2026-01-05 01:25:56,733 [INFO] 		             100.000                26.40 ms
+2026-01-05 01:25:56,733 [INFO] ================================================================================
