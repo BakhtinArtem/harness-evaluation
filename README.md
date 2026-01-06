@@ -134,3 +134,130 @@ More info on running info can be found [in this file](HARNESS_2_0_0_BENCHMARKING
 
 To recreate barista benhcmarking execute following script `./harness_1_0_0_evaluation.sh`.
 More info on running info can be found [in this file](HARNESS_1_0_0_BENCHMARKING.md).
+
+# Running Analysis Notebook
+
+To analyze the benchmarking results using the Jupyter notebook, you need to set up a Python virtual environment and install the required dependencies.
+
+## Automated Setup (Recommended)
+
+The easiest way to set up everything is to use the provided setup script:
+
+```bash
+./setup_jupyter.sh
+```
+
+This script will:
+- Check for Python 3 (3.8 or higher)
+- Create a Python virtual environment (`venv/`)
+- Install all required dependencies from `requirements.txt`
+- Verify the installation
+
+**Options:**
+```bash
+./setup_jupyter.sh --skip-venv  # Skip virtual environment creation (use system Python)
+./setup_jupyter.sh --help       # Show help message
+```
+
+## Manual Setup
+
+If you prefer to set up manually:
+
+### 1. Create Python Virtual Environment
+
+```bash
+python3 -m venv venv
+```
+
+### 2. Activate the Virtual Environment
+
+```bash
+source venv/bin/activate
+```
+
+On Windows (if using Git Bash or PowerShell):
+```bash
+venv\Scripts\activate
+```
+
+### 3. Upgrade pip (recommended)
+
+```bash
+pip install --upgrade pip
+```
+
+### 4. Install Required Dependencies
+
+Install from requirements file:
+```bash
+pip install -r requirements.txt
+```
+
+Or install packages individually:
+```bash
+pip install jupyter pandas numpy matplotlib seaborn
+```
+
+**Required packages:**
+- `jupyter` - Jupyter notebook environment
+- `pandas` - Data manipulation and analysis
+- `numpy` - Numerical computing
+- `matplotlib` - Plotting and visualization
+- `seaborn` - Statistical data visualization
+
+## Running the Notebook
+
+1. **Activate the virtual environment** (if using automated setup):
+   ```bash
+   source venv/bin/activate
+   ```
+
+2. **Start Jupyter Notebook**:
+   ```bash
+   jupyter notebook
+   ```
+
+   Or use JupyterLab:
+   ```bash
+   jupyter lab
+   ```
+
+3. **Open the notebook**:
+   - Navigate to `analysis.ipynb` in the Jupyter interface
+   - Click on the notebook to open it
+
+4. **Run the notebook**:
+   - Execute cells sequentially using `Shift + Enter`
+   - Or run all cells using `Cell > Run All` from the menu
+
+## Notebook Requirements
+
+The notebook expects benchmark results to be located in the `data/` directory with the following structure:
+- `data/results-petclinic-jvm/` - Barista petclinic JVM results
+- `data/results-petclinic-native/` - Barista petclinic native results
+- `data/results-shopcart-jvm/` - Barista shopcart JVM results
+- `data/results-shopcart-native/` - Barista shopcart native results
+- `data/results_petclinic-sim-jvm/` - Barista petclinic JVM simulation results
+- `data/results_petclinic-sim-native/` - Barista petclinic native simulation results
+- `data/results_shopcart-sim-jvm/` - Barista shopcart JVM simulation results
+- `data/results_shopcart-sim-native/` - Barista shopcart native simulation results
+- `data/results-petclinic-harness_2_0_0-*/` - Harness 2.0.0 petclinic results
+- `data/results-shopcart-harness_2_0_0-*/` - Harness 2.0.0 shopcart results
+- `data/results_petclinic-harness_1_0_0-*/` - Harness 1.0.0 petclinic results
+- `data/results_shopcart-harness_1_0_0-*/` - Harness 1.0.0 shopcart results
+- `data/results-media-harness_2_0_0-run/` - Harness 2.0.0 media microservices results
+
+## Deactivate Virtual Environment
+
+When you're done working with the notebook, deactivate the virtual environment:
+
+```bash
+deactivate
+```
+
+## Troubleshooting
+
+- **Import errors**: Make sure the virtual environment is activated and all packages are installed
+- **Data not found**: Verify that the `data/` directory exists and contains the expected result directories
+- **Jupyter not found**: Ensure `jupyter` is installed in the virtual environment: `pip install jupyter`
+- **Kernel issues**: If the notebook kernel doesn't start, try restarting it: `Kernel > Restart` in Jupyter

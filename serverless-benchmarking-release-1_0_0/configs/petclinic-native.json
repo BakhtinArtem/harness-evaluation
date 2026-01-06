@@ -6,6 +6,6 @@
   "resultPath": "./results_petclinic-harness_1_0_0-native",
   "benchmarksRootPath": "./serverless-benchmarking-release-1_0_0/benchmark",
   "benchmarkConfigName": "mixed-requests",
-  "wrk2params": "-t16 -c16 -d30s -R3000",
+  "wrk2params": "-t16 -c16 -d30s -R3000 --latency",
   "javaOptions": "-H:MaxHeapSize=2g -H:StackSize=1m"
 }

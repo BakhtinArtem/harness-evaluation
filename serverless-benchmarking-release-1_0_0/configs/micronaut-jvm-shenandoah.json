@@ -6,6 +6,6 @@
   "resultPath": "./results_shopcart-harness_1_0_0-jvm-shenandoah",
   "benchmarksRootPath": "./serverless-benchmarking-release-1_0_0/benchmark",
   "benchmarkConfigName": "mixed-requests",
-  "wrk2params": "-t16 -c16 -d30s -R800",
+  "wrk2params": "-t16 -c16 -d30s -R800 --latency",
   "javaOptions": "-XX:+UseShenandoahGC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
 }

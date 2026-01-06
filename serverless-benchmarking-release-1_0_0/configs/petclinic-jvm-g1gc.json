@@ -6,6 +6,6 @@
   "resultPath": "./results_petclinic-harness_1_0_0-jvm-g1gc",
   "benchmarksRootPath": "./serverless-benchmarking-release-1_0_0/benchmark",
   "benchmarkConfigName": "mixed-requests",
-  "wrk2params": "-t16 -c16 -d30s -R3000",
+  "wrk2params": "-t16 -c16 -d30s -R3000 --latency",
   "javaOptions": "-XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=filename=/app/logs/recording.jfr,maxsize=100M,maxage=1d,disk=true"
 }
