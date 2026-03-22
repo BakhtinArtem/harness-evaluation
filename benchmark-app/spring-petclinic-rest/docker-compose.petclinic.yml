@@ -1,0 +1,9 @@
+services:
+  petclinic:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9966:9966"
+    environment:
+      - SPRING_PROFILES_ACTIVE=h2,spring-data-jpa
