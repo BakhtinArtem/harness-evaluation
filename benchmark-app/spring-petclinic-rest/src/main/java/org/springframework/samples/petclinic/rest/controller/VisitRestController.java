@@ -85,7 +85,7 @@ public class VisitRestController implements VisitsApi {
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<VisitDto> updateVisit(Integer visitId, VisitFieldsDto visitDto) {
+    public ResponseEntity<Void> updateVisit(Integer visitId, VisitFieldsDto visitDto) {
         Visit currentVisit = this.clinicService.findVisitById(visitId);
         if (currentVisit == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -93,7 +93,7 @@ public class VisitRestController implements VisitsApi {
         currentVisit.setDate(visitDto.getDate());
         currentVisit.setDescription(visitDto.getDescription());
         this.clinicService.saveVisit(currentVisit);
-        return new ResponseEntity<>(visitMapper.toVisitDto(currentVisit), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")

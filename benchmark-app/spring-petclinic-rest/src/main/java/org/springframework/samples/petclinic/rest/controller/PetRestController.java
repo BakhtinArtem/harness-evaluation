@@ -81,7 +81,7 @@ public class PetRestController implements PetsApi {
         currentPet.setName(petDto.getName());
         currentPet.setType(petMapper.toPetType(petDto.getType()));
         this.clinicService.savePet(currentPet);
-        return new ResponseEntity<>(petMapper.toPetDto(currentPet), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(petMapper.toPetDto(currentPet), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")

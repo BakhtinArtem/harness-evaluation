@@ -87,7 +87,7 @@ public class PetTypeRestController implements PettypesApi {
         }
         currentPetType.setName(petTypeDto.getName());
         this.clinicService.savePetType(currentPetType);
-        return new ResponseEntity<>(petTypeMapper.toPetTypeDto(currentPetType), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(petTypeMapper.toPetTypeDto(currentPetType), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")

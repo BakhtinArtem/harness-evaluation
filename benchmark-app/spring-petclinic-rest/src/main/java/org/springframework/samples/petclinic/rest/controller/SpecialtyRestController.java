@@ -90,7 +90,7 @@ public class SpecialtyRestController implements SpecialtiesApi {
         }
         currentSpecialty.setName(specialtyDto.getName());
         this.clinicService.saveSpecialty(currentSpecialty);
-        return new ResponseEntity<>(specialtyMapper.toSpecialtyDto(currentSpecialty), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(specialtyMapper.toSpecialtyDto(currentSpecialty), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")

@@ -53,7 +53,7 @@ class UserRestControllerTests {
         user.setUsername("username");
         user.setPassword("password");
         user.setEnabled(true);
-        user.addRole("OWNER_ADMIN");
+        user.addRole("ROLE_OWNER_ADMIN");
         ObjectMapper mapper = new ObjectMapper();
         String newVetAsJSON = mapper.writeValueAsString(userMapper.toUserDto(user));
         this.mockMvc.perform(post("/api/users")

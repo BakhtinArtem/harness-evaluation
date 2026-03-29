@@ -105,7 +105,7 @@ public class VetRestController implements VetsApi {
             currentVet.setSpecialties(vetSpecialities);
         }
         this.clinicService.saveVet(currentVet);
-        return new ResponseEntity<>(vetMapper.toVetDto(currentVet), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(vetMapper.toVetDto(currentVet), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")

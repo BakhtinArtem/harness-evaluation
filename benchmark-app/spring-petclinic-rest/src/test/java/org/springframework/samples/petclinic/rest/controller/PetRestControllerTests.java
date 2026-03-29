@@ -162,8 +162,10 @@ class PetRestControllerTests {
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         this.mockMvc.perform(put("/api/pets/3")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
-            .andExpect(status().isNoContent());
+            .andExpect(jsonPath("$.id").value(3))
+            .andExpect(jsonPath("$.name").value("Rosy I"));
 
         this.mockMvc.perform(get("/api/pets/3")
                 .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))

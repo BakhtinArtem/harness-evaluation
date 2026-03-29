@@ -50,7 +50,7 @@ public class ExceptionControllerAdvice {
      * @param status HTTP response status.
      * @param url URL request.
      */
-    private ProblemDetail detailBuild(Exception ex, HttpStatus status, StringBuffer url) {
+    private ProblemDetail detailBuild(Exception ex, HttpStatus status, StringBuilder url) {
         ProblemDetail detail = ProblemDetail.forStatus(status);
         detail.setType(URI.create(url.toString()));
         detail.setTitle(ex.getClass().getSimpleName());
@@ -70,22 +70,22 @@ public class ExceptionControllerAdvice {
     @ResponseBody
     public ResponseEntity<ProblemDetail> handleGeneralException(Exception e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        ProblemDetail detail = this.detailBuild(e, status, request.getRequestURL());
+        ProblemDetail detail = this.detailBuild(e, status, new StringBuilder(request.getRequestURL()));
         return ResponseEntity.status(status).body(detail);
     }
 
     /**
      * Handles {@link DataIntegrityViolationException} which typically indicates database constraint violations. This
-     * method returns a 404 Not Found status if an entity does not exist.
+     * method returns a 400 Bad Request status when the request cannot satisfy persistence constraints.
      *
      * @param ex The {@link DataIntegrityViolationException} to be handled
      * @param request {@link HttpServletRequest} object referring to the current request.
-     * @return A {@link ResponseEntity} containing the error information and a 404 Not Found status
+     * @return A {@link ResponseEntity} containing the error information and a 400 Bad Request status
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseBody
     public ResponseEntity<ProblemDetail> handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         ProblemDetail detail = ProblemDetail.forStatus(status);
         detail.setType(URI.create(request.getRequestURL().toString()));
         detail.setTitle(ex.getClass().getSimpleName());
@@ -109,7 +109,7 @@ public class ExceptionControllerAdvice {
         BindingResult bindingResult = ex.getBindingResult();
         if (bindingResult.hasErrors()) {
             errors.addAllErrors(bindingResult);
-            ProblemDetail detail = this.detailBuild(ex, status, request.getRequestURL());
+            ProblemDetail detail = this.detailBuild(ex, status, new StringBuilder(request.getRequestURL()));
             return ResponseEntity.status(status).body(detail);
         }
         return ResponseEntity.status(status).build();

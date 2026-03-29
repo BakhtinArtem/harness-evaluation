@@ -31,11 +31,13 @@ paths:
       tags:
         - failing
       operationId: failingRequest
-      summary: Always fails
-      description: Produces sample error response.
+      summary: Failure-sample route
+      description: >
+        Stable GET route for benchmarks and OpenAPI links. Returns 200 text/plain so callers can
+        complete stateful chains; use other operations to exercise real error responses.
       responses:
         200:
-          description: Never returned.
+          description: Plain text confirmation that the failure-sample path was hit.
           headers:
             ETag:
               description: An ID for this version of the response.
@@ -90,6 +92,12 @@ paths:
               $ref: '#/components/links/GetCreatedOwner'
             ListOwnersByLastName:
               $ref: '#/components/links/ListOwnersByLastName'
+            UpdateCreatedOwner:
+              $ref: '#/components/links/UpdateOwnerFromOwner'
+            AddPetToCreatedOwner:
+              $ref: '#/components/links/AddPetToOwnerFromOwner'
+            DeleteCreatedOwner:
+              $ref: '#/components/links/DeleteOwnerFromOwner'
         400:
           description: Bad request.
           content:
@@ -111,18 +119,29 @@ paths:
       parameters:
         - name: lastName
           in: query
-          description: Last name.
+          description: Last name prefix filter (server uses prefix match). Values below match default sample data; omit the parameter to list all owners.
           required: false
           schema:
             type: string
             minLength: 1
             maxLength: 30
             pattern: "^[A-Za-z]+([ '-][A-Za-z]+){0,2}\\.?$"
+            example: Davis
+            enum:
+              - Davis
+              - Franklin
+              - Rodriquez
+              - McTavish
+              - Coleman
+              - Black
+              - Escobito
+              - Schroeder
+              - Estaban
           examples:
-            commonLastName:
+            davis:
               value: Davis
-            apostropheName:
-              value: O'Neil
+            franklin:
+              value: Franklin
       responses:
         200:
           description: Owner details found and returned.
@@ -137,6 +156,21 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Owner'
+          links:
+            GetOwnerFromOwnersList:
+              $ref: '#/components/links/GetOwnerFromOwnersList'
+            ListPetsAfterOwnersList:
+              $ref: '#/components/links/ListPetsAfterOwnersList'
+            GetPetFromOwnersList:
+              $ref: '#/components/links/GetPetFromOwnersList'
+            ListVetsAfterOwnersList:
+              $ref: '#/components/links/ListVetsAfterOwnersList'
+            GetVetFromOwnersList:
+              $ref: '#/components/links/GetVetFromOwnersList'
+            ListPetTypesAfterOwnersList:
+              $ref: '#/components/links/ListPetTypesAfterOwnersList'
+            ListVisitsAfterOwnersList:
+              $ref: '#/components/links/ListVisitsAfterOwnersList'
         304:
           description: Not modified.
           headers:
@@ -185,6 +219,10 @@ paths:
           links:
             ListOwnersByLastName:
               $ref: '#/components/links/ListOwnersByLastName'
+            UpdateThisOwner:
+              $ref: '#/components/links/UpdateOwnerFromOwner'
+            AddPetToThisOwner:
+              $ref: '#/components/links/AddPetToOwnerFromOwner'
         304:
           description: Not modified.
           headers:
@@ -240,6 +278,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Owner'
+          links:
+            GetUpdatedOwner:
+              $ref: '#/components/links/GetUpdatedOwner'
+            ListOwnersByUpdatedLastName:
+              $ref: '#/components/links/ListOwnersByUpdatedLastName'
         400:
           description: Bad request.
           content:
@@ -356,6 +399,10 @@ paths:
               $ref: '#/components/links/GetCreatedPet'
             GetOwnerOfCreatedPet:
               $ref: '#/components/links/GetOwnerFromPet'
+            UpdateCreatedOwnersPet:
+              $ref: '#/components/links/UpdateCreatedOwnersPet'
+            AddVisitToCreatedOwnersPet:
+              $ref: '#/components/links/AddVisitToCreatedOwnersPet'
         400:
           description: Bad request.
           content:
@@ -418,6 +465,8 @@ paths:
           links:
             GetOwnerFromPet:
               $ref: '#/components/links/GetOwnerFromPet'
+            AddVisitToOwnersPet:
+              $ref: '#/components/links/AddVisitToOwnersPet'
         304:
           description: Not modified.
           headers:
@@ -479,6 +528,9 @@ paths:
       responses:
         204:
           description: Update successful.
+          links:
+            DeletePetAfterOwnersPetUpdate:
+              $ref: '#/components/links/DeletePetAfterOwnersPetUpdate'
         400:
           description: Bad request.
           content:
@@ -546,8 +598,12 @@ paths:
           links:
             GetCreatedVisit:
               $ref: '#/components/links/GetCreatedVisit'
+            UpdateCreatedVisit:
+              $ref: '#/components/links/UpdateCreatedVisit'
             GetPetFromVisit:
               $ref: '#/components/links/GetPetFromVisit'
+            ListVisitsAfterCreateVisit:
+              $ref: '#/components/links/ListVisitsAfterCreateVisit'
         400:
           description: Bad request.
           content:
@@ -614,7 +670,7 @@ paths:
               $ref: '#/components/schemas/PetTypeFields'
         required: true
       responses:
-        200:
+        201:
           description: Pet type created successfully.
           headers:
             ETag:
@@ -625,6 +681,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PetType'
+          links:
+            ListPetTypesAfterPetTypeCreate:
+              $ref: '#/components/links/ListPetTypesAfterPetTypeCreate'
+            GetCreatedPetType:
+              $ref: '#/components/links/GetCreatedPetType'
+            UpdateCreatedPetType:
+              $ref: '#/components/links/UpdateCreatedPetType'
         304:
           description: Not modified.
           headers:
@@ -739,6 +802,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PetType'
+          links:
+            DeletePetTypeAfterUpdate:
+              $ref: '#/components/links/DeletePetTypeAfterUpdate'
         304:
           description: Not modified.
           headers:
@@ -839,6 +905,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Pet'
+          links:
+            GetPetFromPetsList:
+              $ref: '#/components/links/GetPetFromPetsList'
+            UpdatePetFromPetsList:
+              $ref: '#/components/links/UpdatePetFromPetsList'
         304:
           description: Not modified.
           headers:
@@ -937,7 +1008,7 @@ paths:
         required: true
       responses:
         200:
-          description: Pet details found and returned.
+          description: Pet updated; returns the persisted pet (enables stateful links that read id from the body).
           headers:
             ETag:
               description: An ID for this version of the response.
@@ -947,6 +1018,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pet'
+          links:
+            DeletePetAfterUpdate:
+              $ref: '#/components/links/DeletePetAfterUpdate'
         304:
           description: Not modified.
           headers:
@@ -1046,6 +1120,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Visit'
+          links:
+            GetVisitFromVisitsList:
+              $ref: '#/components/links/GetVisitFromVisitsList'
+            ListSpecialtiesAfterVisitsList:
+              $ref: '#/components/links/ListSpecialtiesAfterVisitsList'
         304:
           description: Not modified.
           headers:
@@ -1073,7 +1152,7 @@ paths:
               $ref: '#/components/schemas/Visit'
         required: true
       responses:
-        200:
+        201:
           description: visit created successfully.
           headers:
             ETag:
@@ -1084,6 +1163,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Visit'
+          links:
+            GetCreatedVisit:
+              $ref: '#/components/links/GetCreatedVisit'
+            UpdateCreatedVisit:
+              $ref: '#/components/links/UpdateCreatedVisit'
+            GetPetFromVisit:
+              $ref: '#/components/links/GetPetFromVisit'
+            ListVisitsAfterCreateVisit:
+              $ref: '#/components/links/ListVisitsAfterCreateVisit'
         304:
           description: Not modified.
           headers:
@@ -1193,17 +1281,11 @@ paths:
               $ref: '#/components/schemas/VisitFields'
         required: true
       responses:
-        200:
-          description: Visit details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Visit'
+        204:
+          description: Update successful; no response body.
+          links:
+            DeleteVisitAfterUpdate:
+              $ref: '#/components/links/DeleteVisitAfterUpdate'
         304:
           description: Not modified.
           headers:
@@ -1303,6 +1385,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Specialty'
+          links:
+            GetSpecialtyFromSpecialtiesList:
+              $ref: '#/components/links/GetSpecialtyFromSpecialtiesList'
+            FailingRequestAfterSpecialtiesList:
+              $ref: '#/components/links/FailingRequestAfterSpecialtiesList'
         304:
           description: Not modified.
           headers:
@@ -1330,7 +1417,7 @@ paths:
               $ref: '#/components/schemas/Specialty'
         required: true
       responses:
-        200:
+        201:
           description: Specialty created successfully.
           headers:
             ETag:
@@ -1341,6 +1428,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Specialty'
+          links:
+            ListSpecialtiesAfterSpecialtyCreate:
+              $ref: '#/components/links/ListSpecialtiesAfterSpecialtyCreate'
+            GetCreatedSpecialty:
+              $ref: '#/components/links/GetCreatedSpecialty'
+            UpdateCreatedSpecialty:
+              $ref: '#/components/links/UpdateCreatedSpecialty'
         304:
           description: Not modified.
           headers:
@@ -1455,6 +1549,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Specialty'
+          links:
+            DeleteSpecialtyAfterUpdate:
+              $ref: '#/components/links/DeleteSpecialtyAfterUpdate'
         304:
           description: Not modified.
           headers:
@@ -1554,6 +1651,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Vet'
+          links:
+            GetVetFromVetsList:
+              $ref: '#/components/links/GetVetFromVetsList'
         304:
           description: Not modified.
           headers:
@@ -1582,7 +1682,7 @@ paths:
               $ref: '#/components/schemas/Vet'
         required: true
       responses:
-        200:
+        201:
           description: Vet created successfully.
           headers:
             ETag:
@@ -1593,6 +1693,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Vet'
+          links:
+            ListVetsAfterVetCreate:
+              $ref: '#/components/links/ListVetsAfterVetCreate'
+            GetCreatedVet:
+              $ref: '#/components/links/GetCreatedVet'
+            UpdateCreatedVet:
+              $ref: '#/components/links/UpdateCreatedVet'
         304:
           description: Not modified.
           headers:
@@ -1697,7 +1804,7 @@ paths:
         required: true
       responses:
         200:
-          description: Pet type details found and returned.
+          description: Vet updated; returns the persisted vet (enables stateful links that read id from the body).
           headers:
             ETag:
               description: An ID for this version of the response.
@@ -1707,6 +1814,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Vet'
+          links:
+            DeleteVetAfterUpdate:
+              $ref: '#/components/links/DeleteVetAfterUpdate'
         304:
           description: Not modified.
           headers:
@@ -1803,7 +1913,7 @@ paths:
                 $ref: '#/components/examples/UserCreateExample'
         required: true
       responses:
-        200:
+        201:
           description: User created successfully.
           headers:
             ETag:
@@ -1817,6 +1927,20 @@ paths:
           links:
             CreateOwnerProfileAfterUser:
               $ref: '#/components/links/CreateOwnerProfileAfterUser'
+            AddPetTypeAfterUser:
+              $ref: '#/components/links/AddPetTypeAfterUser'
+            AddSpecialtyAfterUser:
+              $ref: '#/components/links/AddSpecialtyAfterUser'
+            AddVetAfterUser:
+              $ref: '#/components/links/AddVetAfterUser'
+            AddVisitAfterUser:
+              $ref: '#/components/links/AddVisitAfterUser'
+            ListPetsAfterUser:
+              $ref: '#/components/links/ListPetsAfterUser'
+            ListVetsAfterUser:
+              $ref: '#/components/links/ListVetsAfterUser'
+            FailingRequestAfterUser:
+              $ref: '#/components/links/FailingRequestAfterUser'
         304:
           description: Not modified.
           headers:
@@ -1916,8 +2040,110 @@ components:
         password: "P@ssw0rd1"
         enabled: true
         roles:
-          - name: admin
+          - name: ROLE_OWNER_ADMIN
   links:
+    GetOwnerFromOwnersList:
+      operationId: getOwner
+      parameters:
+        ownerId: '$response.body#/0/id'
+      description: Follow the first owner from the owners list response.
+    ListPetsAfterOwnersList:
+      operationId: listPets
+      description: List all pets after listing owners.
+    GetPetFromOwnersList:
+      operationId: getPet
+      parameters:
+        petId: '$response.body#/0/pets/0/id'
+      description: Follow the first pet of the first owner in the list response.
+    ListVetsAfterOwnersList:
+      operationId: listVets
+      description: List all vets after listing owners.
+    GetVetFromVetsList:
+      operationId: getVet
+      parameters:
+        vetId: '$response.body#/0/id'
+      description: Follow the first vet in the list response.
+    GetSpecialtyFromSpecialtiesList:
+      operationId: getSpecialty
+      parameters:
+        specialtyId: '$response.body#/0/id'
+      description: Follow the first specialty in the list response.
+    GetPetFromPetsList:
+      operationId: getPet
+      parameters:
+        petId: '$response.body#/0/id'
+      description: Follow the first pet in the listPets response.
+    UpdatePetFromPetsList:
+      operationId: updatePet
+      parameters:
+        petId: '$response.body#/0/id'
+      description: Update the first pet in the listPets response.
+    GetVetFromOwnersList:
+      operationId: getVet
+      parameters:
+        vetId: '1'
+      description: Owner list payloads have no vet id; use a stable vet id for this link. Prefer listVets then getVet for a data-driven id.
+    ListPetTypesAfterOwnersList:
+      operationId: listPetTypes
+      description: List pet types after listing owners.
+    ListPetTypesAfterPetTypeCreate:
+      operationId: listPetTypes
+      description: Refresh the pet type collection after creating a new pet type.
+    GetCreatedPetType:
+      operationId: getPetType
+      parameters:
+        petTypeId: '$response.body#/id'
+      description: Fetch the newly created pet type by its returned id.
+    UpdateCreatedPetType:
+      operationId: updatePetType
+      parameters:
+        petTypeId: '$response.body#/id'
+      description: Update the newly created pet type using its returned id.
+    DeletePetTypeAfterUpdate:
+      operationId: deletePetType
+      parameters:
+        petTypeId: '$response.body#/id'
+      description: Delete the pet type after an update using the returned id.
+    ListSpecialtiesAfterSpecialtyCreate:
+      operationId: listSpecialties
+      description: Refresh the specialty collection after creating a new specialty.
+    GetCreatedSpecialty:
+      operationId: getSpecialty
+      parameters:
+        specialtyId: '$response.body#/id'
+      description: Fetch the newly created specialty by its returned id.
+    UpdateCreatedSpecialty:
+      operationId: updateSpecialty
+      parameters:
+        specialtyId: '$response.body#/id'
+      description: Update the newly created specialty using its returned id.
+    DeleteSpecialtyAfterUpdate:
+      operationId: deleteSpecialty
+      parameters:
+        specialtyId: '$response.body#/id'
+      description: Delete the specialty after an update using the returned id.
+    ListVisitsAfterOwnersList:
+      operationId: listVisits
+      description: List all visits after listing owners.
+    ListSpecialtiesAfterVisitsList:
+      operationId: listSpecialties
+      description: List specialties after listing visits (hub-style navigation).
+    FailingRequestAfterSpecialtiesList:
+      operationId: failingRequest
+      description: Invoke the /oops sample route after listing specialties (hub-style navigation).
+    ListVetsAfterVetCreate:
+      operationId: listVets
+      description: Refresh the vet collection after creating a new vet.
+    GetCreatedVet:
+      operationId: getVet
+      parameters:
+        vetId: '$response.body#/id'
+      description: Fetch the newly created vet by its returned id.
+    UpdateCreatedVet:
+      operationId: updateVet
+      parameters:
+        vetId: '$response.body#/id'
+      description: Update the newly created vet using its returned id.
     GetCreatedOwner:
       operationId: getOwner
       parameters:
@@ -1928,15 +2154,73 @@ components:
       parameters:
         lastName: '$response.body#/lastName'
       description: Query owners using last name from the source owner payload.
+    UpdateOwnerFromOwner:
+      operationId: updateOwner
+      parameters:
+        ownerId: '$response.body#/id'
+      description: Use the returned owner payload as input for updateOwner.
+    AddPetToOwnerFromOwner:
+      operationId: addPetToOwner
+      parameters:
+        ownerId: '$response.body#/id'
+      description: Use the returned owner ID to create a pet for this owner.
+    DeleteOwnerFromOwner:
+      operationId: deleteOwner
+      parameters:
+        ownerId: '$response.body#/id'
+      description: Delete the newly created owner using its returned ID.
+    GetUpdatedOwner:
+      operationId: getOwner
+      parameters:
+        ownerId: '$request.path.ownerId'
+      description: Fetch the owner using the same path ID after an update request.
+    ListOwnersByUpdatedLastName:
+      operationId: listOwners
+      parameters:
+        lastName: '$request.body#/lastName'
+      description: Query owners using the lastName provided in the update payload.
     CreateOwnerProfileAfterUser:
       operationId: addOwner
       description: After creating an auth user, create an owner profile as the next workflow step.
+    AddPetTypeAfterUser:
+      operationId: addPetType
+      description: After creating a user, create a pet type as a possible next workflow step.
+    AddSpecialtyAfterUser:
+      operationId: addSpecialty
+      description: After creating a user, create a specialty as a possible next workflow step.
+    AddVetAfterUser:
+      operationId: addVet
+      description: After creating a user, create a vet as a possible next workflow step.
+    AddVisitAfterUser:
+      operationId: addVisit
+      description: After creating a user, create a visit via the global visits endpoint as a possible next workflow step.
+    ListPetsAfterUser:
+      operationId: listPets
+      description: After creating a user, list all pets as a possible next workflow step.
+    ListVetsAfterUser:
+      operationId: listVets
+      description: After creating a user, list all vets as a possible next workflow step.
+    FailingRequestAfterUser:
+      operationId: failingRequest
+      description: After creating a user, invoke the intentional failure sample endpoint (GET /oops).
     GetCreatedOwnersPet:
       operationId: getOwnersPet
       parameters:
         ownerId: '$request.path.ownerId'
         petId: '$response.body#/id'
       description: Follow the newly created owner's pet resource.
+    UpdateCreatedOwnersPet:
+      operationId: updateOwnersPet
+      parameters:
+        ownerId: '$request.path.ownerId'
+        petId: '$response.body#/id'
+      description: Update the newly created pet for the same owner context.
+    AddVisitToCreatedOwnersPet:
+      operationId: addVisitToOwner
+      parameters:
+        ownerId: '$request.path.ownerId'
+        petId: '$response.body#/id'
+      description: Add a visit for the newly created pet using the same owner context.
     GetCreatedPet:
       operationId: getPet
       parameters:
@@ -1947,11 +2231,50 @@ components:
       parameters:
         ownerId: '$response.body#/ownerId'
       description: Follow from a pet record back to its owner.
+    AddVisitToOwnersPet:
+      operationId: addVisitToOwner
+      parameters:
+        ownerId: '$request.path.ownerId'
+        petId: '$request.path.petId'
+      description: Add a visit for the owner-pet pair returned by getOwnersPet.
     GetCreatedVisit:
       operationId: getVisit
       parameters:
         visitId: '$response.body#/id'
       description: Follow the newly created visit resource.
+    UpdateCreatedVisit:
+      operationId: updateVisit
+      parameters:
+        visitId: '$response.body#/id'
+      description: Update the newly created visit using its returned id.
+    DeleteVisitAfterUpdate:
+      operationId: deleteVisit
+      parameters:
+        visitId: '$request.path.visitId'
+      description: Delete the visit that was just updated (same path id).
+    DeletePetAfterUpdate:
+      operationId: deletePet
+      parameters:
+        petId: '$response.body#/id'
+      description: Delete the pet that was just updated (id from response body).
+    DeletePetAfterOwnersPetUpdate:
+      operationId: deletePet
+      parameters:
+        petId: '$request.path.petId'
+      description: After owner-scoped pet update (no body), delete the same pet by path id.
+    DeleteVetAfterUpdate:
+      operationId: deleteVet
+      parameters:
+        vetId: '$response.body#/id'
+      description: Delete the vet that was just updated (id from response body).
+    GetVisitFromVisitsList:
+      operationId: getVisit
+      parameters:
+        visitId: '$response.body#/0/id'
+      description: Follow the first visit in the listVisits response.
+    ListVisitsAfterCreateVisit:
+      operationId: listVisits
+      description: List visits after creating a new visit (owner-scoped or global POST /visits).
     GetPetFromVisit:
       operationId: getPet
       parameters:
@@ -2030,13 +2353,14 @@ components:
       title: Specialty
       description: Fields of specialty of vets.
       type: object
+      additionalProperties: false
       properties:
         id:
           title: ID
           description: The ID of the specialty.
           type: integer
           format: int32
-          minimum: 0
+          minimum: 1
           example: 1
           readOnly: true
         name:
@@ -2045,6 +2369,7 @@ components:
           type: string
           maxLength: 80
           minLength: 1
+          pattern: '^[A-Za-z][A-Za-z0-9 _-]{0,79}$'
           example: radiology
       required:
         - id
@@ -2053,6 +2378,7 @@ components:
       title: Owner fields
       description: Editable fields of a pet owner.
       type: object
+      additionalProperties: false
       properties:
         firstName:
           title: First name
@@ -2088,9 +2414,9 @@ components:
           title: Telephone number
           description: The telephone number of the pet owner.
           type: string
-          minLength: 1
-          maxLength: 20
-          pattern: '^[0-9]*$'
+          minLength: 10
+          maxLength: 10
+          pattern: '^[0-9]{10}$'
           example: '6085551023'
       required:
         - firstName
@@ -2101,31 +2427,101 @@ components:
     Owner:
       title: Owner
       description: A pet owner.
-      allOf:
-        - $ref: '#/components/schemas/OwnerFields'
-        - type: object
-          properties:
-            id:
-              title: ID
-              description: The ID of the pet owner.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
-              readOnly: true
-            pets:
-              title: Pets
-              description: The pets owned by this individual including any booked vet visits.
-              type: array
-              items:
-                $ref: '#/components/schemas/Pet'
-              readOnly: true
-          required:
-            - pets
+      type: object
+      additionalProperties: false
+      properties:
+        firstName:
+          title: First name
+          description: The first name of the pet owner.
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: "^[A-Za-z]+([ '-][A-Za-z]+){0,2}$"
+          example: George
+        lastName:
+          title: Last name
+          description: The last name of the pet owner.
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: "^[A-Za-z]+([ '-][A-Za-z]+){0,2}\\.?$"
+          example: Franklin
+        address:
+          title: Address
+          description: The postal address of the pet owner.
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: '110 W. Liberty St.'
+        city:
+          title: City
+          description: The city of the pet owner.
+          type: string
+          minLength: 1
+          maxLength: 80
+          example: Madison
+        telephone:
+          title: Telephone number
+          description: The telephone number of the pet owner.
+          type: string
+          minLength: 10
+          maxLength: 10
+          pattern: '^[0-9]{10}$'
+          example: '6085551023'
+        id:
+          title: ID
+          description: The ID of the pet owner.
+          type: integer
+          format: int32
+          minimum: 1
+          example: 1
+          readOnly: true
+        pets:
+          title: Pets
+          description: The pets owned by this individual including any booked vet visits.
+          type: array
+          items:
+            $ref: '#/components/schemas/Pet'
+          readOnly: true
+      required:
+        - firstName
+        - lastName
+        - address
+        - city
+        - telephone
+        - pets
     PetFields:
       title: Pet fields
       description: Editable fields of a pet.
       type: object
+      additionalProperties: false
+      properties:
+        name:
+          title: Name
+          description: The name of the pet.
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: "^[A-Za-z0-9]+([ '-][A-Za-z0-9]+){0,2}$"
+          example: Leo
+        birthDate:
+          title: Birth date
+          description: The date of birth of the pet. Must not be in the future and must not be older than 50 years.
+          type: string
+          format: date
+          example: '2018-06-10'
+          x-field-extra-annotation: "@org.springframework.samples.petclinic.rest.validation.PetAgeValidation"
+        type:
+          $ref: '#/components/schemas/PetType'
+      required:
+        - name
+        - birthDate
+        - type
+    Pet:
+      title: Pet
+      description: A pet.
+      type: object
+      additionalProperties: false
       properties:
         name:
           title: Name
@@ -2144,48 +2540,40 @@ components:
           x-field-extra-annotation: "@org.springframework.samples.petclinic.rest.validation.PetAgeValidation"
         type:
           $ref: '#/components/schemas/PetType'
+        id:
+          title: ID
+          description: The ID of the pet.
+          type: integer
+          format: int32
+          minimum: 1
+          example: 1
+          readOnly: true
+        ownerId:
+          title: Owner ID
+          description: The ID of the pet's owner.
+          type: integer
+          format: int32
+          minimum: 1
+          example: 1
+          readOnly: true
+        visits:
+          title: Visits
+          description: Vet visit bookings for this pet.
+          type: array
+          items:
+            $ref: '#/components/schemas/Visit'
+          readOnly: true
       required:
         - name
         - birthDate
         - type
-    Pet:
-      title: Pet
-      description: A pet.
-      allOf:
-        - $ref: '#/components/schemas/PetFields'
-        - type: object
-          properties:
-            id:
-              title: ID
-              description: The ID of the pet.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
-              readOnly: true
-            ownerId:
-              title: Owner ID
-              description: The ID of the pet's owner.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
-              readOnly: true
-            visits:
-              title: Visits
-              description: Vet visit bookings for this pet.
-              type: array
-              items:
-                $ref: '#/components/schemas/Visit'
-              readOnly: true
-          required:
-            - id
-            - type
-            - visits
+        - id
+        - visits
     VetFields:
       title: VetFields
       description: Editable fields of a veterinarian.
       type: object
+      additionalProperties: false
       properties:
         firstName:
           title: First name
@@ -2216,18 +2604,39 @@ components:
     Vet:
       title: Vet
       description: A veterinarian.
-      allOf:
-        - $ref: '#/components/schemas/VetFields'
-        - type: object
-          properties:
-            id:
-              title: ID
-              description: The ID of the vet.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
-              readOnly: true
+      type: object
+      additionalProperties: false
+      properties:
+        firstName:
+          title: First name
+          description: The first name of the vet.
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: "^[A-Za-z]+([ '-][A-Za-z]+){0,2}$"
+          example: 'James'
+        lastName:
+          title: Last name
+          description: The last name of the vet.
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: "^[A-Za-z]+([ '-][A-Za-z]+){0,2}\\.?$"
+          example: 'Carter'
+        specialties:
+          title: Specialties
+          description: The specialties of the vet.
+          type: array
+          items:
+            $ref: '#/components/schemas/Specialty'
+        id:
+          title: ID
+          description: The ID of the vet.
+          type: integer
+          format: int32
+          minimum: 1
+          example: 1
+          readOnly: true
       required:
         - id
         - firstName
@@ -2237,13 +2646,13 @@ components:
       title: Visit fields
       description: Editable fields of a vet visit.
       type: object
+      additionalProperties: false
       properties:
         date:
           title: Date
           description: The date of the visit.
           type: string
           format: date
-          pattern: '^\d{4}-\d{2}-\d{2}$'
           example: '2013-01-01'
         description:
           title: Description
@@ -2258,32 +2667,48 @@ components:
     Visit:
       title: Visit
       description: A booking for a vet visit.
-      allOf:
-        - $ref: '#/components/schemas/VisitFields'
-        - type: object
-          properties:
-            id:
-              title: ID
-              description: The ID of the visit.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
-              readOnly: true
-            petId:
-              title: Pet ID
-              description: The ID of the pet.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
-          required:
-            - id
-            - petId
+      type: object
+      additionalProperties: false
+      properties:
+        date:
+          title: Date
+          description: The date of the visit.
+          type: string
+          format: date
+          example: '2013-01-01'
+        description:
+          title: Description
+          description: The description for the visit.
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[A-Za-z0-9][A-Za-z0-9 ,.()'/-]{0,254}$"
+          example: 'rabies shot'
+        id:
+          title: ID
+          description: The ID of the visit.
+          type: integer
+          format: int32
+          minimum: 1
+          example: 1
+          readOnly: true
+        petId:
+          title: Pet ID
+          description: >
+            Existing pet id (FK). Must reference a persisted pet; used on create and echoed on nested
+            visit payloads inside owner/pet lists (any id — do not restrict to seed data only).
+          type: integer
+          format: int32
+          minimum: 1
+          example: 7
+      required:
+        - description
+        - petId
     PetTypeFields:
       title: PetType fields
       description: Editable fields of a pet type.
       type: object
+      additionalProperties: false
       properties:
         name:
           title: Name
@@ -2291,35 +2716,45 @@ components:
           type: string
           maxLength: 80
           minLength: 1
+          pattern: '^[A-Za-z][A-Za-z0-9 _-]{0,79}$'
           example: cat
       required:
         - name
     PetType:
       title: Pet type
       description: A pet type.
-      allOf:
-        - $ref: '#/components/schemas/PetTypeFields'
-        - type: object
-          properties:
-            id:
-              title: ID
-              description: The ID of the pet type.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
-          required:
-            - id
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          title: ID
+          description: The ID of the pet type.
+          type: integer
+          format: int32
+          minimum: 1
+          example: 1
+        name:
+          title: Name
+          description: The name of the pet type.
+          type: string
+          maxLength: 80
+          minLength: 1
+          pattern: '^[A-Za-z][A-Za-z0-9 _-]{0,79}$'
+          example: cat
+      required:
+        - id
+        - name
     User:
       title: User
       description: An user.
       type: object
+      additionalProperties: false
       properties:
         username:
           title: username
           description: The username
           type: string
-          maxLength: 80
+          maxLength: 20
           minLength: 1
           pattern: '^[a-zA-Z0-9._-]{3,80}$'
           example: john.doe
@@ -2340,22 +2775,27 @@ components:
           title: Roles
           description: The roles of an user
           type: array
+          minItems: 1
           items:
             $ref: '#/components/schemas/Role'
       required:
         - username
+        - password
+        - roles
     Role:
       title: Role
       description: A role.
       type: object
+      additionalProperties: false
       properties:
         name:
           title: name
-          description: The role's name
+          description: The role's name.
           type: string
-          maxLength: 80
-          minLength: 1
-          pattern: '^[a-zA-Z][a-zA-Z0-9_:-]{1,79}$'
-          example: admin
+          enum:
+            - ROLE_OWNER_ADMIN
+            - ROLE_VET_ADMIN
+            - ROLE_ADMIN
+          example: ROLE_OWNER_ADMIN
       required:
         - name
