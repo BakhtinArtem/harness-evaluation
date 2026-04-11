@@ -1,0 +1,46 @@
+stages:
+  read-heavy:
+    wrk2params: -t2 -c5 -d30s -R200
+    flow:
+      - createOwner:
+        operationId: addOwner
+        entrynode: true
+        edges:
+          - to: getOwnerRead
+            weight: 0.40
+          - to: addPetToOwnerForRead
+            weight: 0.25
+          - to: addVetForRead
+            weight: 0.20
+          - to: addPetTypeForRead
+            weight: 0.15
+
+      - getOwnerRead:
+        operationId: getOwner
+
+      - addPetToOwnerForRead:
+        operationId: addPetToOwner
+        edges:
+          - to: getOwnersPetRead
+            weight: 1.0
+
+      - getOwnersPetRead:
+        operationId: getOwnersPet
+
+      - addVetForRead:
+        operationId: addVet
+        edges:
+          - to: getVetRead
+            weight: 1.0
+
+      - getVetRead:
+        operationId: getVet
+
+      - addPetTypeForRead:
+        operationId: addPetType
+        edges:
+          - to: getPetTypeRead
+            weight: 1.0
+
+      - getPetTypeRead:
+        operationId: getPetType

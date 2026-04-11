@@ -1,0 +1,61 @@
+stages:
+  lifecycle:
+    wrk2params: -t2 -c5 -d30s -R200
+    flow:
+      - createOwner:
+        operationId: addOwner
+        entrynode: true
+        edges:
+          - to: addPetToCreatedOwner
+            weight: 0.35
+          - to: getCreatedOwner
+            weight: 0.25
+          - to: listAllPets
+            weight: 0.15
+          - to: addVetSide
+            weight: 0.15
+          - to: listAllVets
+            weight: 0.10
+
+      - getCreatedOwner:
+        operationId: getOwner
+
+      - addPetToCreatedOwner:
+        operationId: addPetToOwner
+        edges:
+          - to: addVisitToPet
+            weight: 0.50
+          - to: getPetAfterAdd
+            weight: 0.50
+
+      - getPetAfterAdd:
+        operationId: getPet
+
+      - addVisitToPet:
+        operationId: addVisitToOwnerPet
+        edges:
+          - to: getVisitAfterAdd
+            weight: 0.60
+          - to: listAllVisits
+            weight: 0.40
+
+      - getVisitAfterAdd:
+        operationId: getVisit
+
+      - listAllVisits:
+        operationId: listPetVisits
+
+      - listAllPets:
+        operationId: listOwnerPets
+
+      - addVetSide:
+        operationId: addVet
+        edges:
+          - to: getVetAfterAdd
+            weight: 1.0
+
+      - getVetAfterAdd:
+        operationId: getVet
+
+      - listAllVets:
+        operationId: listVets

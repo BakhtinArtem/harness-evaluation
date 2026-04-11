@@ -1,0 +1,9 @@
+services:
+  petclinic:
+    image: aape2k/spring-petclinic-rest
+    expose:
+      - "9966"
+    ports:
+      - "9966:9966"
+    environment:
+      - SPRING_PROFILES_ACTIVE=h2,spring-data-jpa
