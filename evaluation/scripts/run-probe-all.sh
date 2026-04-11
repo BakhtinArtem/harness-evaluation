@@ -43,18 +43,21 @@ for APP in $APPS; do
             SERVICE_NAME="$SPRING_SERVICE_NAME"
             PORT="$SPRING_PORT"
             OPENAPI_PATH="$EVAL_DIR/$SPRING_OPENAPI"
+            READINESS_PATH="$SPRING_API_BASE/owners"
             ;;
         quarkus)
             COMPOSE_FILE="$EVAL_DIR/$QUARKUS_COMPOSE"
             SERVICE_NAME="$QUARKUS_SERVICE_NAME"
             PORT="$QUARKUS_PORT"
             OPENAPI_PATH="$EVAL_DIR/$QUARKUS_OPENAPI"
+            READINESS_PATH="$QUARKUS_API_BASE/owners"
             ;;
         quarkus-jvm)
             COMPOSE_FILE="$EVAL_DIR/$QUARKUS_JVM_COMPOSE"
             SERVICE_NAME="$QUARKUS_JVM_SERVICE_NAME"
             PORT="$QUARKUS_JVM_PORT"
             OPENAPI_PATH="$EVAL_DIR/$QUARKUS_JVM_OPENAPI"
+            READINESS_PATH="$QUARKUS_JVM_API_BASE/owners"
             ;;
         *)
             echo "Unknown app: $APP" >&2
@@ -85,7 +88,7 @@ for APP in $APPS; do
         PROBE_CACHE="$EVAL_DIR/results/$FLOW_APP/slsbench/$SCENARIO/probe-bodies"
 
         # Skip if result already exists
-        EXISTING=$(find "$PROBE_CACHE" -maxdepth 1 -type d -name 'probe-bodies-result-*' 2>/dev/null | head -1)
+        EXISTING=$(find "$PROBE_CACHE" -maxdepth 1 -type d -name 'probe-bodies-result-*' 2>/dev/null | head -1 || true)
         if [ -n "$EXISTING" ]; then
             echo "=== probe-bodies SKIP (exists) | flow=$FLOW_KEY -> $EXISTING ==="
             DONE_FLOWS="$DONE_FLOWS $FLOW_KEY"
@@ -94,23 +97,10 @@ for APP in $APPS; do
 
         mkdir -p "$PROBE_CACHE"
 
-        # Build probe flow: MAX_RATE + DURATION_STEADY + warmup stage.
-        # This produces enough iterations for every rate/phase combination.
+        # Build probe flow (no warmup — probes only need path coverage).
         PROBE_FLOW="$PROBE_CACHE/probe-flow.yaml"
         sed "s|-t2 -c5 -d[^ ]* -R[0-9]*|-t${WRK2_THREADS} -c${WRK2_CONNECTIONS} -d${DURATION} -R${MAX_RATE}|" \
             "$FLOW_FILE" > "$PROBE_FLOW"
-
-        python3 -c "
-import yaml, sys, copy
-with open(sys.argv[1]) as f:
-    doc = yaml.safe_load(f)
-sname = list(doc['stages'].keys())[0]
-warmup = copy.deepcopy(doc['stages'][sname])
-warmup['wrk2params'] = sys.argv[2]
-doc['stages'] = {'00-warmup': warmup, **doc['stages']}
-with open(sys.argv[1], 'w') as f:
-    yaml.dump(doc, f, default_flow_style=False, sort_keys=False)
-" "$PROBE_FLOW" "-t1 -c2 -d${WARMUP_DURATION} -R${WARMUP_RATE}"
 
         echo "=== probe-bodies | flow=$FLOW_KEY max_rate=$MAX_RATE ==="
         docker run --rm \
@@ -128,6 +118,8 @@ with open(sys.argv[1], 'w') as f:
                 --docker-socket-path "$DOCKER_SOCKET" \
                 --service-name "$SERVICE_NAME" \
                 --port "$PORT" \
+                --readiness-path "$READINESS_PATH" \
+                --max-probe-target 500 \
             2>&1 | tee "$PROBE_CACHE/probe-bodies.log"
 
         RESULT=$(find "$PROBE_CACHE" -maxdepth 1 -type d -name 'probe-bodies-result-*' | sort | tail -1)

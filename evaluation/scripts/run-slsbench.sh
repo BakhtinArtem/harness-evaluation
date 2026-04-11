@@ -63,7 +63,7 @@ fi
 # ---------------------------------------------------------------------------
 
 PROBE_CACHE="$EVAL_DIR/results/$FLOW_APP/slsbench/$SCENARIO/probe-bodies"
-PROBE_RESULT=$(find "$PROBE_CACHE" -maxdepth 1 -type d -name 'probe-bodies-result-*' 2>/dev/null | sort | tail -1)
+PROBE_RESULT=$(find "$PROBE_CACHE" -maxdepth 1 -type d -name 'probe-bodies-result-*' 2>/dev/null | sort | tail -1 || true)
 
 if [ -z "$PROBE_RESULT" ]; then
     echo "ERROR: No cached probe-bodies result found at $PROBE_CACHE" >&2
@@ -97,6 +97,13 @@ for RATE in $RATES; do
 
     if [ "$PHASE" = "steady" ]; then
         echo "  Injecting warmup stage (${WARMUP_DURATION} at R=${WARMUP_RATE})..."
+        FIRST_STAGE=$(python3 -c "
+import yaml, sys
+with open(sys.argv[1]) as f:
+    doc = yaml.safe_load(f)
+sname = list(doc['stages'].keys())[0]
+print(sname)
+" "$TEMP_FLOW")
         python3 -c "
 import yaml, sys, copy
 with open(sys.argv[1]) as f:
@@ -108,6 +115,10 @@ doc['stages'] = {'00-warmup': warmup, **doc['stages']}
 with open(sys.argv[1], 'w') as f:
     yaml.dump(doc, f, default_flow_style=False, sort_keys=False)
 " "$TEMP_FLOW" "-t1 -c2 -d${WARMUP_DURATION} -R${WARMUP_RATE}"
+        # Symlink warmup probe-bodies to the first real stage's data
+        if [ -d "$PROBE_RESULT/$FIRST_STAGE" ] && [ ! -e "$PROBE_RESULT/00-warmup" ]; then
+            ln -sf "$FIRST_STAGE" "$PROBE_RESULT/00-warmup"
+        fi
     fi
 
     echo "  Running harness..."
@@ -117,8 +128,8 @@ with open(sys.argv[1], 'w') as f:
         -v "$TEMP_FLOW:/workspace/flow.yaml:ro" \
         -v "$OPENAPI_PATH:/workspace/openapi.yaml:ro" \
         -v "$COMPOSE_FILE:/workspace/docker-compose.yml:ro" \
-        -v "$PROBE_RESULT:/workspace/probe-result:ro" \
-        -v "$RESULT_DIR:/workspace/results" \
+        --mount "type=bind,source=$PROBE_RESULT,target=/workspace/probe-result,readonly" \
+        -v "$RESULT_DIR:$RESULT_DIR" \
         "$SLSBENCH_IMAGE" harness \
             --flow-path /workspace/flow.yaml \
             --probe-bodies-path /workspace/probe-result \
@@ -127,7 +138,7 @@ with open(sys.argv[1], 'w') as f:
             --docker-socket-path "$DOCKER_SOCKET" \
             --service-name "$SERVICE_NAME" \
             --port "$PORT" \
-            --result-path /workspace/results \
+            --result-path "$RESULT_DIR" \
             --debug-non2xx \
         2>&1 | tee "$RESULT_DIR/harness.log"
 

@@ -3,7 +3,7 @@
 # Iterates: app x scenario x phase x repetition, running both treatments.
 #
 # Usage: ./run-all.sh [--apps spring,quarkus] [--scenarios read-heavy,mixed]
-#                     [--phases cold,steady] [--reps 3]
+#                     [--phases cold,steady] [--reps 3] [--rates "200 500"]
 
 set -euo pipefail
 
@@ -22,13 +22,18 @@ while [[ $# -gt 0 ]]; do
         --scenarios)  SCENARIOS="${2//,/ }"; shift 2 ;;
         --phases)     PHASES="${2//,/ }"; shift 2 ;;
         --reps)       REPS="$2"; shift 2 ;;
+        --rates)      RATES="${2//,/ }"; shift 2 ;;
         *)
             echo "Unknown option: $1" >&2
-            echo "Usage: $0 [--apps spring,quarkus] [--scenarios read-heavy,mixed] [--phases cold,steady] [--reps N]" >&2
+            echo "Usage: $0 [--apps spring,quarkus] [--scenarios read-heavy,mixed] [--phases cold,steady] [--reps N] [--rates \"200 500\"]" >&2
             exit 1
             ;;
     esac
 done
+
+# Export RATES so child scripts (run-slsbench.sh, run-baseline.sh) pick up overrides
+# instead of re-reading the default from config.env.
+export RATES
 
 # Ensure wrk2 image exists
 if ! docker image inspect "$WRK2_IMAGE" > /dev/null 2>&1; then

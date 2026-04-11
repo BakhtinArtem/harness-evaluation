@@ -94,7 +94,7 @@ for RATE in $RATES; do
     fi
 
     # Start docker stats collector in background
-    "$EVAL_DIR/scripts/docker-stats-collector.sh" "$SERVICE_NAME" "$RESULT_DIR/container-stats.jsonl" &
+    "$EVAL_DIR/scripts/docker-stats-collector.sh" "$SERVICE_NAME" "$RESULT_DIR/container-stats.jsonl" "$COMPOSE_FILE" &
     STATS_PID=$!
 
     # Run wrk2

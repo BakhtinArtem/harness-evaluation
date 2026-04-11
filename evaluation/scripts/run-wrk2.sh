@@ -33,11 +33,24 @@ case "$APP" in
         ;;
 esac
 
+# Resolve app port and readiness endpoint
+case "$APP" in
+    spring)      APP_PORT="$SPRING_PORT"; READINESS_URL="http://localhost:$SPRING_PORT$SPRING_API_BASE/owners" ;;
+    quarkus)     APP_PORT="$QUARKUS_PORT"; READINESS_URL="http://localhost:$QUARKUS_PORT$QUARKUS_API_BASE/owners" ;;
+    quarkus-jvm) APP_PORT="$QUARKUS_JVM_PORT"; READINESS_URL="http://localhost:$QUARKUS_JVM_PORT$QUARKUS_JVM_API_BASE/owners" ;;
+esac
+
 # For steady-state, ensure app is running before handing off
 if [ "$PHASE" = "steady" ]; then
     docker compose -f "$COMPOSE_FILE" up -d
-    echo "Waiting for app readiness..."
-    sleep 10
+    echo "Waiting for app readiness at $READINESS_URL ..."
+    for i in $(seq 1 120); do
+        if curl -sf "$READINESS_URL" > /dev/null 2>&1; then
+            echo "  App ready after ~${i}s"
+            break
+        fi
+        sleep 1
+    done
 fi
 
 exec "$EVAL_DIR/wrk2-baseline/run-baseline.sh" "$APP" "$SCENARIO" "$PHASE" "$RUN"

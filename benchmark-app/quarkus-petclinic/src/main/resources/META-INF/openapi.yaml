@@ -41,6 +41,12 @@ paths:
               $ref: '#/components/links/UpdateCreatedOwner'
             AddPetToCreatedOwner:
               $ref: '#/components/links/AddPetToCreatedOwner'
+            ListOwnerPetsAfterOwnerCreate:
+              $ref: '#/components/links/ListOwnerPetsAfterOwnerCreate'
+            AddVetAfterOwnerCreate:
+              $ref: '#/components/links/AddVetAfterOwnerCreate'
+            ListVetsAfterOwnerCreate:
+              $ref: '#/components/links/ListVetsAfterOwnerCreate'
   /api/owners/{ownerId}:
     parameters:
       - $ref: '#/components/parameters/OwnerId'
@@ -224,6 +230,8 @@ paths:
               $ref: '#/components/links/GetCreatedVisit'
             UpdateCreatedVisit:
               $ref: '#/components/links/UpdateCreatedVisit'
+            ListPetVisitsAfterVisitCreate:
+              $ref: '#/components/links/ListPetVisitsAfterVisitCreate'
         '404':
           description: Owner or pet not found
 
@@ -661,6 +669,23 @@ components:
       operationId: deletePetType
       parameters:
         petTypeId: '$response.body#/id'
+    ListOwnerPetsAfterOwnerCreate:
+      operationId: listOwnerPets
+      parameters:
+        ownerId: '$response.body#/id'
+      description: List the new owner's pets after creating the owner.
+    AddVetAfterOwnerCreate:
+      operationId: addVet
+      description: Create a vet as a next workflow step after owner creation.
+    ListVetsAfterOwnerCreate:
+      operationId: listVets
+      description: Browse vets after creating an owner.
+    ListPetVisitsAfterVisitCreate:
+      operationId: listPetVisits
+      parameters:
+        ownerId: '$request.path.ownerId'
+        petId: '$request.path.petId'
+      description: List all visits for the pet after creating a visit.
   schemas:
     Owner:
       type: object
@@ -669,16 +694,32 @@ components:
         id:
           type: integer
           format: int64
+          readOnly: true
         firstName:
           type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[A-Za-z]+$'
         lastName:
           type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[A-Za-z]+$'
         address:
           type: string
+          minLength: 1
+          maxLength: 255
+          pattern: '^[A-Za-z0-9 .,-]+$'
         city:
           type: string
+          minLength: 1
+          maxLength: 80
+          pattern: '^[A-Za-z ]+$'
         telephone:
           type: string
+          minLength: 1
+          maxLength: 10
+          pattern: '^[0-9]+$'
       required: [firstName, lastName, address, city, telephone]
     Pet:
       type: object
@@ -687,17 +728,24 @@ components:
         id:
           type: integer
           format: int64
+          readOnly: true
         name:
           type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[A-Za-z]+$'
         birthDate:
           type: string
           format: date
         typeId:
           type: integer
           format: int64
+          minimum: 1001
+          maximum: 1006
         ownerId:
           type: integer
           format: int64
+          readOnly: true
       required: [name, typeId]
     Visit:
       type: object
@@ -706,14 +754,19 @@ components:
         id:
           type: integer
           format: int64
+          readOnly: true
         date:
           type: string
           format: date
         description:
           type: string
+          minLength: 1
+          maxLength: 255
+          pattern: '^[A-Za-z0-9 .,-]+$'
         petId:
           type: integer
           format: int64
+          readOnly: true
       required: [description]
     Vet:
       type: object
@@ -722,15 +775,24 @@ components:
         id:
           type: integer
           format: int64
+          readOnly: true
         firstName:
           type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[A-Za-z]+$'
         lastName:
           type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[A-Za-z]+$'
         specialtyIds:
           type: array
           items:
             type: integer
             format: int64
+            minimum: 1001
+            maximum: 1003
       required: [firstName, lastName]
     Specialty:
       type: object
@@ -739,8 +801,12 @@ components:
         id:
           type: integer
           format: int64
+          readOnly: true
         name:
           type: string
+          minLength: 1
+          maxLength: 80
+          pattern: '^[A-Za-z ]+$'
       required: [name]
     PetType:
       type: object
@@ -749,6 +815,10 @@ components:
         id:
           type: integer
           format: int64
+          readOnly: true
         name:
           type: string
+          minLength: 1
+          maxLength: 80
+          pattern: '^[A-Za-z ]+$'
       required: [name]

@@ -40,7 +40,7 @@ esac
 TARGET_URL="http://localhost:${PORT}${PROBE_PATH}"
 TIMEOUT="${FIRST_RESPONSE_TIMEOUT:-120}"
 INTERVAL_MS="${FIRST_RESPONSE_INTERVAL_MS:-200}"
-INTERVAL_S=$(awk "BEGIN{printf \"%.3f\", $INTERVAL_MS / 1000}")
+INTERVAL_S=$(LC_NUMERIC=C awk "BEGIN{printf \"%.3f\", $INTERVAL_MS / 1000}")
 
 docker compose -f "$COMPOSE_FILE" down --remove-orphans 2>/dev/null || true
 docker compose -f "$COMPOSE_FILE" up -d
@@ -64,7 +64,7 @@ done
 END_EPOCH_NS=$(date +%s%N)
 END_TS=$(date -u +%Y-%m-%dT%H:%M:%S.%NZ)
 DURATION_MS=$(( (END_EPOCH_NS - START_EPOCH_NS) / 1000000 ))
-DURATION_S=$(awk "BEGIN{printf \"%.3f\", $DURATION_MS / 1000}")
+DURATION_S=$(LC_NUMERIC=C awk "BEGIN{printf \"%.3f\", $DURATION_MS / 1000}")
 
 cat <<EOF
 {

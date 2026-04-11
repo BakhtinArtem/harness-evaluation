@@ -98,6 +98,16 @@ paths:
               $ref: '#/components/links/AddPetToOwnerFromOwner'
             DeleteCreatedOwner:
               $ref: '#/components/links/DeleteOwnerFromOwner'
+            ListPetsAfterOwnerCreate:
+              $ref: '#/components/links/ListPetsAfterOwnerCreate'
+            AddVetAfterOwnerCreate:
+              $ref: '#/components/links/AddVetAfterOwnerCreate'
+            ListVetsAfterOwnerCreate:
+              $ref: '#/components/links/ListVetsAfterOwnerCreate'
+            AddPetTypeAfterOwnerCreate:
+              $ref: '#/components/links/AddPetTypeAfterOwnerCreate'
+            AddSpecialtyAfterOwnerCreate:
+              $ref: '#/components/links/AddSpecialtyAfterOwnerCreate'
         400:
           description: Bad request.
           content:
@@ -283,6 +293,16 @@ paths:
               $ref: '#/components/links/GetUpdatedOwner'
             ListOwnersByUpdatedLastName:
               $ref: '#/components/links/ListOwnersByUpdatedLastName'
+            DeleteOwnerAfterUpdate:
+              $ref: '#/components/links/DeleteOwnerAfterUpdate'
+        204:
+          description: Update successful (no content).
+          links:
+            DeleteOwnerAfterUpdate204:
+              operationId: deleteOwner
+              parameters:
+                ownerId: '$request.path.ownerId'
+              description: Delete the owner after updating it (via request path param since 204 has no body).
         400:
           description: Bad request.
           content:
@@ -467,6 +487,8 @@ paths:
               $ref: '#/components/links/GetOwnerFromPet'
             AddVisitToOwnersPet:
               $ref: '#/components/links/AddVisitToOwnersPet'
+            UpdateOwnersPetFromOwnersPet:
+              $ref: '#/components/links/UpdateOwnersPetFromOwnersPet'
         304:
           description: Not modified.
           headers:
@@ -742,6 +764,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PetType'
+          links:
+            UpdatePetTypeFromPetType:
+              $ref: '#/components/links/UpdatePetTypeFromPetType'
         304:
           description: Not modified.
           headers:
@@ -1489,6 +1514,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Specialty'
+          links:
+            UpdateSpecialtyFromSpecialty:
+              $ref: '#/components/links/UpdateSpecialtyFromSpecialty'
         304:
           description: Not modified.
           headers:
@@ -1754,6 +1782,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Vet'
+          links:
+            UpdateVetFromVet:
+              $ref: '#/components/links/UpdateVetFromVet'
         304:
           description: Not modified.
           headers:
@@ -2280,6 +2311,47 @@ components:
       parameters:
         petId: '$response.body#/petId'
       description: Follow from a visit record back to its pet.
+    ListPetsAfterOwnerCreate:
+      operationId: listPets
+      description: Browse all pets after creating an owner.
+    AddVetAfterOwnerCreate:
+      operationId: addVet
+      description: Create a vet as a next workflow step after owner creation.
+    ListVetsAfterOwnerCreate:
+      operationId: listVets
+      description: Browse vets after creating an owner.
+    AddPetTypeAfterOwnerCreate:
+      operationId: addPetType
+      description: Create a pet type as a next workflow step after owner creation.
+    AddSpecialtyAfterOwnerCreate:
+      operationId: addSpecialty
+      description: Create a specialty as a next workflow step after owner creation.
+    DeleteOwnerAfterUpdate:
+      operationId: deleteOwner
+      parameters:
+        ownerId: '$response.body#/id'
+      description: Delete the owner after updating it.
+    UpdatePetTypeFromPetType:
+      operationId: updatePetType
+      parameters:
+        petTypeId: '$response.body#/id'
+      description: Update the pet type after viewing it.
+    UpdateSpecialtyFromSpecialty:
+      operationId: updateSpecialty
+      parameters:
+        specialtyId: '$response.body#/id'
+      description: Update the specialty after viewing it.
+    UpdateVetFromVet:
+      operationId: updateVet
+      parameters:
+        vetId: '$response.body#/id'
+      description: Update the vet after viewing it.
+    UpdateOwnersPetFromOwnersPet:
+      operationId: updateOwnersPet
+      parameters:
+        ownerId: '$request.path.ownerId'
+        petId: '$response.body#/id'
+      description: Update the pet after viewing it.
   schemas:
     ProblemDetail:
       title: Problem Detail

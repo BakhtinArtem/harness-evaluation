@@ -20,7 +20,9 @@ This evaluation answers: **does deriving workload scenarios from OpenAPI specifi
 | Scenario   | Read-heavy, Mixed CRUD, Lifecycle |
 | Rate       | 50, 200, 500, 1000 req/s        |
 
-Full matrix: 2 treatments x 3 frameworks x 2 phases x 3 scenarios x 4 rates = **144 configurations**, each repeated 3 times = **432 runs**.
+Not every testing point requires the full cross-product. Each TP specifies its own
+focused slice of the variable space; the union of all TPs yields **156 runs**
+(see Testing Points below for per-TP breakdowns).
 
 ### Controlled Variables
 
@@ -75,7 +77,7 @@ evaluation/
 │   └── docker-stats-collector.sh    # Container stats JSONL collector
 ├── tests/
 │   └── first/
-│       └── README.md                # Hypothesis-driven test plan (TP1-TP6)
+│       └── README.md                # Hypothesis-driven test plan (TP-A through TP-D)
 └── results/                         # Output (git-ignored)
 ```
 
@@ -93,8 +95,13 @@ evaluation/
    ```
 4. **Application images** pulled or built:
    - `aape2k/spring-petclinic-rest` (Docker Hub)
-   - `aape2k/quarkus-petclinic` -- Quarkus Native (Docker Hub)
-   - `aape2k/quarkus-petclinic-jvm` -- Quarkus JVM (build from `benchmark-app/quarkus-petclinic` with `Dockerfile.jvm`)
+   - `aape2k/quarkus-petclinic-jvm` -- Quarkus JVM (build from `benchmark-app/quarkus-petclinic`):
+     ```bash
+     cd benchmark-app/quarkus-petclinic
+     ./mvnw package -DskipTests
+     docker build -f src/main/docker/Dockerfile.fast-jar -t aape2k/quarkus-petclinic-jvm .
+     ```
+   - `aape2k/quarkus-petclinic` -- Quarkus Native (optional; requires GraalVM native-image and compatible pom.xml)
 
 ## Quick Start
 
@@ -105,14 +112,44 @@ cd evaluation
 ./scripts/run-all.sh
 ```
 
-### Run a subset
+### Run per testing point
 
 ```bash
-# Only Spring, lifecycle scenario, steady-state, 1 repetition
-./scripts/run-all.sh --apps spring --scenarios lifecycle --phases steady --reps 1
+# TP-A: Per-operation characterization (lifecycle, steady, rate sweep)
+./scripts/run-all.sh --apps spring,quarkus --scenarios lifecycle --phases steady --reps 3
 
-# Compare Quarkus Native vs JVM on cold start
-./scripts/run-all.sh --apps quarkus,quarkus-jvm --scenarios lifecycle --phases cold --reps 3
+# TP-B: Execution phase granularity (mixed, cold+steady, R=500)
+./scripts/run-all.sh --apps spring,quarkus --scenarios mixed --phases cold,steady --reps 3 --rates 500
+
+# TP-C: Scenario shape sensitivity (all scenarios, Spring only, R=500)
+./scripts/run-all.sh --apps spring --scenarios read-heavy,mixed,lifecycle --phases steady --reps 2 --rates 500
+
+# TP-D: Cross-framework decision quality (lifecycle, all frameworks, R=200+500)
+./scripts/run-all.sh --apps spring,quarkus,quarkus-jvm --scenarios lifecycle --phases cold,steady --reps 3 --rates "200 500"
+```
+
+### Quick sample (validate pipeline)
+
+```bash
+# 4 runs: Spring lifecycle at 2 rates
+./scripts/run-all.sh --apps spring --scenarios lifecycle --phases steady --reps 1 --rates "200 500"
+# 2 runs: Spring mixed cold+steady
+./scripts/run-all.sh --apps spring --scenarios mixed --phases cold,steady --reps 1 --rates 500
+# 2 runs: Spring read-heavy
+./scripts/run-all.sh --apps spring --scenarios read-heavy --phases steady --reps 1 --rates 500
+# 2 runs: Quarkus JVM lifecycle
+./scripts/run-all.sh --apps quarkus-jvm --scenarios lifecycle --phases steady --reps 1 --rates 500
+```
+
+### Analysis notebook
+
+The Jupyter notebook `analysis/evaluation.ipynb` auto-discovers results and produces
+thesis-ready charts and tables for all 4 testing points:
+
+```bash
+cd analysis
+source .venv/bin/activate  # or: python3 -m venv .venv && pip install -r requirements.txt
+jupyter notebook evaluation.ipynb
 ```
 
 ### Run a single experiment
@@ -218,75 +255,82 @@ The flow files in `flows/spring/` and `flows/quarkus/` account for these differe
 See `tests/first/README.md` for the full hypothesis-driven test plan with commands,
 expected outputs, confirmation criteria, and thesis table/chart structures.
 
-### TP1: Per-Operation Insight Depth
+Four testing points, each targeting a focused slice of the variable space.
+Total unique runs across all TPs: **156** (down from 432 in the full matrix).
 
-Run `lifecycle` at R=500 steady-state. slsbench `flow_stats` reveals per-operation
-latencies (e.g. listPets 29ms vs getVet 0.1ms -- a 290x spread). wrk2 reports a
-single blended average (~5ms) that masks this variance. The aggregate is misleading:
-a developer would miss the listPets bottleneck entirely.
+### TP-A: Per-Operation Performance Characterization
 
-### TP2: Execution Phase Granularity
+**Merges per-operation insight depth with per-operation saturation detection.**
 
-Run `mixed` cold vs steady. slsbench shows cold-start penalty is non-uniform:
-write operations (addOwner) suffer ~100x while read operations (getVet) suffer ~5x.
-wrk2 shows one aggregate cold penalty (~10x) with no per-operation breakdown, hiding
-which operations to optimize for cold-start scenarios.
+Lifecycle flow, steady state, rate sweep (50/200/500/1000) on Spring + Quarkus Native.
+slsbench `flow_stats` reveals per-operation latencies at each rate level. At a single
+rate (e.g. R=500), this shows that listPets is ~290x slower than getVet -- a spread
+wrk2's aggregate completely masks. Across the rate sweep, it further shows that
+individual operations saturate at different rates: listPets p99 spikes at R=500 while
+getVet stays flat through R=1000, identifying exactly which operation to optimize.
 
-### TP3: Stateful Data Validity Under Load
+Additionally, wrk2's non-2xx error rates are reported as a validity observation: its
+hardcoded IDs in `mixed-crud.lua` produce 4xx errors from stale state, while
+slsbench's Schemathesis-generated chains maintain valid state per iteration.
 
-Run `mixed` at R=500 steady. Compare non-2xx error rates: wrk2's hardcoded IDs in
-`mixed-crud.lua` produce 4xx errors from stale state, while slsbench's stateful chains
-use freshly created IDs per iteration. This is not just "less insight" -- it is wrong
-data. Latency measurements including error responses measure error-handling paths, not
-application performance.
+**Runs:** 2 treatments x 2 apps x 4 rates x 3 reps = **48 runs**
 
-### TP4: Scenario Shape Sensitivity
+### TP-B: Execution Phase Granularity
 
-Run all three scenarios on the same app at the same rate. slsbench reveals distinct
-per-operation signatures per scenario (read-heavy is fast, mixed has slow deletes,
-lifecycle shows cascading write latency). wrk2's Lua scripts produce similar aggregate
-numbers because they lack dependency chains, flattening the differences that
-scenario-aware tooling captures.
+Mixed CRUD flow, cold vs steady, at R=500 on Spring + Quarkus Native. slsbench shows
+cold-start penalty is non-uniform: write operations (addOwner) suffer ~100x while read
+operations (getVet) suffer ~5x. wrk2 shows one aggregate cold penalty (~10x) with no
+per-operation breakdown, hiding which operations to optimize for cold-start scenarios.
 
-### TP5: Cross-Framework Decision Quality
+**Runs:** 2 treatments x 2 apps x 2 phases x 1 rate x 3 reps = **24 runs**
 
-Run `lifecycle` on Spring vs Quarkus vs Quarkus JVM (steady + cold). wrk2 says
-"Quarkus is 20% faster." slsbench shows "Quarkus is faster for reads, Spring is
-faster for write chains" -- the recommendation depends on the workload type.
-Scenario-based data doesn't just give more data; it gives different answers to the
-framework selection question.
+### TP-C: Scenario Shape Sensitivity
 
-### TP6: Per-Operation Saturation Detection
+All three scenarios (read-heavy, mixed, lifecycle) on Spring at R=500, steady state.
+slsbench reveals distinct per-operation signatures per scenario: read-heavy is fast
+across the board, mixed has slow deletes, lifecycle shows cascading write latency.
+wrk2's Lua scripts produce similar aggregate numbers because they lack dependency
+chains, flattening the differences that scenario-aware tooling captures.
 
-Load sweep (50, 200, 500, 1000 R/s) on `lifecycle`. wrk2 shows a smooth aggregate
-throughput plateau. slsbench shows `listPets` p99 spiking at R=500 while `getVet`
-stays flat through R=1000, identifying exactly which operation to optimize to
-increase overall capacity.
+**Runs:** 2 treatments x 1 app x 3 scenarios x 1 rate x 2 reps = **12 runs**
+
+### TP-D: Cross-Framework Decision Quality
+
+Lifecycle flow on all three frameworks (Spring, Quarkus Native, Quarkus JVM), cold +
+steady, at R=200 and R=500. wrk2 says "Quarkus is 20% faster." slsbench shows
+"Quarkus is faster for reads, Spring is faster for write chains" -- the recommendation
+depends on the workload type. For cold start, `first_request_result.json` captures
+native (~500ms) vs JVM (~5000ms) startup, and per-step cold penalties differ by
+operation category.
+
+**Runs:** 2 treatments x 3 apps x 2 phases x 2 rates x 3 reps = **72 runs**
 
 ## What This Demonstrates
 
 ### wrk2 (microbenchmark) limitations
 
-- Aggregate metrics mask per-operation variance by up to 290x (TP1)
-- Single cold-start penalty number hides non-uniform recovery across operations (TP2)
-- Hardcoded IDs produce invalid measurements under concurrent load -- wrong data, not just less data (TP3)
-- Different Lua scripts produce similar aggregate latencies, unable to distinguish scenario shapes (TP4)
-- Single "X is faster" verdict misses operation-level trade-offs that change the recommendation (TP5)
-- Smooth throughput plateau hides per-operation saturation points (TP6)
+- Aggregate metrics mask per-operation variance by up to 290x (TP-A)
+- Smooth aggregate throughput plateau hides per-operation saturation points (TP-A)
+- Hardcoded IDs produce invalid measurements under concurrent load -- wrong data, not just less data (TP-A, observed across all TPs)
+- Single cold-start penalty number hides non-uniform recovery across operations (TP-B)
+- Different Lua scripts produce similar aggregate latencies, unable to distinguish scenario shapes (TP-C)
+- Single "X is faster" verdict misses operation-level trade-offs that change the recommendation (TP-D)
 
 ### slsbench (scenario-based) advantages
 
 - OpenAPI-driven flows traverse realistic multi-step operation chains with per-step metrics
-- Stateful body generation via Schemathesis ensures valid request payloads across transitions, eliminating artificial errors (TP3)
-- Per-step latency breakdown reveals hidden bottlenecks (TP1) and non-uniform cold penalties (TP2)
-- Distinct performance signatures per scenario validate that usage patterns matter (TP4)
-- Per-operation framework comparisons enable workload-dependent recommendations (TP5)
-- Per-operation load curves reveal individual saturation points invisible to aggregate throughput (TP6)
+- Per-step latency breakdown reveals hidden bottlenecks and per-operation saturation points invisible to aggregate throughput (TP-A)
+- Stateful body generation via Schemathesis ensures valid request payloads across transitions, eliminating artificial errors (TP-A)
+- Per-operation cold-start analysis reveals non-uniform phase penalties, guiding targeted optimization (TP-B)
+- Distinct performance signatures per scenario validate that usage patterns matter (TP-C)
+- Per-operation framework comparisons enable workload-dependent recommendations (TP-D)
 
 ## Threats to Validity
 
 - Results are limited to JVM-based implementations and the Petclinic domain
-- Spring uses H2 (in-memory DB); Quarkus uses PostgreSQL -- this is deliberate (each framework's typical config) but affects absolute numbers
+- Spring uses H2 (in-memory DB); Quarkus uses PostgreSQL -- this is deliberate (each framework's typical config) but affects absolute numbers. Relative comparisons across operations within the same app are unaffected
 - Quarkus JVM Dockerfile uses Java 11; Spring uses Java 21 -- control for this in analysis
 - Cross-language generalization is future work
 - Network effects are minimized by using `--network=host` but not eliminated
+- wrk2 error rates (observed in TP-A) depend on Lua script design (hardcoded IDs). This is the realistic baseline: wrk2 has no mechanism for stateful chaining, so hardcoded IDs are the standard approach
+- Scenario shapes (TP-C) are designed by the author, not derived from production traces. The point is that the tooling supports scenario differentiation, not that these specific scenarios match real-world traffic distributions
