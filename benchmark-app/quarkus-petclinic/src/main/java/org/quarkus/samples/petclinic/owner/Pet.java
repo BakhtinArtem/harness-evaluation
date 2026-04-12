@@ -46,7 +46,11 @@ public class Pet extends PanacheEntity {
         return getEntityManager().merge(this);
     }
 
-    protected Set<Visit> getVisitsInternal() {
+	public Set<Visit> getVisits() {
+		return getVisitsInternal();
+	}
+
+	protected Set<Visit> getVisitsInternal() {
 		if (this.visits == null) {
 			this.visits = new HashSet<>();
 		}

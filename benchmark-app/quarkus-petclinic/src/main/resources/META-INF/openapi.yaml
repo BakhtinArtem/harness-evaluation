@@ -47,6 +47,10 @@ paths:
               $ref: '#/components/links/AddVetAfterOwnerCreate'
             ListVetsAfterOwnerCreate:
               $ref: '#/components/links/ListVetsAfterOwnerCreate'
+            AddPetTypeAfterOwnerCreate:
+              $ref: '#/components/links/AddPetTypeAfterOwnerCreate'
+            AddSpecialtyAfterOwnerCreate:
+              $ref: '#/components/links/AddSpecialtyAfterOwnerCreate'
   /api/owners/{ownerId}:
     parameters:
       - $ref: '#/components/parameters/OwnerId'
@@ -331,6 +335,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Vet'
+          links:
+            UpdateVetFromGet:
+              $ref: '#/components/links/UpdateVetFromGet'
         '404':
           description: Vet not found
     put:
@@ -411,6 +418,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Specialty'
+          links:
+            UpdateSpecialtyFromGet:
+              $ref: '#/components/links/UpdateSpecialtyFromGet'
         '404':
           description: Specialty not found
     put:
@@ -491,6 +501,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PetType'
+          links:
+            UpdatePetTypeFromGet:
+              $ref: '#/components/links/UpdatePetTypeFromGet'
         '404':
           description: Pet type not found
     put:
@@ -680,6 +693,24 @@ components:
     ListVetsAfterOwnerCreate:
       operationId: listVets
       description: Browse vets after creating an owner.
+    AddPetTypeAfterOwnerCreate:
+      operationId: addPetType
+      description: Create a pet type as a next workflow step after owner creation.
+    AddSpecialtyAfterOwnerCreate:
+      operationId: addSpecialty
+      description: Create a specialty as a next workflow step after owner creation.
+    UpdatePetTypeFromGet:
+      operationId: updatePetType
+      parameters:
+        petTypeId: '$response.body#/id'
+    UpdateSpecialtyFromGet:
+      operationId: updateSpecialty
+      parameters:
+        specialtyId: '$response.body#/id'
+    UpdateVetFromGet:
+      operationId: updateVet
+      parameters:
+        vetId: '$response.body#/id'
     ListPetVisitsAfterVisitCreate:
       operationId: listPetVisits
       parameters:
