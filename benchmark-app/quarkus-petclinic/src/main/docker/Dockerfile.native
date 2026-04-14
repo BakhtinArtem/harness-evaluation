@@ -1,0 +1,27 @@
+####
+# This Dockerfile is used in order to build a container that runs the Quarkus application in native (no JVM) mode
+#
+# Before building the container image run:
+#
+# ./mvnw package -Pnative
+#
+# Then, build the image with:
+#
+# docker build -f src/main/docker/Dockerfile.native -t quarkus/quarkus-petclinic .
+#
+# Then run the container using:
+#
+# docker run -i --rm -p 8080:8080 quarkus/quarkus-petclinic
+#
+###
+FROM ubuntu:22.04
+WORKDIR /work/
+RUN apt-get update && apt-get install -y --no-install-recommends libfreetype6 && rm -rf /var/lib/apt/lists/* \
+    && groupadd -r app && useradd -r -g app -d /work app \
+    && chown app:app /work && chmod "g+rwX" /work
+COPY --chown=app:app target/*-runner /work/application
+
+EXPOSE 8080
+USER app
+
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]

@@ -1,0 +1,855 @@
+openapi: 3.0.3
+info:
+  title: Quarkus Petclinic API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/owners:
+    get:
+      operationId: listOwners
+      tags: [owners]
+      responses:
+        '200':
+          description: Owners listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Owner'
+    post:
+      operationId: addOwner
+      tags: [owners]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Owner'
+      responses:
+        '201':
+          description: Owner created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+          links:
+            GetCreatedOwner:
+              $ref: '#/components/links/GetCreatedOwner'
+            UpdateCreatedOwner:
+              $ref: '#/components/links/UpdateCreatedOwner'
+            AddPetToCreatedOwner:
+              $ref: '#/components/links/AddPetToCreatedOwner'
+            ListOwnerPetsAfterOwnerCreate:
+              $ref: '#/components/links/ListOwnerPetsAfterOwnerCreate'
+            AddVetAfterOwnerCreate:
+              $ref: '#/components/links/AddVetAfterOwnerCreate'
+            ListVetsAfterOwnerCreate:
+              $ref: '#/components/links/ListVetsAfterOwnerCreate'
+            AddPetTypeAfterOwnerCreate:
+              $ref: '#/components/links/AddPetTypeAfterOwnerCreate'
+            AddSpecialtyAfterOwnerCreate:
+              $ref: '#/components/links/AddSpecialtyAfterOwnerCreate'
+  /api/owners/{ownerId}:
+    parameters:
+      - $ref: '#/components/parameters/OwnerId'
+    get:
+      operationId: getOwner
+      tags: [owners]
+      responses:
+        '200':
+          description: Owner details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+          links:
+            UpdateOwnerFromOwner:
+              $ref: '#/components/links/UpdateOwnerFromOwner'
+            AddPetToOwnerFromOwner:
+              $ref: '#/components/links/AddPetToOwnerFromOwner'
+        '404':
+          description: Owner not found
+    put:
+      operationId: updateOwner
+      tags: [owners]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Owner'
+      responses:
+        '200':
+          description: Owner updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+          links:
+            DeleteOwnerAfterUpdate:
+              $ref: '#/components/links/DeleteOwnerAfterUpdate'
+        '404':
+          description: Owner not found
+    delete:
+      operationId: deleteOwner
+      tags: [owners]
+      responses:
+        '204':
+          description: Owner deleted
+        '404':
+          description: Owner not found
+
+  /api/owners/{ownerId}/pets:
+    parameters:
+      - $ref: '#/components/parameters/OwnerId'
+    get:
+      operationId: listOwnerPets
+      tags: [pets]
+      responses:
+        '200':
+          description: Owner pets listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+          links:
+            GetFirstPetFromOwnerPets:
+              $ref: '#/components/links/GetFirstPetFromOwnerPets'
+        '404':
+          description: Owner not found
+    post:
+      operationId: addPetToOwner
+      tags: [pets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '201':
+          description: Pet created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+          links:
+            GetCreatedPet:
+              $ref: '#/components/links/GetCreatedPet'
+            UpdateCreatedPet:
+              $ref: '#/components/links/UpdateCreatedPet'
+            AddVisitToCreatedPet:
+              $ref: '#/components/links/AddVisitToCreatedPet'
+        '404':
+          description: Owner or pet type not found
+
+  /api/pets/{petId}:
+    parameters:
+      - $ref: '#/components/parameters/PetId'
+    get:
+      operationId: getPet
+      tags: [pets]
+      responses:
+        '200':
+          description: Pet details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+          links:
+            UpdatePetFromPet:
+              $ref: '#/components/links/UpdatePetFromPet'
+        '404':
+          description: Pet not found
+    put:
+      operationId: updatePet
+      tags: [pets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '200':
+          description: Pet updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+          links:
+            DeletePetAfterUpdate:
+              $ref: '#/components/links/DeletePetAfterUpdate'
+        '404':
+          description: Pet or pet type not found
+    delete:
+      operationId: deletePet
+      tags: [pets]
+      responses:
+        '204':
+          description: Pet deleted
+        '404':
+          description: Pet not found
+
+  /api/owners/{ownerId}/pets/{petId}/visits:
+    parameters:
+      - $ref: '#/components/parameters/OwnerId'
+      - $ref: '#/components/parameters/PetId'
+    get:
+      operationId: listPetVisits
+      tags: [visits]
+      responses:
+        '200':
+          description: Visits listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Visit'
+        '404':
+          description: Owner or pet not found
+    post:
+      operationId: addVisitToOwnerPet
+      tags: [visits]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Visit'
+      responses:
+        '201':
+          description: Visit created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+          links:
+            GetCreatedVisit:
+              $ref: '#/components/links/GetCreatedVisit'
+            UpdateCreatedVisit:
+              $ref: '#/components/links/UpdateCreatedVisit'
+            ListPetVisitsAfterVisitCreate:
+              $ref: '#/components/links/ListPetVisitsAfterVisitCreate'
+        '404':
+          description: Owner or pet not found
+
+  /api/visits/{visitId}:
+    parameters:
+      - $ref: '#/components/parameters/VisitId'
+    get:
+      operationId: getVisit
+      tags: [visits]
+      responses:
+        '200':
+          description: Visit details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        '404':
+          description: Visit not found
+    put:
+      operationId: updateVisit
+      tags: [visits]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Visit'
+      responses:
+        '200':
+          description: Visit updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+          links:
+            DeleteVisitAfterUpdate:
+              $ref: '#/components/links/DeleteVisitAfterUpdate'
+        '404':
+          description: Visit not found
+    delete:
+      operationId: deleteVisit
+      tags: [visits]
+      responses:
+        '204':
+          description: Visit deleted
+        '404':
+          description: Visit not found
+
+  /api/vets:
+    get:
+      operationId: listVets
+      tags: [vets]
+      responses:
+        '200':
+          description: Vets listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vet'
+          links:
+            GetFirstVetFromVets:
+              $ref: '#/components/links/GetFirstVetFromVets'
+    post:
+      operationId: addVet
+      tags: [vets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vet'
+      responses:
+        '201':
+          description: Vet created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vet'
+          links:
+            GetCreatedVet:
+              $ref: '#/components/links/GetCreatedVet'
+            UpdateCreatedVet:
+              $ref: '#/components/links/UpdateCreatedVet'
+
+  /api/vets/{vetId}:
+    parameters:
+      - $ref: '#/components/parameters/VetId'
+    get:
+      operationId: getVet
+      tags: [vets]
+      responses:
+        '200':
+          description: Vet details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vet'
+          links:
+            UpdateVetFromGet:
+              $ref: '#/components/links/UpdateVetFromGet'
+        '404':
+          description: Vet not found
+    put:
+      operationId: updateVet
+      tags: [vets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vet'
+      responses:
+        '200':
+          description: Vet updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vet'
+          links:
+            DeleteVetAfterUpdate:
+              $ref: '#/components/links/DeleteVetAfterUpdate'
+        '404':
+          description: Vet or specialty not found
+    delete:
+      operationId: deleteVet
+      tags: [vets]
+      responses:
+        '204':
+          description: Vet deleted
+        '404':
+          description: Vet not found
+
+  /api/specialties:
+    get:
+      operationId: listSpecialties
+      tags: [specialties]
+      responses:
+        '200':
+          description: Specialties listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Specialty'
+    post:
+      operationId: addSpecialty
+      tags: [specialties]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Specialty'
+      responses:
+        '201':
+          description: Specialty created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specialty'
+          links:
+            GetCreatedSpecialty:
+              $ref: '#/components/links/GetCreatedSpecialty'
+            UpdateCreatedSpecialty:
+              $ref: '#/components/links/UpdateCreatedSpecialty'
+
+  /api/specialties/{specialtyId}:
+    parameters:
+      - $ref: '#/components/parameters/SpecialtyId'
+    get:
+      operationId: getSpecialty
+      tags: [specialties]
+      responses:
+        '200':
+          description: Specialty details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specialty'
+          links:
+            UpdateSpecialtyFromGet:
+              $ref: '#/components/links/UpdateSpecialtyFromGet'
+        '404':
+          description: Specialty not found
+    put:
+      operationId: updateSpecialty
+      tags: [specialties]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Specialty'
+      responses:
+        '200':
+          description: Specialty updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specialty'
+          links:
+            DeleteSpecialtyAfterUpdate:
+              $ref: '#/components/links/DeleteSpecialtyAfterUpdate'
+        '404':
+          description: Specialty not found
+    delete:
+      operationId: deleteSpecialty
+      tags: [specialties]
+      responses:
+        '204':
+          description: Specialty deleted
+        '404':
+          description: Specialty not found
+
+  /api/pettypes:
+    get:
+      operationId: listPetTypes
+      tags: [pettypes]
+      responses:
+        '200':
+          description: Pet types listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PetType'
+    post:
+      operationId: addPetType
+      tags: [pettypes]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetType'
+      responses:
+        '201':
+          description: Pet type created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetType'
+          links:
+            GetCreatedPetType:
+              $ref: '#/components/links/GetCreatedPetType'
+            UpdateCreatedPetType:
+              $ref: '#/components/links/UpdateCreatedPetType'
+
+  /api/pettypes/{petTypeId}:
+    parameters:
+      - $ref: '#/components/parameters/PetTypeId'
+    get:
+      operationId: getPetType
+      tags: [pettypes]
+      responses:
+        '200':
+          description: Pet type details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetType'
+          links:
+            UpdatePetTypeFromGet:
+              $ref: '#/components/links/UpdatePetTypeFromGet'
+        '404':
+          description: Pet type not found
+    put:
+      operationId: updatePetType
+      tags: [pettypes]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetType'
+      responses:
+        '200':
+          description: Pet type updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetType'
+          links:
+            DeletePetTypeAfterUpdate:
+              $ref: '#/components/links/DeletePetTypeAfterUpdate'
+        '404':
+          description: Pet type not found
+    delete:
+      operationId: deletePetType
+      tags: [pettypes]
+      responses:
+        '204':
+          description: Pet type deleted
+        '404':
+          description: Pet type not found
+
+components:
+  parameters:
+    OwnerId:
+      in: path
+      name: ownerId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    PetId:
+      in: path
+      name: petId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    VisitId:
+      in: path
+      name: visitId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    VetId:
+      in: path
+      name: vetId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    SpecialtyId:
+      in: path
+      name: specialtyId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    PetTypeId:
+      in: path
+      name: petTypeId
+      required: true
+      schema:
+        type: integer
+        format: int64
+  links:
+    GetCreatedOwner:
+      operationId: getOwner
+      parameters:
+        ownerId: '$response.body#/id'
+    UpdateCreatedOwner:
+      operationId: updateOwner
+      parameters:
+        ownerId: '$response.body#/id'
+    AddPetToCreatedOwner:
+      operationId: addPetToOwner
+      parameters:
+        ownerId: '$response.body#/id'
+    UpdateOwnerFromOwner:
+      operationId: updateOwner
+      parameters:
+        ownerId: '$response.body#/id'
+    AddPetToOwnerFromOwner:
+      operationId: addPetToOwner
+      parameters:
+        ownerId: '$response.body#/id'
+    DeleteOwnerAfterUpdate:
+      operationId: deleteOwner
+      parameters:
+        ownerId: '$response.body#/id'
+    GetFirstPetFromOwnerPets:
+      operationId: getPet
+      parameters:
+        petId: '$response.body#/0/id'
+    GetCreatedPet:
+      operationId: getPet
+      parameters:
+        petId: '$response.body#/id'
+    UpdateCreatedPet:
+      operationId: updatePet
+      parameters:
+        petId: '$response.body#/id'
+    UpdatePetFromPet:
+      operationId: updatePet
+      parameters:
+        petId: '$response.body#/id'
+    DeletePetAfterUpdate:
+      operationId: deletePet
+      parameters:
+        petId: '$response.body#/id'
+    AddVisitToCreatedPet:
+      operationId: addVisitToOwnerPet
+      parameters:
+        ownerId: '$response.body#/ownerId'
+        petId: '$response.body#/id'
+    GetCreatedVisit:
+      operationId: getVisit
+      parameters:
+        visitId: '$response.body#/id'
+    UpdateCreatedVisit:
+      operationId: updateVisit
+      parameters:
+        visitId: '$response.body#/id'
+    DeleteVisitAfterUpdate:
+      operationId: deleteVisit
+      parameters:
+        visitId: '$response.body#/id'
+    GetFirstVetFromVets:
+      operationId: getVet
+      parameters:
+        vetId: '$response.body#/0/id'
+    GetCreatedVet:
+      operationId: getVet
+      parameters:
+        vetId: '$response.body#/id'
+    UpdateCreatedVet:
+      operationId: updateVet
+      parameters:
+        vetId: '$response.body#/id'
+    DeleteVetAfterUpdate:
+      operationId: deleteVet
+      parameters:
+        vetId: '$response.body#/id'
+    GetCreatedSpecialty:
+      operationId: getSpecialty
+      parameters:
+        specialtyId: '$response.body#/id'
+    UpdateCreatedSpecialty:
+      operationId: updateSpecialty
+      parameters:
+        specialtyId: '$response.body#/id'
+    DeleteSpecialtyAfterUpdate:
+      operationId: deleteSpecialty
+      parameters:
+        specialtyId: '$response.body#/id'
+    GetCreatedPetType:
+      operationId: getPetType
+      parameters:
+        petTypeId: '$response.body#/id'
+    UpdateCreatedPetType:
+      operationId: updatePetType
+      parameters:
+        petTypeId: '$response.body#/id'
+    DeletePetTypeAfterUpdate:
+      operationId: deletePetType
+      parameters:
+        petTypeId: '$response.body#/id'
+    ListOwnerPetsAfterOwnerCreate:
+      operationId: listOwnerPets
+      parameters:
+        ownerId: '$response.body#/id'
+      description: List the new owner's pets after creating the owner.
+    AddVetAfterOwnerCreate:
+      operationId: addVet
+      description: Create a vet as a next workflow step after owner creation.
+    ListVetsAfterOwnerCreate:
+      operationId: listVets
+      description: Browse vets after creating an owner.
+    AddPetTypeAfterOwnerCreate:
+      operationId: addPetType
+      description: Create a pet type as a next workflow step after owner creation.
+    AddSpecialtyAfterOwnerCreate:
+      operationId: addSpecialty
+      description: Create a specialty as a next workflow step after owner creation.
+    UpdatePetTypeFromGet:
+      operationId: updatePetType
+      parameters:
+        petTypeId: '$response.body#/id'
+    UpdateSpecialtyFromGet:
+      operationId: updateSpecialty
+      parameters:
+        specialtyId: '$response.body#/id'
+    UpdateVetFromGet:
+      operationId: updateVet
+      parameters:
+        vetId: '$response.body#/id'
+    ListPetVisitsAfterVisitCreate:
+      operationId: listPetVisits
+      parameters:
+        ownerId: '$request.path.ownerId'
+        petId: '$request.path.petId'
+      description: List all visits for the pet after creating a visit.
+  schemas:
+    Owner:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[A-Za-z]+$'
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[A-Za-z]+$'
+        address:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: '^[A-Za-z0-9 .,-]+$'
+        city:
+          type: string
+          minLength: 1
+          maxLength: 80
+          pattern: '^[A-Za-z ]+$'
+        telephone:
+          type: string
+          minLength: 1
+          maxLength: 10
+          pattern: '^[0-9]+$'
+      required: [firstName, lastName, address, city, telephone]
+    Pet:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[A-Za-z]+$'
+        birthDate:
+          type: string
+          format: date
+        typeId:
+          type: integer
+          format: int64
+          minimum: 1001
+          maximum: 1006
+        ownerId:
+          type: integer
+          format: int64
+          readOnly: true
+      required: [name, typeId]
+    Visit:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: '^[A-Za-z0-9 .,-]+$'
+        petId:
+          type: integer
+          format: int64
+          readOnly: true
+      required: [description]
+    Vet:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[A-Za-z]+$'
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[A-Za-z]+$'
+        specialtyIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+            minimum: 1001
+            maximum: 1003
+      required: [firstName, lastName]
+    Specialty:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+          maxLength: 80
+          pattern: '^[A-Za-z ]+$'
+      required: [name]
+    PetType:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+          maxLength: 80
+          pattern: '^[A-Za-z ]+$'
+      required: [name]

@@ -1,0 +1,117 @@
+stages:
+  mixed:
+    wrk2params: -t2 -c5 -d30s -R200
+    flow:
+      - createOwner:
+        operationId: addOwner
+        entrynode: true
+        edges:
+          - to: getCreatedOwner
+            weight: 0.20
+          - to: addPetTypeCRUD
+            weight: 0.20
+          - to: addSpecialtyCRUD
+            weight: 0.20
+          - to: addVetCRUD
+            weight: 0.20
+          - to: addPetToOwnerCRUD
+            weight: 0.20
+
+      - getCreatedOwner:
+        operationId: getOwner
+        edges:
+          - to: updateOwnerCRUD
+            weight: 1.0
+
+      - updateOwnerCRUD:
+        operationId: updateOwner
+        edges:
+          - to: deleteOwnerCRUD
+            weight: 1.0
+
+      - deleteOwnerCRUD:
+        operationId: deleteOwner
+
+      - addPetTypeCRUD:
+        operationId: addPetType
+        edges:
+          - to: getPetTypeCRUD
+            weight: 1.0
+
+      - getPetTypeCRUD:
+        operationId: getPetType
+        edges:
+          - to: updatePetTypeCRUD
+            weight: 1.0
+
+      - updatePetTypeCRUD:
+        operationId: updatePetType
+        edges:
+          - to: deletePetTypeCRUD
+            weight: 1.0
+
+      - deletePetTypeCRUD:
+        operationId: deletePetType
+
+      - addSpecialtyCRUD:
+        operationId: addSpecialty
+        edges:
+          - to: getSpecialtyCRUD
+            weight: 1.0
+
+      - getSpecialtyCRUD:
+        operationId: getSpecialty
+        edges:
+          - to: updateSpecialtyCRUD
+            weight: 1.0
+
+      - updateSpecialtyCRUD:
+        operationId: updateSpecialty
+        edges:
+          - to: deleteSpecialtyCRUD
+            weight: 1.0
+
+      - deleteSpecialtyCRUD:
+        operationId: deleteSpecialty
+
+      - addVetCRUD:
+        operationId: addVet
+        edges:
+          - to: getVetCRUD
+            weight: 1.0
+
+      - getVetCRUD:
+        operationId: getVet
+        edges:
+          - to: updateVetCRUD
+            weight: 1.0
+
+      - updateVetCRUD:
+        operationId: updateVet
+        edges:
+          - to: deleteVetCRUD
+            weight: 1.0
+
+      - deleteVetCRUD:
+        operationId: deleteVet
+
+      - addPetToOwnerCRUD:
+        operationId: addPetToOwner
+        edges:
+          - to: getPetCRUD
+            weight: 1.0
+
+      - getPetCRUD:
+        operationId: getPet
+        edges:
+          - to: updatePetCRUD
+            weight: 1.0
+
+      - updatePetCRUD:
+        operationId: updatePet
+        edges:
+          - to: deletePetCRUD
+            weight: 1.0
+
+      - deletePetCRUD:
+        operationId: deletePet

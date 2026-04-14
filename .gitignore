@@ -1,3 +1,2 @@
-data/
-.prerequisites/
-venv/
+**/.venv
+**/results
