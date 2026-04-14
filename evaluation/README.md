@@ -126,7 +126,7 @@ If you change `config.env`, you are changing the experiment. Record that file al
 
 1. Docker
 2. Docker Compose v2 plugin
-3. Python 3 for notebook setup and a few helper snippets in scripts
+3. Python 3 with PyYAML (`pip install pyyaml`) for notebook setup and warmup-injection in scripts
 
 ### `slsbench`
 

@@ -14,7 +14,7 @@ services:
       - bench
 
   quarkus-petclinic-db:
-    image: postgres:14
+    image: postgres:14@sha256:ae46a8452f2c137766c9d4a62f4fe60166355ff8b00512e6c48692dbf1eed3d5
     mem_limit: 128m
     environment:
       - POSTGRES_USER=developer
