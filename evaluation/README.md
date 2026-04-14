@@ -1,170 +1,235 @@
-# Evaluation: slsbench vs wrk2
+# Evaluation: `slsbench` vs `wrk2`
 
-Comparative evaluation of **scenario-based benchmarking** (slsbench) against **traditional microbenchmark-style load testing** (wrk2) across JVM-based Petclinic implementations.
+Comparative evaluation of scenario-based benchmarking with `slsbench` against traditional microbenchmark-style load testing with `wrk2` across JVM-based Petclinic implementations.
 
 ## Thesis Context
 
 > Meaningful performance evaluation of serverless applications requires benchmarks that reflect realistic usage patterns rather than isolated micro-level measurements.
 
-This evaluation answers: **does deriving workload scenarios from OpenAPI specifications produce richer, more actionable performance insights than hitting individual endpoints with wrk2?**
+This evaluation asks whether deriving workload scenarios from OpenAPI specifications and replaying them as stateful chains produces richer, more actionable performance insight than hitting isolated endpoints or Lua-scripted baselines with `wrk2`.
+
+## What This Directory Contains
+
+This directory is the canonical execution and analysis guide for the evaluation.
+
+It contains:
+
+- benchmark configuration in `config.env`,
+- Docker/Compose definitions for the evaluated applications,
+- Flow DSL files used by `slsbench`,
+- `wrk2` baseline scripts,
+- orchestration scripts for the full experiment matrix,
+- the analysis notebook and thesis-oriented Markdown chapter drafts,
+- optional measured results under `results/` when a replication-data bundle is prepared.
+
+The committed `config.env` is the authoritative source for experiment parameters. If prose in older notes or thesis drafts disagrees with `config.env`, treat `config.env` as correct.
+
+## Directory Structure
+
+```text
+evaluation/
+├── README.md
+├── REPRODUCIBILITY.md
+├── config.env
+├── docker/
+│   ├── wrk2.Dockerfile
+│   ├── spring-bench.yml
+│   ├── quarkus-bench.yml
+│   └── quarkus-jvm-bench.yml
+├── flows/
+│   ├── spring/
+│   │   ├── read-heavy.yaml
+│   │   ├── mixed.yaml
+│   │   └── lifecycle.yaml
+│   └── quarkus/
+│       ├── read-heavy.yaml
+│       ├── mixed.yaml
+│       └── lifecycle.yaml
+├── wrk2-baseline/
+│   ├── lua/
+│   │   ├── read-list.lua
+│   │   ├── post-create.lua
+│   │   ├── mixed-crud.lua
+│   │   └── single-endpoint.lua
+│   └── run-baseline.sh
+├── scripts/
+│   ├── run-all.sh
+│   ├── run-probe-all.sh
+│   ├── run-slsbench.sh
+│   ├── run-wrk2.sh
+│   ├── cold-start-probe.sh
+│   └── docker-stats-collector.sh
+├── analysis/
+│   ├── evaluation.ipynb
+│   ├── evaluation-chapter.md
+│   ├── slsbench-architecture-chapter.md
+│   ├── requirements.txt
+│   └── chart_*.pdf                 # generated after running the notebook
+└── results/                        # gitignored, optional in release bundles
+```
 
 ## Experiment Design
 
 ### Independent Variables
 
-| Variable   | Levels                          |
-|------------|---------------------------------|
-| Treatment  | slsbench (scenario-based), wrk2 (microbenchmark) |
-| Framework  | Spring Boot, Quarkus Native, Quarkus JVM |
-| Phase      | Cold start, Steady state        |
-| Scenario   | Read-heavy, Mixed CRUD, Lifecycle |
-| Rate       | 50, 200, 500, 1000 req/s        |
+| Variable | Levels |
+|---|---|
+| Treatment | `slsbench` (scenario-based), `wrk2` (microbenchmark-style) |
+| Framework | Spring Boot, Quarkus Native, Quarkus JVM |
+| Phase | Cold start, steady state |
+| Scenario | Read-heavy, mixed CRUD, lifecycle |
+| Rate | 50, 200, 500, 1000 req/s |
 
-Not every testing point requires the full cross-product. Each TP specifies its own
-focused slice of the variable space; the union of all TPs yields **156 runs**
-(see Testing Points below for per-TP breakdowns).
+Not every testing point requires the full cross-product. Each TP uses a focused slice of the variable space; the union of all TPs yields the evaluation matrix discussed below.
 
 ### Controlled Variables
 
 - Same host machine for all experiments
 - Same Docker resource constraints
-- Same wrk2 thread/connection settings (2 threads, 5 connections)
-- Same measurement durations (30s steady, 15s cold)
+- Same wrk thread/connection settings: 2 threads, 5 connections
+- Same measurement durations as defined in `config.env`
 - Applications use default Petclinic seed data
 
-### Dependent Variables (Metrics)
+### Dependent Variables
 
-| Metric | wrk2 source | slsbench source |
-|--------|-------------|-----------------|
-| p50/p95/p99 latency | `--latency` HdrHistogram | `flow_stats_*.json` per-step + `wrk_output_*.log` |
-| Throughput (req/s) | wrk2 summary | wrk2 summary in `wrk_output_*.log` |
-| Error rate (non-2xx %) | wrk2 Non-2xx line | `flow_stats` summary `responses_non2xx` |
-| First response time | `cold-start-probe.sh` | `first_request_result.json` |
-| CPU / memory | `docker-stats-collector.sh` | `benchmark-container-stats.jsonl` |
+| Metric | `wrk2` source | `slsbench` source |
+|---|---|---|
+| p50/p95/p99 latency | `--latency` HdrHistogram | `flow_stats_*.json` plus raw wrk logs |
+| Throughput (req/s) | wrk summary | wrk summary in stage output logs |
+| Error rate (non-2xx) | wrk non-2xx line | `flow_stats` summaries and response histograms |
+| First response time | `cold-start-probe.sh` output | `first_request_result.json` |
+| CPU / memory | `container-stats.jsonl` | `benchmark-container-stats.jsonl` |
 
-## Directory Structure
+## Configuration
 
-```
-evaluation/
-├── README.md                        # This file
-├── config.env                       # Shared parameters
-├── docker/
-│   ├── wrk2.Dockerfile              # Vanilla wrk2 image
-│   ├── spring-bench.yml             # Spring Petclinic compose
-│   ├── quarkus-bench.yml            # Quarkus Native compose
-│   └── quarkus-jvm-bench.yml        # Quarkus JVM compose
-├── flows/
-│   ├── spring/
-│   │   ├── read-heavy.yaml          # slsbench flow: create-then-read chains
-│   │   ├── mixed.yaml               # slsbench flow: full CRUD lifecycle chains
-│   │   └── lifecycle.yaml           # slsbench flow: deep entity-dependency chain
-│   └── quarkus/
-│       ├── read-heavy.yaml          # slsbench flow (Quarkus operationIds)
-│       ├── mixed.yaml               # slsbench flow (Quarkus operationIds)
-│       └── lifecycle.yaml           # slsbench flow: deep chain (Quarkus operationIds)
-├── wrk2-baseline/
-│   ├── lua/
-│   │   ├── read-list.lua            # Round-robin GET across list endpoints
-│   │   ├── post-create.lua          # POST /owners with varying payloads
-│   │   ├── mixed-crud.lua           # Interleaved GET/POST/PUT/DELETE
-│   │   └── single-endpoint.lua      # Single GET /owners (purest microbenchmark)
-│   └── run-baseline.sh              # wrk2 baseline runner
-├── scripts/
-│   ├── run-all.sh                   # Full matrix runner
-│   ├── run-slsbench.sh              # Single slsbench experiment
-│   ├── run-wrk2.sh                  # Single wrk2 experiment
-│   ├── cold-start-probe.sh          # First-response-time measurement
-│   └── docker-stats-collector.sh    # Container stats JSONL collector
-├── tests/
-│   └── first/
-│       └── README.md                # Hypothesis-driven test plan (TP-A through TP-D)
-└── results/                         # Output (git-ignored)
+All shared parameters live in `config.env`.
+
+Key defaults from the current committed file are:
+
+| Parameter | Default | Description |
+|---|---|---|
+| `REPETITIONS` | 3 | Runs per configuration |
+| `RATES` | `50 200 500 1000` | Request-rate sweep |
+| `DURATION_STEADY` | `30s` | Steady-state replay duration |
+| `DURATION_COLD` | `30s` | Cold-phase replay duration |
+| `WARMUP_DURATION` | `10s` | Warm-up duration before steady runs |
+| `WARMUP_RATE` | `100` | Warm-up replay rate |
+| `WRK2_THREADS` | `2` | wrk thread count |
+| `WRK2_CONNECTIONS` | `5` | wrk connection count |
+| `SLSBENCH_IMAGE` | `slsbench:dood` | Image used by `run-probe-all.sh` and `run-slsbench.sh` |
+
+If you change `config.env`, you are changing the experiment. Record that file alongside any published dataset.
+
+## Dependencies
+
+### Required tools
+
+1. Docker
+2. Docker Compose v2 plugin
+3. Python 3 for notebook setup and a few helper snippets in scripts
+
+### `slsbench`
+
+This evaluation depends on the sibling repository:
+
+```text
+../serverless-benchmarking
 ```
 
-## Prerequisites
+The scripts expect the image name configured in `config.env`:
 
-1. **Docker and Docker Compose** (v2 plugin)
-2. **slsbench DooD image**: build from the serverless-benchmarking repo:
-   ```bash
-   cd /path/to/serverless-benchmarking
-   docker build -t slsbench:dood .
-   ```
-3. **wrk2 image**: built automatically on first run, or manually:
-   ```bash
-   docker build -t eval-wrk2:latest -f evaluation/docker/wrk2.Dockerfile evaluation/docker/
-   ```
-4. **Application images** pulled or built:
-   - `aape2k/spring-petclinic-rest` (Docker Hub)
-   - `aape2k/quarkus-petclinic-jvm` -- Quarkus JVM (build from `benchmark-app/quarkus-petclinic`):
-     ```bash
-     cd benchmark-app/quarkus-petclinic
-     ./mvnw package -DskipTests
-     docker build -f src/main/docker/Dockerfile.fast-jar -t aape2k/quarkus-petclinic-jvm .
-     ```
-   - `aape2k/quarkus-petclinic` -- Quarkus Native (optional; requires GraalVM native-image and compatible pom.xml)
+```bash
+SLSBENCH_IMAGE="slsbench:dood"
+```
 
-## Quick Start
+A typical local build path is:
 
-### Run the full experiment matrix
+```bash
+cd ../serverless-benchmarking
+docker build -t slsbench:dood .
+```
+
+For release users, record the exact `serverless-benchmarking` tag or commit used.
+
+### Benchmark application images
+
+- `aape2k/spring-petclinic-rest`
+- `aape2k/quarkus-petclinic`
+- `aape2k/quarkus-petclinic-jvm`
+
+The application source trees also exist locally under `../benchmark-app/`, which is useful when rebuilding images or inspecting OpenAPI files.
+
+## Rerun Workflows
+
+### 1. Full rerun from scratch
+
+Use this when you want to regenerate the full benchmark dataset.
 
 ```bash
 cd evaluation
 ./scripts/run-all.sh
 ```
 
-### Run per testing point
+What happens:
+
+1. the `wrk2` image is built if missing,
+2. `scripts/run-probe-all.sh` generates probe caches once per unique flow,
+3. `scripts/run-wrk2.sh` and `scripts/run-slsbench.sh` execute the matrix,
+4. results are written under `results/`.
+
+### 2. Pre-generate reusable probe artifacts only
+
+Use this when you want to separate the slow `probe-bodies` step from later replay runs.
 
 ```bash
-# TP-A: Per-operation characterization (lifecycle, steady, rate sweep)
-./scripts/run-all.sh --apps spring,quarkus --scenarios lifecycle --phases steady --reps 3
-
-# TP-B: Execution phase granularity (mixed, cold+steady, R=500)
-./scripts/run-all.sh --apps spring,quarkus --scenarios mixed --phases cold,steady --reps 3 --rates 500
-
-# TP-C: Scenario shape sensitivity (all scenarios, Spring only, R=500)
-./scripts/run-all.sh --apps spring --scenarios read-heavy,mixed,lifecycle --phases steady --reps 2 --rates 500
-
-# TP-D: Cross-framework decision quality (lifecycle, all frameworks, R=200+500)
-./scripts/run-all.sh --apps spring,quarkus,quarkus-jvm --scenarios lifecycle --phases cold,steady --reps 3 --rates "200 500"
+cd evaluation
+./scripts/run-probe-all.sh
 ```
 
-### Quick sample (validate pipeline)
+This script:
+
+- generates probe caches once per unique `app + scenario` flow,
+- stores them under `results/<flow_app>/slsbench/<scenario>/probe-bodies/`,
+- allows later `slsbench harness` runs to reuse the same replay artifacts across rates, phases, and repetitions.
+
+This is the recommended path before running large benchmark matrices.
+
+### 3. Run one `slsbench` experiment
 
 ```bash
-# 4 runs: Spring lifecycle at 2 rates
-./scripts/run-all.sh --apps spring --scenarios lifecycle --phases steady --reps 1 --rates "200 500"
-# 2 runs: Spring mixed cold+steady
-./scripts/run-all.sh --apps spring --scenarios mixed --phases cold,steady --reps 1 --rates 500
-# 2 runs: Spring read-heavy
-./scripts/run-all.sh --apps spring --scenarios read-heavy --phases steady --reps 1 --rates 500
-# 2 runs: Quarkus JVM lifecycle
-./scripts/run-all.sh --apps quarkus-jvm --scenarios lifecycle --phases steady --reps 1 --rates 500
-```
-
-### Analysis notebook
-
-The Jupyter notebook `analysis/evaluation.ipynb` auto-discovers results and produces
-thesis-ready charts and tables for all 4 testing points:
-
-```bash
-cd analysis
-source .venv/bin/activate  # or: python3 -m venv .venv && pip install -r requirements.txt
-jupyter notebook evaluation.ipynb
-```
-
-### Run a single experiment
-
-```bash
-# slsbench lifecycle on Spring, steady state
+cd evaluation
 ./scripts/run-slsbench.sh spring lifecycle steady 1
+```
 
-# wrk2 single-endpoint on Quarkus (purest microbenchmark contrast)
+This expects probe caches to exist already. If they do not, run `./scripts/run-probe-all.sh` first.
+
+### 4. Run one `wrk2` baseline experiment
+
+```bash
+cd evaluation
 ./scripts/run-wrk2.sh quarkus single-endpoint steady 1
 ```
 
-### Measure cold-start time only
+### 5. Analysis only with an existing results tree
 
 ```bash
+cd evaluation/analysis
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+jupyter notebook evaluation.ipynb
+```
+
+The notebook:
+
+- expects `../results`,
+- auto-discovers runs,
+- emits generated PDFs such as `chart_a1_violin.pdf`, `chart_a2_saturation.pdf`, `chart_b1_cold_penalty.pdf`, and `chart_d3_framework_comparison.pdf`.
+
+### 6. Cold-start probe only
+
+```bash
+cd evaluation
 ./scripts/cold-start-probe.sh spring
 ./scripts/cold-start-probe.sh quarkus
 ./scripts/cold-start-probe.sh quarkus-jvm
@@ -172,165 +237,114 @@ jupyter notebook evaluation.ipynb
 
 ## Results Layout
 
-```
+All runs live under:
+
+```text
 results/<app>/<treatment>/<scenario>/<phase>/R<rate>/run-<N>/
 ```
 
-### wrk2 results contain
+### `wrk2` run contents
 
 | File | Description |
-|------|-------------|
-| `wrk2_output.log` | Full wrk2 output with HdrHistogram latency distribution |
+|---|---|
+| `wrk2_output.log` | Full wrk output with latency distribution |
 | `container-stats.jsonl` | Docker container CPU/memory snapshots |
-| `first_response.json` | Cold-start first-response measurement (cold phase only) |
+| `first_response.json` | Cold-phase first-response timing |
 
-### slsbench results contain
+### `slsbench` run contents
+
+At the run root:
 
 | File | Description |
-|------|-------------|
+|---|---|
+| `harness.log` | Full harness execution log |
+| `flow.yaml` | Flow file used for the specific rate/phase/run |
+
+Inside `harness-result-<timestamp>/`:
+
+| File or directory | Description |
+|---|---|
 | `first_request_result.json` | Time to first successful response |
 | `benchmark-container-stats.jsonl` | Streaming container resource usage |
-| `wrk2-results/<stage>/flow_stats_*.json` | Per-step counts, latencies, status codes |
-| `wrk2-results/<stage>/wrk_output_*.log` | Raw wrk2 latency distribution |
-| `wrk2-input/<stage>/iteration-*.json` | Request templates used |
-| `probe-bodies.log` | Probe generation log |
-| `harness.log` | Harness execution log |
-| `flow.yaml` | Actual flow file used (with substituted rate) |
+| `wrk2-input/` | Stage-local replay inputs |
+| `wrk2-results/` | Stage-local replay outputs |
 
-## Configuration
+Inside `wrk2-results/<stage>/`, typical outputs include:
 
-All parameters are in `config.env`. Key settings:
+| File | Description |
+|---|---|
+| `response_histogram.json` | Aggregated status-code distribution |
+| `wrk_container.log` | Raw wrk container stdout/stderr |
+| `exit_code.txt` | Container exit code |
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `REPETITIONS` | 3 | Runs per configuration |
-| `RATES` | 50 200 500 1000 | Request rates for load sweep |
-| `DURATION_STEADY` | 30s | Benchmark duration (steady state) |
-| `DURATION_COLD` | 15s | Benchmark duration (cold start) |
-| `WARMUP_DURATION` | 10s | Warm-up before steady-state measurement |
-| `WRK2_THREADS` | 2 | wrk2 thread count |
-| `WRK2_CONNECTIONS` | 5 | wrk2 connection count |
+Probe generation caches are stored separately under:
+
+```text
+results/<flow_app>/slsbench/<scenario>/probe-bodies/
+```
+
+## Analysis and Thesis Artifacts
+
+The `analysis/` subtree contains:
+
+- `evaluation.ipynb`: notebook that parses `results/` and regenerates charts/tables.
+- `evaluation-chapter.md`: thesis-oriented evaluation chapter draft.
+- `slsbench-architecture-chapter.md`: thesis-oriented architecture chapter draft for the tool itself.
+- `requirements.txt`: Python dependencies for the notebook.
+- `chart_*.pdf`: generated outputs after notebook execution.
+
+These files are part of the release story even if `results/` is omitted, because they define how the published claims are reproduced from measured data.
 
 ## Scenario Design
 
 ### Read-heavy
 
-Entry point: `addOwner` (creates one entity to seed IDs).
-Branches: 40% `getOwner`, 25% create+read pet, 20% create+read vet, 15% create+read petType.
-All chains terminate on a GET operation. Models a browsing-dominant usage pattern.
+Entry point: `addOwner` to seed IDs, then mostly read-dominant chains.
 
 ### Mixed CRUD
 
-Entry point: `addOwner`.
-Equal-weight (20% each) branches to full create-get-update-delete chains for:
-owners, pet types, specialties, vets, and pets.
-Models a management/admin usage pattern with complete entity lifecycles.
+Entry point: `addOwner`, followed by balanced CRUD-style branches across owners, pet types, specialties, vets, and pets.
 
-### Lifecycle (bottleneck detection)
+### Lifecycle
 
-Entry point: `addOwner`.
-Deep entity-dependency chain: addOwner -> addPetToOwner -> addVisit (cascading writes),
-plus parallel branches to listPets (expensive join) and listVets/getVet (cheap reads).
-Designed to maximize per-step latency variance so slsbench's `flow_stats` reveals
-which operation is the actual bottleneck. wrk2 baseline uses `mixed-crud.lua` for this
-scenario, which can only report aggregate latency.
+Entry point: `addOwner`, followed by deeper dependency chains intended to expose bottlenecks and maximize per-step latency variance.
 
-### OperationId Mapping
+### OperationId mapping
 
-Both apps implement the same domain but with slightly different operation names:
-
-| Operation | Spring | Quarkus |
-|-----------|--------|---------|
-| Get pet by ID | `getOwnersPet` | `getPet` |
-| Update pet | `updateOwnersPet` | `updatePet` |
-| Add visit | `addVisitToOwner` | `addVisitToOwnerPet` |
-| List owner's pets | `listPets` | `listOwnerPets` |
-| List pet's visits | `listVisits` | `listPetVisits` |
-
-The flow files in `flows/spring/` and `flows/quarkus/` account for these differences.
-`quarkus-jvm` reuses the `quarkus` flow files (same API, different runtime).
+The Spring and Quarkus applications share the same domain but use slightly different operation names. The flow files in `flows/spring/` and `flows/quarkus/` capture those differences, while `quarkus-jvm` reuses the `quarkus` flow files.
 
 ## Testing Points
 
-See `tests/first/README.md` for the full hypothesis-driven test plan with commands,
-expected outputs, confirmation criteria, and thesis table/chart structures.
+The detailed narrative now lives in:
 
-Four testing points, each targeting a focused slice of the variable space.
-Total unique runs across all TPs: **156** (down from 432 in the full matrix).
+- `analysis/evaluation.ipynb`
+- `analysis/evaluation-chapter.md`
 
-### TP-A: Per-Operation Performance Characterization
+The practical purpose of the four testing points is:
 
-**Merges per-operation insight depth with per-operation saturation detection.**
+- TP-A: per-operation characterization and saturation behavior
+- TP-B: cold vs steady execution-phase granularity
+- TP-C: scenario-shape sensitivity
+- TP-D: framework and runtime decision quality
 
-Lifecycle flow, steady state, rate sweep (50/200/500/1000) on Spring + Quarkus Native.
-slsbench `flow_stats` reveals per-operation latencies at each rate level. At a single
-rate (e.g. R=500), this shows that listPets is ~290x slower than getVet -- a spread
-wrk2's aggregate completely masks. Across the rate sweep, it further shows that
-individual operations saturate at different rates: listPets p99 spikes at R=500 while
-getVet stays flat through R=1000, identifying exactly which operation to optimize.
+## Release and Packaging Notes
 
-Additionally, wrk2's non-2xx error rates are reported as a validity observation: its
-hardcoded IDs in `mixed-crud.lua` produce 4xx errors from stale state, while
-slsbench's Schemathesis-generated chains maintain valid state per iteration.
+This repository supports two release modes:
 
-**Runs:** 2 treatments x 2 apps x 4 rates x 3 reps = **48 runs**
+- `source-only`: no `results/`, intended for users who will rerun the experiments.
+- `replication-data`: source plus archived `results/`, intended for users who want to reproduce figures and tables without rerunning benchmarks.
 
-### TP-B: Execution Phase Granularity
+See `REPRODUCIBILITY.md` for:
 
-Mixed CRUD flow, cold vs steady, at R=500 on Spring + Quarkus Native. slsbench shows
-cold-start penalty is non-uniform: write operations (addOwner) suffer ~100x while read
-operations (getVet) suffer ~5x. wrk2 shows one aggregate cold penalty (~10x) with no
-per-operation breakdown, hiding which operations to optimize for cold-start scenarios.
-
-**Runs:** 2 treatments x 2 apps x 2 phases x 1 rate x 3 reps = **24 runs**
-
-### TP-C: Scenario Shape Sensitivity
-
-All three scenarios (read-heavy, mixed, lifecycle) on Spring at R=500, steady state.
-slsbench reveals distinct per-operation signatures per scenario: read-heavy is fast
-across the board, mixed has slow deletes, lifecycle shows cascading write latency.
-wrk2's Lua scripts produce similar aggregate numbers because they lack dependency
-chains, flattening the differences that scenario-aware tooling captures.
-
-**Runs:** 2 treatments x 1 app x 3 scenarios x 1 rate x 2 reps = **12 runs**
-
-### TP-D: Cross-Framework Decision Quality
-
-Lifecycle flow on all three frameworks (Spring, Quarkus Native, Quarkus JVM), cold +
-steady, at R=200 and R=500. wrk2 says "Quarkus is 20% faster." slsbench shows
-"Quarkus is faster for reads, Spring is faster for write chains" -- the recommendation
-depends on the workload type. For cold start, `first_request_result.json` captures
-native (~500ms) vs JVM (~5000ms) startup, and per-step cold penalties differ by
-operation category.
-
-**Runs:** 2 treatments x 3 apps x 2 phases x 2 rates x 3 reps = **72 runs**
-
-## What This Demonstrates
-
-### wrk2 (microbenchmark) limitations
-
-- Aggregate metrics mask per-operation variance by up to 290x (TP-A)
-- Smooth aggregate throughput plateau hides per-operation saturation points (TP-A)
-- Hardcoded IDs produce invalid measurements under concurrent load -- wrong data, not just less data (TP-A, observed across all TPs)
-- Single cold-start penalty number hides non-uniform recovery across operations (TP-B)
-- Different Lua scripts produce similar aggregate latencies, unable to distinguish scenario shapes (TP-C)
-- Single "X is faster" verdict misses operation-level trade-offs that change the recommendation (TP-D)
-
-### slsbench (scenario-based) advantages
-
-- OpenAPI-driven flows traverse realistic multi-step operation chains with per-step metrics
-- Per-step latency breakdown reveals hidden bottlenecks and per-operation saturation points invisible to aggregate throughput (TP-A)
-- Stateful body generation via Schemathesis ensures valid request payloads across transitions, eliminating artificial errors (TP-A)
-- Per-operation cold-start analysis reveals non-uniform phase penalties, guiding targeted optimization (TP-B)
-- Distinct performance signatures per scenario validate that usage patterns matter (TP-C)
-- Per-operation framework comparisons enable workload-dependent recommendations (TP-D)
+- how to zip or tar the dataset,
+- which metadata to record,
+- how to preserve the notebook path assumptions,
+- what to include in a full versus reduced results bundle.
 
 ## Threats to Validity
 
-- Results are limited to JVM-based implementations and the Petclinic domain
-- Spring uses H2 (in-memory DB); Quarkus uses PostgreSQL -- this is deliberate (each framework's typical config) but affects absolute numbers. Relative comparisons across operations within the same app are unaffected
-- Quarkus JVM Dockerfile uses Java 11; Spring uses Java 21 -- control for this in analysis
-- Cross-language generalization is future work
-- Network effects are minimized by using `--network=host` but not eliminated
-- wrk2 error rates (observed in TP-A) depend on Lua script design (hardcoded IDs). This is the realistic baseline: wrk2 has no mechanism for stateful chaining, so hardcoded IDs are the standard approach
-- Scenario shapes (TP-C) are designed by the author, not derived from production traces. The point is that the tooling supports scenario differentiation, not that these specific scenarios match real-world traffic distributions
+- Results are limited to JVM-based implementations and the Petclinic domain.
+- Spring and Quarkus use different persistence/runtime stacks, which affects absolute numbers.
+- Cross-language generalization remains future work.
+- The `wrk2` baseline depends on Lua-script design and therefore does not model stateful chaining as directly as `slsbench`.
+- Scenario shapes are authored workloads, not production-trace reconstructions. The point is to test scenario sensitivity and scenario-based tooling, not to claim these exact distributions are universal.
