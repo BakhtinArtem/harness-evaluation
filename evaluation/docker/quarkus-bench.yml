@@ -1,6 +1,6 @@
 services:
   quarkus-petclinic:
-    image: aape2k/quarkus-petclinic
+    image: aape2k/quarkus-petclinic:v1.0.0
     expose:
       - "8080"
     ports:

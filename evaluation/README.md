@@ -116,7 +116,7 @@ Key defaults from the current committed file are:
 | `WARMUP_RATE` | `100` | Warm-up replay rate |
 | `WRK2_THREADS` | `2` | wrk thread count |
 | `WRK2_CONNECTIONS` | `5` | wrk connection count |
-| `SLSBENCH_IMAGE` | `slsbench:dood` | Image used by `run-probe-all.sh` and `run-slsbench.sh` |
+| `SLSBENCH_IMAGE` | `aape2k/slsbench:v3.0.0` | Image used by `run-probe-all.sh` and `run-slsbench.sh` |
 
 If you change `config.env`, you are changing the experiment. Record that file alongside any published dataset.
 
@@ -130,32 +130,25 @@ If you change `config.env`, you are changing the experiment. Record that file al
 
 ### `slsbench`
 
-This evaluation depends on the sibling repository:
-
-```text
-../serverless-benchmarking
-```
-
-The scripts expect the image name configured in `config.env`:
+The evaluation uses the published `slsbench` Docker image:
 
 ```bash
-SLSBENCH_IMAGE="slsbench:dood"
+docker pull aape2k/slsbench:v3.0.0
 ```
 
-A typical local build path is:
+This is configured in `config.env` as `SLSBENCH_IMAGE="aape2k/slsbench:v3.0.0"`.
 
-```bash
-cd ../serverless-benchmarking
-docker build -t slsbench:dood .
-```
-
-For release users, record the exact `serverless-benchmarking` tag or commit used.
+Source repository: [serverless-benchmarking](https://github.com/BakhtinArtem/serverless-benchmarking) (only needed for development).
 
 ### Benchmark application images
 
-- `aape2k/spring-petclinic-rest`
-- `aape2k/quarkus-petclinic`
-- `aape2k/quarkus-petclinic-jvm`
+All benchmark images are pinned to `v1.0.0`:
+
+```bash
+docker pull aape2k/spring-petclinic-rest:v1.0.0
+docker pull aape2k/quarkus-petclinic:v1.0.0
+docker pull aape2k/quarkus-petclinic-jvm:v1.0.0
+```
 
 The application source trees also exist locally under `../benchmark-app/`, which is useful when rebuilding images or inspecting OpenAPI files.
 

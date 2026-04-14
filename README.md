@@ -98,20 +98,35 @@ Two release modes are supported by the documentation:
 
 By default, the repository only contains the source-oriented release contents. The measured dataset is excluded from git by `.gitignore`.
 
+## Pinned Docker Image Versions
+
+All Docker images used by the evaluation are pinned to explicit version tags for reproducibility:
+
+| Component | Image | Tag |
+|---|---|---|
+| Spring Petclinic REST | `aape2k/spring-petclinic-rest` | `v1.0.0` |
+| Quarkus Petclinic (native) | `aape2k/quarkus-petclinic` | `v1.0.0` |
+| Quarkus Petclinic (JVM) | `aape2k/quarkus-petclinic-jvm` | `v1.0.0` |
+| slsbench (DooD) | `aape2k/slsbench` | `v3.0.0` |
+| wrk2 | `eval-wrk2` | `latest` (built locally) |
+
+Pull the pre-built images before running the evaluation:
+
+```bash
+docker pull aape2k/spring-petclinic-rest:v1.0.0
+docker pull aape2k/quarkus-petclinic:v1.0.0
+docker pull aape2k/quarkus-petclinic-jvm:v1.0.0
+docker pull aape2k/slsbench:v3.0.0
+```
+
+The `eval-wrk2` image is built automatically by the runner scripts from `evaluation/docker/wrk2.Dockerfile` if it does not already exist locally.
+
 ## Dependencies and Related Repositories
 
-This repository depends on the `slsbench` project in the sibling repository:
+This repository depends on the `slsbench` project ([serverless-benchmarking](https://github.com/BakhtinArtem/serverless-benchmarking)):
 
-- `../serverless-benchmarking`
-
-The evaluation scripts currently expect the Docker image name configured in `evaluation/config.env`:
-
-- `SLSBENCH_IMAGE="slsbench:dood"`
-
-For release users, the safest path is either:
-
-1. build that image from the sibling `serverless-benchmarking` checkout, or
-2. pull/tag an equivalent published image under the same name before running the scripts.
+- Published image: `aape2k/slsbench:v3.0.0` (configured in `evaluation/config.env`)
+- Source repository: `../serverless-benchmarking` (sibling checkout, only needed for development)
 
 The benchmark application sources are included locally under `benchmark-app/`, including:
 

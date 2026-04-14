@@ -1,6 +1,6 @@
 services:
   petclinic:
-    image: aape2k/spring-petclinic-rest
+    image: aape2k/spring-petclinic-rest:v1.0.0
     expose:
       - "9966"
     ports:
