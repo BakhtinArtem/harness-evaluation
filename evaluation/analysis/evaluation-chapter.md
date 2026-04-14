@@ -86,6 +86,29 @@ The notebook and evaluation README define the main independent variables:
 
 The final analysis notebook auto-detected a substantial dataset, including 102 `wrk2` aggregate rows, 1,237 `slsbench` per-step rows, 217 `slsbench` aggregate rows, 152 first-response measurements, and 198 container-stat snapshots. This is sufficient to support a comparative chapter, even though not every slice has identical replication depth.
 
+### Execution Environment And Pinned Benchmark Stack
+
+The chapter's conclusions are tied not only to the benchmark logic, but also to a concrete and controlled execution environment. The notebook and evaluation README make the main execution assumptions explicit, even when the raw machine specification is not itself the focus of the analysis.
+
+| Setup aspect | Final analyzed setup |
+|---|---|
+| Execution host | Single machine |
+| Run scheduling | Sequential execution, no concurrent benchmark workloads |
+| Network mode | Docker `--network=host` to reduce avoidable network overhead |
+| Spring storage stack | H2 in-memory |
+| Quarkus storage stack | PostgreSQL in Docker |
+| `wrk2` image | `eval-wrk2:latest` |
+| Spring image | `aape2k/spring-petclinic-rest:v1.0.0` |
+| Quarkus Native image | `aape2k/quarkus-petclinic:v1.0.0` |
+| Quarkus JVM image | `aape2k/quarkus-petclinic-jvm:v1.0.0` |
+| `slsbench` image | `aape2k/slsbench:v3.0.0` |
+| Steady-state duration | 30 seconds |
+| Cold-phase duration | 30 seconds |
+| Warm-up duration | 10 seconds |
+| `wrk2` threads / connections | 2 threads, 5 connections |
+
+Presenting this setup explicitly matters for two reasons. First, it shows that the evaluation compares the treatments under a controlled, repeated environment rather than under opportunistic ad hoc runs. Second, it clarifies that the chapter's claims are grounded in a pinned artifact stack, which strengthens reproducibility even when the thesis does not attempt a hardware-scaling study.
+
 ### Compact Evaluation Setup
 
 The final analyzed dataset can be summarized compactly as follows.
@@ -101,6 +124,20 @@ The final analyzed dataset can be summarized compactly as follows.
 | Main collected outputs | aggregate `wrk2` logs, `flow_stats`, per-step latencies, `first_request_result.json`, `benchmark-container-stats.jsonl` |
 
 This compact view complements the broader experiment design in the evaluation README. The chapter focuses on the slices that were actually present and analyzed in the final notebook rather than on the larger hypothetical matrix originally proposed during planning.
+
+### Dataset Coverage And Completeness
+
+The final notebook does not rely on the full theoretical cross-product of all variables. Instead, it analyzes the slices that were actually collected and sufficiently populated to support the chapter's four testing points. Making that explicit improves the defensibility of the later conclusions.
+
+| Coverage dimension | What is fully represented in the analyzed dataset | Where coverage is partial |
+|---|---|---|
+| Frameworks | `spring`, `quarkus`, `quarkus-jvm` all appear in the final notebook inventory | Shared-operation overlap for three-way TP-D comparison is limited |
+| Scenarios | `read-heavy`, `mixed`, `lifecycle` all appear | Some framework-to-framework comparisons use narrower shared subsets |
+| Phases | Both `cold` and `steady` are represented | Not every TP requires both phases equally |
+| Rates | 200 and 500 req/s are directly observed in the final notebook inventory | The broader planned matrix also mentioned 50 and 1000 req/s, but the chapter only interprets the populated slices |
+| Repetitions | Up to 3 repetitions per configuration | Replication depth is not identical for every slice |
+
+This coverage pattern is sufficient for the chapter's purpose because the strongest conclusions come from repeated patterns across multiple evidence types rather than from any one perfectly rectangular matrix. TP-A combines variance, saturation, and validity evidence; TP-B combines amortized cold penalties with first-response timing; TP-C combines latency sensitivity with operation-set overlap; and TP-D combines aggregate and per-operation framework comparisons. The chapter therefore makes claims at the level supported by the data that was actually collected.
 
 ### Reproducibility And Artifact Chain
 
@@ -130,6 +167,14 @@ Because one treatment measures the whole chain and the other measures individual
 
 - `wrk2` for aggregate throughput, aggregate error rate, and one-number baseline conclusions;
 - `slsbench` for per-operation latency structure, per-step validity, and scenario-sensitive interpretation.
+
+### Treatment Comparability And Fairness
+
+The treatments are not identical instruments, but the comparison is still methodologically fair for the thesis question being asked. Both approaches are applied to the same applications, under the same high-level scenario families, on the same host, with the same rate-controlled replay intent, and with the same basic timing parameters. What differs is the level of visibility they preserve.
+
+`wrk2` intentionally serves as an aggregate microbenchmark-style baseline. It answers the question, "What is the end-to-end latency and error behavior of the scripted chain as a whole?" `slsbench` answers a richer question: "How do the individual operations inside a valid, stateful, specification-grounded scenario behave under the same workload shape?" The point of the chapter is therefore not to force these outputs into a false one-to-one equivalence, but to compare what kinds of engineering conclusions each measurement model enables.
+
+This distinction is especially important for the thesis abstract. The core claim is not that one tool should always replace the other, but that scenario-based benchmarking should provide a more meaningful basis for decision-making once the workload is stateful, multi-step, and usage-structured. On that question, the treatments are directly comparable because they are competing ways to evaluate the same systems under the same benchmark intent.
 
 ### Baseline Interpretation
 
@@ -162,7 +207,9 @@ The final notebook methodology uses the following settings:
 - Docker host networking to minimize avoidable network overhead,
 - sequential execution on one host machine.
 
-This chapter follows the notebook's finalized methodology rather than older configuration drafts. That matters because some earlier documentation still referenced a shorter cold duration. The notebook reflects the final settings used for the analyzed dataset.
+These are the finalized settings from `config.env`: `DURATION_STEADY="30s"`, `DURATION_COLD="30s"`, `WARMUP_DURATION="10s"`, `WRK2_THREADS=2`, and `WRK2_CONNECTIONS=5`. The chapter therefore follows the stabilized benchmark configuration rather than earlier drafts discussed during evaluation planning.
+
+This distinction matters because some earlier documentation and exploratory runs used shorter cold-phase durations. The final notebook, however, consistently analyzes the stabilized 30-second cold and 30-second steady windows with a 10-second warm-up. The chapter therefore reports conclusions from the finalized measurement design, not from intermediate methodological drafts.
 
 ### Evaluation Logic
 
@@ -312,6 +359,18 @@ The notebook's final decision-comparison section provides the clearest synthesis
 
 This is a richer basis for engineering judgment. A team deciding where to optimize, which runtime to deploy, or which framework to choose benefits more from workload-aware operation-level evidence than from one aggregate number.
 
+### Claim-To-Evidence Mapping
+
+The relation between the thesis abstract and the chapter's findings can be summarized directly.
+
+| Abstract claim | Main evidence in this chapter | Interpretation |
+|---|---|---|
+| Meaningful evaluation should reflect realistic usage patterns | TP-A, TP-C | Aggregate numbers alone hide internal variation and scenario-specific behavior |
+| Scenarios should be derived from application-level specifications | Reproducibility chain, OpenAPI-link workflow, lower invalid-traffic rates under `slsbench` | Specification grounding improves workload validity and auditability |
+| Execution phases such as cold and steady should be modeled explicitly | TP-B, first-response measurements, amortized cold penalties | Startup behavior is real, concentrated, and not well captured by one blended average |
+| Comparative insight should extend across frameworks and runtimes | TP-B, TP-D | Framework and runtime choice depend on both startup behavior and per-operation steady-state evidence |
+| Scenario-based benchmarking should improve decision-making over microbenchmarks | TP-D, practical implications | Workload-aware evidence is more actionable than one aggregate winner |
+
 ## Practical Implications
 
 The evaluation supports several concrete engineering implications.
@@ -321,6 +380,16 @@ The evaluation supports several concrete engineering implications.
 3. If the deployment is startup-sensitive, runtime choice can matter more than warmed steady-state micro-optimizations. The Quarkus Native versus Quarkus JVM first-response gap makes this especially clear.
 4. If request validity under concurrent stateful load matters, specification-grounded chain generation is preferable to handcrafted identifier management because invalid traffic can distort conclusions.
 5. If framework selection depends on workload composition rather than on one average path, per-operation comparisons are more defensible than a single aggregate winner.
+
+### Decision Scenarios
+
+The same findings can be reframed as concrete decision cases.
+
+1. If the engineering question is only, "Can this workflow sustain a target rate with acceptable end-to-end latency?", the `wrk2` baseline may be sufficient as a fast aggregate smoke test.
+2. If the question is, "Which step inside this multi-step workflow is actually causing the slowdown?", `slsbench` is more appropriate because TP-A shows that aggregate flow-completion time hides large operation-level spread and asymmetric saturation.
+3. If the system is startup-sensitive, such as scale-to-zero or infrequent invocation deployments, the first-response evidence in TP-B should dominate the decision. In this dataset, that strongly favors Quarkus Native over Quarkus JVM.
+4. If the concern is measurement validity under concurrent stateful load, specification-grounded chain generation should be preferred because TP-A shows that invalid traffic can meaningfully distort the interpretation of aggregate results.
+5. If framework choice depends on the dominant workload path rather than on one average benchmark number, TP-D shows that per-operation rankings are more actionable than a single aggregate winner.
 
 ## Threats To Validity And Limitations
 
@@ -357,6 +426,33 @@ The scenarios used in TP-C were designed by the author rather than derived from 
 ### What This Chapter Does Not Claim
 
 The chapter does not establish a universal framework ranking across all workloads, it does not claim that the chosen scenarios are validated against production traffic traces, and it does not constitute a full evaluation on managed cloud serverless platforms. Its contribution is narrower and more defensible: it shows that scenario-based, specification-grounded benchmarking changes the quality of the evidence available for performance analysis and therefore improves the basis for decision-making.
+
+### Threat Mitigations Already Present In The Evaluation
+
+The limitations above are real, but they were not ignored during the evaluation design. The chapter's conclusions should therefore be read together with the controls that were already built into the workflow.
+
+| Threat | Why it matters | Mitigation already present in this evaluation |
+|---|---|---|
+| Single-host execution | Risks host-specific artifacts and limited external validity | Same machine used for all runs, host networking used consistently, repeated runs used where available |
+| Invalid stateful requests under load | Can inflate non-2xx rates and distort latency interpretation | `probe-bodies` generates and validates stateful chains before replay, then reuses only successful chains |
+| Cold-start dilution inside long windows | Can make startup effects look smaller than they really are | First-response measurement is collected alongside amortized cold-window metrics |
+| Framework asymmetry | Can weaken naive "global winner" claims | Chapter emphasizes within-workload interpretation and runtime-sensitive comparisons rather than universal ranking |
+| Partial operation overlap across frameworks | Limits full three-way per-operation comparison | TP-D explicitly uses shared-operation subsets and interprets the result as informative but partial |
+| Scenario subjectivity | Scenarios are authored, not production-trace calibrated | Chapter frames them as plausible structured workloads used to test scenario sensitivity, not as exact traffic replicas |
+
+## Headline Quantitative Takeaways
+
+The chapter's main quantitative results can be summarized compactly as follows.
+
+| Headline finding | Reported value | Why it matters |
+|---|---|---|
+| Per-operation latency variance spread | `8.8x` | Confirms that aggregate chain timing hides major internal differences |
+| Saturation spread across operations | `1.9x` | Shows that load increase does not degrade all steps equally |
+| Amortized cold-penalty spread | `1.6x` | Indicates that phase effects are not uniform across operations |
+| First-response spread across runtimes | `38x` | Shows that startup behavior is much more dramatic than cold-window averages suggest |
+| Quarkus Native vs JVM startup gap | `~13x` | Makes runtime choice a first-order design decision for startup-sensitive deployments |
+| Mean CV across shared operations in TP-C | `0.372` | Confirms that scenario context materially changes operation behavior |
+| Operations shared across all scenarios | `6/25` | Shows that scenario families exercise substantially different parts of the application |
 
 ## Research Question Summary Matrix
 
