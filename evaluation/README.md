@@ -1,6 +1,6 @@
 # Evaluation: `slsbench` vs `wrk2`
 
-Comparative evaluation of scenario-based benchmarking with `slsbench` against traditional microbenchmark-style load testing with `wrk2` across JVM-based Petclinic implementations.
+Comparative evaluation of scenario-based benchmarking with `slsbench` against traditional microbenchmark-style load testing with `wrk2` across Petclinic implementations in multiple ecosystems (Spring Boot, Quarkus native, Quarkus JVM, and a Go port).
 
 ## Thesis Context
 
@@ -35,13 +35,18 @@ evaluation/
 │   ├── wrk2.Dockerfile
 │   ├── spring-bench.yml
 │   ├── quarkus-bench.yml
-│   └── quarkus-jvm-bench.yml
+│   ├── quarkus-jvm-bench.yml
+│   └── go-bench.yml
 ├── flows/
 │   ├── spring/
 │   │   ├── read-heavy.yaml
 │   │   ├── mixed.yaml
 │   │   └── lifecycle.yaml
-│   └── quarkus/
+│   ├── quarkus/
+│   │   ├── read-heavy.yaml
+│   │   ├── mixed.yaml
+│   │   └── lifecycle.yaml
+│   └── go/
 │       ├── read-heavy.yaml
 │       ├── mixed.yaml
 │       └── lifecycle.yaml
@@ -148,6 +153,12 @@ All benchmark images are pinned to `v1.0.0`:
 docker pull aape2k/spring-petclinic-rest:v1.0.0
 docker pull aape2k/quarkus-petclinic:v1.0.0
 docker pull aape2k/quarkus-petclinic-jvm:v1.0.0
+```
+
+The `go` app is built locally from `../benchmark-app/go-petclinic`:
+
+```bash
+docker build -t go-petclinic:dev ../benchmark-app/go-petclinic
 ```
 
 The application source trees also exist locally under `../benchmark-app/`, which is useful when rebuilding images or inspecting OpenAPI files.
@@ -304,7 +315,7 @@ Entry point: `addOwner`, followed by deeper dependency chains intended to expose
 
 ### OperationId mapping
 
-The Spring and Quarkus applications share the same domain but use slightly different operation names. The flow files in `flows/spring/` and `flows/quarkus/` capture those differences, while `quarkus-jvm` reuses the `quarkus` flow files.
+The Spring and Quarkus applications share the same domain but use slightly different operation names. The flow files in `flows/spring/` and `flows/quarkus/` capture those differences, while `quarkus-jvm` reuses the `quarkus` flow files. The `go` app is a Go port of `spring-petclinic-rest` with an identical OpenAPI contract, so `flows/go/` is a verbatim copy of `flows/spring/`.
 
 ## Testing Points
 

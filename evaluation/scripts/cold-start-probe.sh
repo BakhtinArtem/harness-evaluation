@@ -3,7 +3,7 @@
 # Outputs a JSON object compatible with slsbench's first_request_result.json.
 #
 # Usage: ./cold-start-probe.sh <app>
-#   app: spring | quarkus | quarkus-jvm
+#   app: spring | quarkus | quarkus-jvm | go
 #
 # Reads parameters from ../config.env.
 
@@ -30,6 +30,11 @@ case "$APP" in
         PORT="$QUARKUS_JVM_PORT"
         PROBE_PATH="$QUARKUS_JVM_API_BASE/owners"
         COMPOSE_FILE="$EVAL_DIR/$QUARKUS_JVM_COMPOSE"
+        ;;
+    go)
+        PORT="$GO_PORT"
+        PROBE_PATH="$GO_API_BASE/owners"
+        COMPOSE_FILE="$EVAL_DIR/$GO_COMPOSE"
         ;;
     *)
         echo '{"error":"unknown app"}' >&2

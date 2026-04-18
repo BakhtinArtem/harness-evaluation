@@ -2,7 +2,7 @@
 # Run a wrk2 baseline benchmark for a single (app, scenario) combination.
 #
 # Usage: ./run-baseline.sh <app> <scenario> <phase> <run_number>
-#   app:        spring | quarkus | quarkus-jvm
+#   app:        spring | quarkus | quarkus-jvm | go
 #   scenario:   read-heavy | mixed | lifecycle | post-create | single-endpoint
 #   phase:      cold | steady
 #   run_number: integer repetition index
@@ -40,8 +40,14 @@ case "$APP" in
         PORT="$QUARKUS_JVM_PORT"
         API_BASE="$QUARKUS_JVM_API_BASE"
         ;;
+    go)
+        COMPOSE_FILE="$EVAL_DIR/$GO_COMPOSE"
+        SERVICE_NAME="$GO_SERVICE_NAME"
+        PORT="$GO_PORT"
+        API_BASE="$GO_API_BASE"
+        ;;
     *)
-        echo "Unknown app: $APP (expected: spring|quarkus|quarkus-jvm)" >&2
+        echo "Unknown app: $APP (expected: spring|quarkus|quarkus-jvm|go)" >&2
         exit 1
         ;;
 esac

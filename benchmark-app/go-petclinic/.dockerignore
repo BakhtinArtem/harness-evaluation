@@ -1,0 +1,5 @@
+README.md
+resources/
+**/*.md
+.git
+.gitignore

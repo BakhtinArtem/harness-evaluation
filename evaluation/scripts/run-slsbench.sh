@@ -3,7 +3,7 @@
 # Expects probe-bodies to have been run already (via run-probe-all.sh).
 #
 # Usage: ./run-slsbench.sh <app> <scenario> <phase> <run_number>
-#   app:        spring | quarkus | quarkus-jvm
+#   app:        spring | quarkus | quarkus-jvm | go
 #   scenario:   read-heavy | mixed | lifecycle
 #   phase:      cold | steady
 #   run_number: integer repetition index
@@ -39,6 +39,12 @@ case "$APP" in
         SERVICE_NAME="$QUARKUS_JVM_SERVICE_NAME"
         PORT="$QUARKUS_JVM_PORT"
         OPENAPI_PATH="$EVAL_DIR/$QUARKUS_JVM_OPENAPI"
+        ;;
+    go)
+        COMPOSE_FILE="$EVAL_DIR/$GO_COMPOSE"
+        SERVICE_NAME="$GO_SERVICE_NAME"
+        PORT="$GO_PORT"
+        OPENAPI_PATH="$EVAL_DIR/$GO_OPENAPI"
         ;;
     *)
         echo "Unknown app: $APP" >&2

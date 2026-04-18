@@ -27,6 +27,7 @@ case "$APP" in
     spring)      COMPOSE_FILE="$EVAL_DIR/$SPRING_COMPOSE" ;;
     quarkus)     COMPOSE_FILE="$EVAL_DIR/$QUARKUS_COMPOSE" ;;
     quarkus-jvm) COMPOSE_FILE="$EVAL_DIR/$QUARKUS_JVM_COMPOSE" ;;
+    go)          COMPOSE_FILE="$EVAL_DIR/$GO_COMPOSE" ;;
     *)
         echo "Unknown app: $APP" >&2
         exit 1
@@ -38,6 +39,7 @@ case "$APP" in
     spring)      APP_PORT="$SPRING_PORT"; READINESS_URL="http://localhost:$SPRING_PORT$SPRING_API_BASE/owners" ;;
     quarkus)     APP_PORT="$QUARKUS_PORT"; READINESS_URL="http://localhost:$QUARKUS_PORT$QUARKUS_API_BASE/owners" ;;
     quarkus-jvm) APP_PORT="$QUARKUS_JVM_PORT"; READINESS_URL="http://localhost:$QUARKUS_JVM_PORT$QUARKUS_JVM_API_BASE/owners" ;;
+    go)          APP_PORT="$GO_PORT"; READINESS_URL="http://localhost:$GO_PORT$GO_API_BASE/owners" ;;
 esac
 
 # For steady-state, ensure app is running before handing off

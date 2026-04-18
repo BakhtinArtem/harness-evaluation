@@ -1,0 +1,35 @@
+services:
+  go-petclinic:
+    image: go-petclinic:dev
+    expose:
+      - "9966"
+    ports:
+      - "9966:9966"
+    environment:
+      - PORT=9966
+      - API_BASE=/petclinic/api
+      - DATABASE_URL=postgres://developer:developer@go-petclinic-db:5432/mydb?sslmode=disable
+    depends_on:
+      go-petclinic-db:
+        condition: service_healthy
+    networks:
+      - bench
+
+  go-petclinic-db:
+    image: postgres:14@sha256:ae46a8452f2c137766c9d4a62f4fe60166355ff8b00512e6c48692dbf1eed3d5
+    mem_limit: 128m
+    environment:
+      - POSTGRES_USER=developer
+      - POSTGRES_PASSWORD=developer
+      - POSTGRES_DB=mydb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --dbname $$POSTGRES_DB --username $$POSTGRES_USER"]
+      interval: 5s
+      timeout: 5s
+      retries: 6
+    networks:
+      - bench
+
+networks:
+  bench:
+    driver: bridge

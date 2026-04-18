@@ -5,7 +5,7 @@
 #
 # Cached at: results/<flow_app>/slsbench/<scenario>/probe-bodies/
 #
-# Usage: ./run-probe-all.sh [--apps spring,quarkus,quarkus-jvm] [--scenarios read-heavy,mixed,lifecycle]
+# Usage: ./run-probe-all.sh [--apps spring,quarkus,quarkus-jvm,go] [--scenarios read-heavy,mixed,lifecycle]
 #
 # Typically called once before the experiment matrix.  run-slsbench.sh then
 # discovers the cached result automatically.
@@ -16,7 +16,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 EVAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 source "$EVAL_DIR/config.env"
 
-APPS="spring quarkus quarkus-jvm"
+APPS="spring quarkus quarkus-jvm go"
 SCENARIOS="read-heavy mixed lifecycle"
 
 while [[ $# -gt 0 ]]; do
@@ -58,6 +58,13 @@ for APP in $APPS; do
             PORT="$QUARKUS_JVM_PORT"
             OPENAPI_PATH="$EVAL_DIR/$QUARKUS_JVM_OPENAPI"
             READINESS_PATH="$QUARKUS_JVM_API_BASE/owners"
+            ;;
+        go)
+            COMPOSE_FILE="$EVAL_DIR/$GO_COMPOSE"
+            SERVICE_NAME="$GO_SERVICE_NAME"
+            PORT="$GO_PORT"
+            OPENAPI_PATH="$EVAL_DIR/$GO_OPENAPI"
+            READINESS_PATH="$GO_API_BASE/owners"
             ;;
         *)
             echo "Unknown app: $APP" >&2

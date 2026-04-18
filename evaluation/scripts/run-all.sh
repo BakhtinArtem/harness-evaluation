@@ -11,7 +11,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 EVAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 source "$EVAL_DIR/config.env"
 
-APPS="spring quarkus quarkus-jvm"
+APPS="spring quarkus quarkus-jvm go"
 SCENARIOS="read-heavy mixed lifecycle"
 PHASES="cold steady"
 REPS="$REPETITIONS"
@@ -76,6 +76,7 @@ for APP in $APPS; do
         spring)      COMPOSE_FILE="$EVAL_DIR/$SPRING_COMPOSE" ;;
         quarkus)     COMPOSE_FILE="$EVAL_DIR/$QUARKUS_COMPOSE" ;;
         quarkus-jvm) COMPOSE_FILE="$EVAL_DIR/$QUARKUS_JVM_COMPOSE" ;;
+        go)          COMPOSE_FILE="$EVAL_DIR/$GO_COMPOSE" ;;
     esac
 
     for SCENARIO in $SCENARIOS; do
