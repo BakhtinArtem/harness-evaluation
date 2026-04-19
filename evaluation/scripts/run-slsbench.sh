@@ -3,7 +3,7 @@
 # Expects probe-bodies to have been run already (via run-probe-all.sh).
 #
 # Usage: ./run-slsbench.sh <app> <scenario> <phase> <run_number>
-#   app:        spring | quarkus | quarkus-jvm | go
+#   app:        spring | spring-native | quarkus | quarkus-jvm | go
 #   scenario:   read-heavy | mixed | lifecycle
 #   phase:      cold | steady
 #   run_number: integer repetition index
@@ -52,10 +52,14 @@ case "$APP" in
         ;;
 esac
 
-# quarkus-jvm reuses the quarkus flow files and probe-bodies cache
+# quarkus-jvm reuses the quarkus flow files and probe-bodies cache;
+# spring-native likewise reuses spring (same Petclinic API surface).
 FLOW_APP="$APP"
 if [ "$APP" = "quarkus-jvm" ]; then
     FLOW_APP="quarkus"
+fi
+if [ "$APP" = "spring-native" ]; then
+    FLOW_APP="spring"
 fi
 FLOW_FILE="$EVAL_DIR/flows/$FLOW_APP/$SCENARIO.yaml"
 if [ ! -f "$FLOW_FILE" ]; then

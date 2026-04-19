@@ -1,0 +1,90 @@
+# syntax=docker/dockerfile:1.7
+# Multi-stage build: GraalVM Community native-image -> distroless runtime.
+FROM ghcr.io/graalvm/native-image-community:25 AS build
+WORKDIR /app
+
+# The base image is microdnf-based and lacks a few POSIX userland tools that
+# our debug/diagnostics shell script below relies on (notably `find`). Install
+# them once so the native build step can reliably locate AOT output.
+RUN microdnf install -y findutils tar gzip && microdnf clean all
+
+COPY .mvn/ .mvn/
+COPY mvnw pom.xml ./
+RUN chmod +x mvnw
+
+# Pre-warm dependencies with a cached Maven local repository. This makes
+# retries after transient network errors cheap, because subsequent invocations
+# hit the buildx cache instead of re-downloading from Maven Central.
+RUN --mount=type=cache,id=m2,target=/root/.m2 \
+    ./mvnw --batch-mode -DskipTests dependency:go-offline || true
+
+COPY src/ src/
+# Spring Boot's native profile chains:
+#   1. spring-boot:process-aot -> generates AOT classes and Graal metadata
+#      (reflect-config.json, resource-config.json, ...) under
+#      target/spring-aot/main/{classes,resources,sources}.
+#   2. maven-compiler-plugin -> compiles AOT sources directly into target/classes.
+#   3. native-maven-plugin -> invokes native-image against target/classes + deps.
+# Step 2 reliably brings the AOT .class files into target/classes. Step 1's
+# RESOURCES (META-INF/native-image/<groupId>/<artifactId>/*.json), however,
+# are NOT copied by default: native-image auto-discovers them only when they
+# live under target/classes. If that step is missed, Class.forName() at
+# runtime for <App>__ApplicationContextInitializer fails with
+# AotInitializerNotFoundException, because the class ends up compiled in but
+# unregistered for reflection.
+#
+# We therefore:
+#   (a) run `package` so Spring Boot emits both classes and resources,
+#   (b) flatten spring-aot/main/{classes,resources} into target/classes, and
+#   (c) run native:compile-no-fork against the prepared classpath.
+# Cap the native-image builder heap. The default policy is "80% of RAM"
+# which, on a 15 GiB host, asks for ~12 GiB and can OOM-kill the Docker VM.
+# 4 GiB is tight for Spring Boot 4 + Hibernate + Tomcat but leaves enough
+# headroom for the Docker Desktop VM, buildx itself, the Maven reactor, and
+# the host. Raising this has been observed to crash the local dev box.
+ENV NATIVE_IMAGE_OPTIONS="-J-Xmx5g"
+
+# Activate the PostgreSQL + Spring Data JPA profiles during AOT processing so
+# the generated ApplicationContextInitializer wires in PostgreSQLDialect and
+# the Postgres JDBC driver, not the default H2 in-memory config. In a native
+# image these decisions are made at build time; runtime env vars cannot swap
+# in a different dialect after AOT has baked one in.
+ENV SPRING_PROFILES_ACTIVE=postgres,spring-data-jpa
+
+RUN --mount=type=cache,id=m2,target=/root/.m2 \
+    set -eux; \
+    ./mvnw --batch-mode -DskipTests -Pnative package; \
+    echo '--- target tree after package ---'; \
+    find target -maxdepth 4 -type d | sort; \
+    AOT_CLASSES=$(find target -type d -path '*/spring-aot/main/classes' -print -quit || true); \
+    if [ -n "$AOT_CLASSES" ]; then \
+        echo "Flattening AOT classes from $AOT_CLASSES into target/classes"; \
+        cp -r "$AOT_CLASSES"/. target/classes/; \
+    fi; \
+    AOT_RES=$(find target -type d -path '*/spring-aot/main/resources' -print -quit || true); \
+    if [ -n "$AOT_RES" ]; then \
+        echo "Flattening AOT resources from $AOT_RES into target/classes"; \
+        cp -r "$AOT_RES"/. target/classes/ || true; \
+    fi; \
+    echo '--- META-INF/native-image in target/classes ---'; \
+    find target/classes/META-INF/native-image -type f 2>/dev/null | sort || echo '(none)'; \
+    echo '--- reachability-metadata.json (first 120 lines) ---'; \
+    MD_FILE=$(find target/classes/META-INF/native-image -name 'reachability-metadata.json' -print -quit || true); \
+    if [ -n "$MD_FILE" ]; then head -120 "$MD_FILE"; fi; \
+    echo '--- AotInitializer references in reachability metadata ---'; \
+    if [ -n "$MD_FILE" ]; then grep -i 'Initializer\|PetClinicApplication' "$MD_FILE" | head -20; fi; \
+    echo '--- META-INF/spring files (aot factories etc.) ---'; \
+    find target/classes/META-INF/spring -type f 2>/dev/null | sort || echo '(none)'; \
+    ls target/classes/org/springframework/samples/petclinic/ | grep -i initializer || echo '!! Initializer class still missing in target/classes'; \
+    ./mvnw --batch-mode -DskipTests -Pnative -o native:compile-no-fork
+
+FROM debian:12-slim
+WORKDIR /app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libz1 ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd -r nonroot && useradd -r -g nonroot -s /sbin/nologin nonroot
+COPY --from=build /app/target/spring-petclinic-rest /app/spring-petclinic-rest
+EXPOSE 9966
+USER nonroot:nonroot
+ENTRYPOINT ["/app/spring-petclinic-rest"]

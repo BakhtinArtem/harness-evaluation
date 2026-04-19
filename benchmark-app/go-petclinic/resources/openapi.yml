@@ -983,6 +983,10 @@ paths:
           links:
             GetOwnerFromPet:
               $ref: '#/components/links/GetOwnerFromPet'
+            UpdatePetFromPet:
+              $ref: '#/components/links/UpdatePetFromPet'
+            DeletePetAfterGet:
+              $ref: '#/components/links/DeletePetAfterGet'
         304:
           description: Not modified.
           headers:
@@ -2288,6 +2292,16 @@ components:
       parameters:
         petId: '$response.body#/id'
       description: Delete the pet that was just updated (id from response body).
+    UpdatePetFromPet:
+      operationId: updatePet
+      parameters:
+        petId: '$response.body#/id'
+      description: Update the pet returned by GET /pets/{petId} using the id from the response body.
+    DeletePetAfterGet:
+      operationId: deletePet
+      parameters:
+        petId: '$response.body#/id'
+      description: Delete the pet returned by GET /pets/{petId} directly (id from response body).
     DeletePetAfterOwnersPetUpdate:
       operationId: deletePet
       parameters:

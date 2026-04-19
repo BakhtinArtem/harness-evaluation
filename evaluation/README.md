@@ -147,19 +147,28 @@ Source repository: [serverless-benchmarking](https://github.com/BakhtinArtem/ser
 
 ### Benchmark application images
 
-All benchmark images are pinned to `v1.0.0`:
+All benchmark images for the active runtime matrix are pinned and published:
 
 ```bash
-docker pull aape2k/spring-petclinic-rest:v1.0.0
-docker pull aape2k/quarkus-petclinic:v1.0.0
-docker pull aape2k/quarkus-petclinic-jvm:v1.0.0
+docker pull aape2k/spring-petclinic-rest:v2.0.0           # Spring Boot (JVM) + PostgreSQL
+docker pull aape2k/quarkus-petclinic:v1.0.0               # Quarkus (GraalVM Native)
+docker pull aape2k/quarkus-petclinic-jvm:v1.0.0           # Quarkus (JVM)
+docker pull aape2k/go-petclinic:v1.0.0                    # Go + chi router + GORM
 ```
 
-The `go` app is built locally from `../benchmark-app/go-petclinic`:
+The Spring Boot JVM image was rebuilt at `v2.0.0` because the configuration
+was switched from the original H2 in-memory database to a PostgreSQL sidecar
+so that every evaluated system shares the same storage backend. The Go image
+is a new addition for the extended runtime-class matrix.
 
-```bash
-docker build -t go-petclinic:dev ../benchmark-app/go-petclinic
-```
+A fifth runtime, **Spring Boot (GraalVM Native)**, is scaffolded but deferred
+to a follow-up campaign. The build pipeline (`benchmark-app/spring-petclinic-rest/Dockerfile.native`),
+the compose file (`docker/spring-native-bench.yml`), and the runner-script
+branching are all in place, but the Spring Boot 4 + GraalVM CE native-image
+analysis stage requires more RAM than the reference evaluation host can
+reliably provide. To build and run `aape2k/spring-petclinic-rest-native:v1.0.0`
+on a larger builder, see the notes in that Dockerfile and then re-run the
+evaluation with `--apps spring-native`.
 
 The application source trees also exist locally under `../benchmark-app/`, which is useful when rebuilding images or inspecting OpenAPI files.
 

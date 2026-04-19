@@ -1,0 +1,19 @@
+[
+  {
+    "name": "org.springframework.samples.petclinic.PetClinicApplication__ApplicationContextInitializer",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true
+  },
+  {
+    "name": "org.springframework.samples.petclinic.PetClinicApplication__BeanFactoryRegistrations",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "org.springframework.samples.petclinic.PetClinicApplication__BeanDefinitions",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  }
+]

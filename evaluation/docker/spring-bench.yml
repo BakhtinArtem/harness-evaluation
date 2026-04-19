@@ -1,9 +1,36 @@
 services:
   petclinic:
-    image: aape2k/spring-petclinic-rest:v1.0.0
+    image: aape2k/spring-petclinic-rest:v2.0.0
     expose:
       - "9966"
     ports:
       - "9966:9966"
     environment:
-      - SPRING_PROFILES_ACTIVE=h2,spring-data-jpa
+      - SPRING_PROFILES_ACTIVE=postgres,spring-data-jpa
+      - POSTGRES_URL=jdbc:postgresql://spring-petclinic-db:5432/mydb
+      - POSTGRES_USER=developer
+      - POSTGRES_PASS=developer
+    depends_on:
+      spring-petclinic-db:
+        condition: service_healthy
+    networks:
+      - bench
+
+  spring-petclinic-db:
+    image: postgres:14@sha256:ae46a8452f2c137766c9d4a62f4fe60166355ff8b00512e6c48692dbf1eed3d5
+    mem_limit: 128m
+    environment:
+      - POSTGRES_USER=developer
+      - POSTGRES_PASSWORD=developer
+      - POSTGRES_DB=mydb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --dbname $$POSTGRES_DB --username $$POSTGRES_USER"]
+      interval: 5s
+      timeout: 5s
+      retries: 6
+    networks:
+      - bench
+
+networks:
+  bench:
+    driver: bridge

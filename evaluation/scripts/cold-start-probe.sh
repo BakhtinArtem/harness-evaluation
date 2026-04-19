@@ -3,7 +3,7 @@
 # Outputs a JSON object compatible with slsbench's first_request_result.json.
 #
 # Usage: ./cold-start-probe.sh <app>
-#   app: spring | quarkus | quarkus-jvm | go
+#   app: spring | spring-native | quarkus | quarkus-jvm | go
 #
 # Reads parameters from ../config.env.
 
@@ -20,6 +20,11 @@ case "$APP" in
         PORT="$SPRING_PORT"
         PROBE_PATH="$SPRING_API_BASE/owners"
         COMPOSE_FILE="$EVAL_DIR/$SPRING_COMPOSE"
+        ;;
+    spring-native)
+        PORT="$SPRING_NATIVE_PORT"
+        PROBE_PATH="$SPRING_NATIVE_API_BASE/owners"
+        COMPOSE_FILE="$EVAL_DIR/$SPRING_NATIVE_COMPOSE"
         ;;
     quarkus)
         PORT="$QUARKUS_PORT"

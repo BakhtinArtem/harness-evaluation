@@ -2,7 +2,7 @@
 # Run a wrk2 baseline benchmark for a single (app, scenario) combination.
 #
 # Usage: ./run-baseline.sh <app> <scenario> <phase> <run_number>
-#   app:        spring | quarkus | quarkus-jvm | go
+#   app:        spring | spring-native | quarkus | quarkus-jvm | go
 #   scenario:   read-heavy | mixed | lifecycle | post-create | single-endpoint
 #   phase:      cold | steady
 #   run_number: integer repetition index
@@ -47,7 +47,7 @@ case "$APP" in
         API_BASE="$GO_API_BASE"
         ;;
     *)
-        echo "Unknown app: $APP (expected: spring|quarkus|quarkus-jvm|go)" >&2
+        echo "Unknown app: $APP (expected: spring|spring-native|quarkus|quarkus-jvm|go)" >&2
         exit 1
         ;;
 esac

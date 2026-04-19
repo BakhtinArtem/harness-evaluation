@@ -113,26 +113,43 @@ For a reduced bundle intended only for notebook reproduction, you may choose to 
 
 If you create a reduced bundle, document exactly what was removed and verify that the notebook still runs successfully on the reduced dataset.
 
-## Pinned Image Versions (v1.0.0)
+## Pinned Image Versions
 
 All Docker images are pinned in `config.env` and the compose files:
 
 | Component | Image | Tag |
 |---|---|---|
-| Spring Petclinic REST | `aape2k/spring-petclinic-rest` | `v1.0.0` |
+| Spring Petclinic REST (JVM + PostgreSQL) | `aape2k/spring-petclinic-rest` | `v2.0.0` |
 | Quarkus Petclinic (native) | `aape2k/quarkus-petclinic` | `v1.0.0` |
 | Quarkus Petclinic (JVM) | `aape2k/quarkus-petclinic-jvm` | `v1.0.0` |
+| Go Petclinic (chi + GORM, distroless) | `aape2k/go-petclinic` | `v1.0.0` |
 | slsbench (DooD) | `aape2k/slsbench` | `v3.0.0` |
 | wrk2 | `eval-wrk2` | `latest` (built locally from `docker/wrk2.Dockerfile`) |
+| PostgreSQL sidecar (all apps) | `postgres` | `14@sha256:ae46a8452f2c137766c9d4a62f4fe60166355ff8b00512e6c48692dbf1eed3d5` |
 
 Pull all pre-built images:
 
 ```bash
-docker pull aape2k/spring-petclinic-rest:v1.0.0
+docker pull aape2k/spring-petclinic-rest:v2.0.0
 docker pull aape2k/quarkus-petclinic:v1.0.0
 docker pull aape2k/quarkus-petclinic-jvm:v1.0.0
+docker pull aape2k/go-petclinic:v1.0.0
 docker pull aape2k/slsbench:v3.0.0
 ```
+
+### Deferred runtime: Spring Boot (GraalVM Native)
+
+A fifth runtime, **Spring Boot (GraalVM Native) on PostgreSQL**, is
+scaffolded in the repository but intentionally not part of the pinned
+artifact set of this release. Build pipeline:
+`benchmark-app/spring-petclinic-rest/Dockerfile.native`. Compose file:
+`evaluation/docker/spring-native-bench.yml`. Runner-script branching for
+`spring-native` is already in place (see `evaluation/scripts/run-*.sh`). The
+Spring Boot 4 + GraalVM CE native-image analysis stage requires more RAM
+than the reference evaluation host can reliably provide; users reproducing
+or extending this evaluation on a larger builder can produce
+`aape2k/spring-petclinic-rest-native:v1.0.0` from that Dockerfile, publish it,
+and re-run the full matrix with `--apps spring-native`.
 
 ## Record These Versions with Any Published Dataset
 
@@ -143,7 +160,8 @@ When publishing or sharing a measured dataset, record:
 - Docker Compose version,
 - the exact `config.env` used,
 - the `slsbench` image version (`aape2k/slsbench:v3.0.0`),
-- benchmark application image tags (`v1.0.0` for all three Petclinic variants),
+- benchmark application image tags: `aape2k/spring-petclinic-rest:v2.0.0` (Spring Boot JVM + PostgreSQL), `aape2k/quarkus-petclinic:v1.0.0` (Quarkus Native), `aape2k/quarkus-petclinic-jvm:v1.0.0` (Quarkus JVM), `aape2k/go-petclinic:v1.0.0` (Go + chi + GORM), and, if the deferred Spring Native runtime is used, the locally-built `aape2k/spring-petclinic-rest-native:v1.0.0`,
+- the pinned PostgreSQL image digest used by every sidecar (`postgres:14@sha256:ae46a8452f2c137766c9d4a62f4fe60166355ff8b00512e6c48692dbf1eed3d5`),
 - date of execution,
 - whether the dataset is full or reduced.
 
@@ -224,11 +242,16 @@ dataset-type: full | reduced
 generated-at: 2026-04-14T12:00:00Z
 docker-version: ...
 docker-compose-version: ...
-harness-evaluation-version: v1.0.0
+harness-evaluation-version: v2.0.0
 slsbench-image: aape2k/slsbench:v3.0.0
-spring-petclinic-image: aape2k/spring-petclinic-rest:v1.0.0
+spring-petclinic-image: aape2k/spring-petclinic-rest:v2.0.0
 quarkus-native-image: aape2k/quarkus-petclinic:v1.0.0
 quarkus-jvm-image: aape2k/quarkus-petclinic-jvm:v1.0.0
+go-petclinic-image: aape2k/go-petclinic:v1.0.0
+postgres-image: postgres:14@sha256:ae46a8452f2c137766c9d4a62f4fe60166355ff8b00512e6c48692dbf1eed3d5
+# If the deferred Spring Native runtime was included in this dataset, also
+# record the locally built image digest here, e.g.:
+# spring-petclinic-native-image: aape2k/spring-petclinic-rest-native:v1.0.0
 config-env: evaluation/config.env
 notes: ...
 ```

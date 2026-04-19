@@ -10,6 +10,7 @@ The chapter uses the analysis in `evaluation.ipynb` as its backbone. Rather than
 2. Does it model cold and steady execution phases more informatively?
 3. Do different scenario shapes produce materially different performance profiles?
 4. Does per-operation evidence improve framework and runtime selection?
+5. Does the method remain informative when comparing different runtime *classes* (JVM, GraalVM native, and a non-JVM native runtime) on a common storage backend and a common API?
 
 These questions map directly to the thesis abstract. They examine whether OpenAPI-derived, stateful, high-level scenarios provide richer decision support than a single aggregate latency number.
 
@@ -33,7 +34,11 @@ Do different high-level workload scenarios, such as read-heavy, mixed CRUD, and 
 
 Does per-operation evidence lead to better framework and runtime decisions than a single aggregate flow-completion metric?
 
-Together, these questions operationalize the abstract's claims about realistic usage patterns, phase-specific modeling, framework comparison, and improved decision-making.
+### RQ5: Runtime-class decomposition
+
+Can the scenario-based method distinguish performance effects that are attributable to the *runtime class* (JVM, GraalVM native, non-JVM native) from effects that are attributable to the *framework* (Spring Boot, Quarkus, a Go `chi` service)? This question becomes answerable once all applications share the same API surface *and* the same storage backend, because framework and runtime-class effects are then no longer confounded with database-engine differences.
+
+Together, these questions operationalize the abstract's claims about realistic usage patterns, phase-specific modeling, framework comparison, and improved decision-making, and extend them to the runtime-class dimension.
 
 ## Experimental Context
 
@@ -54,13 +59,23 @@ This design matters methodologically. It separates scenario validity from perfor
 
 ### Systems Under Test
 
-The evaluated systems are three Petclinic-style HTTP applications:
+The evaluated systems in this release are four Petclinic-style HTTP applications that share a common API surface and a common storage backend, together with one planned fifth runtime (Spring Boot Native) whose build infrastructure is published but whose image is not part of the pinned artifact set of this release:
 
-- Spring Boot,
-- Quarkus Native,
-- Quarkus JVM.
+- **Spring Boot (JVM)** — the `spring-petclinic-rest` application packaged as a fat JAR and executed on HotSpot JDK 21. The application is configured through the `postgres,spring-data-jpa` profile combination so that it connects to a PostgreSQL sidecar rather than to the earlier in-memory H2 database.
+- **Quarkus (GraalVM Native)** — the Quarkus Petclinic application packaged as a native executable by Quarkus's GraalVM integration.
+- **Quarkus (JVM)** — the same Quarkus Petclinic application deployed as a JVM container (HotSpot JDK 21).
+- **Go (`go-petclinic`)** — a functionally equivalent Petclinic REST API implemented in Go with the `chi` router and GORM, compiled to a static binary (`CGO_ENABLED=0`) and packaged into a distroless base image.
+- **Spring Boot (GraalVM Native)** (planned) — the same Spring Boot application compiled ahead-of-time via the GraalVM Community Edition native-image builder and the Spring Boot AOT pipeline; the Dockerfile, compose file, and runner-script branching are all in place (`benchmark-app/spring-petclinic-rest/Dockerfile.native`, `evaluation/docker/spring-native-bench.yml`), but the Spring Boot 4 AOT + GraalVM CE build requires more host memory than the reference evaluation host can reliably provide for the AOT analysis stage, so this runtime is deferred to a follow-up iteration that can be executed on a larger builder.
 
-These systems share the same domain but differ in implementation framework and runtime configuration. They are appropriate for the thesis because they expose comparable CRUD-oriented APIs while still allowing meaningful runtime contrasts, especially between Quarkus Native and Quarkus JVM during cold start.
+All four currently-analyzed applications connect to PostgreSQL 14 sidecars pinned by image digest, so that framework, runtime, and storage effects can be reasoned about independently. In earlier iterations of the evaluation, Spring Boot used H2 in-memory storage while Quarkus used PostgreSQL; comparing them directly therefore risked conflating storage-engine effects with framework effects. With Spring Boot now on PostgreSQL and with a non-JVM native reference point (Go on distroless), three of the four classical runtime classes relevant to serverless HTTP systems are represented in this release, with the fourth (Spring Boot Native) scaffolded for a follow-up campaign:
+
+| Runtime class | Representative systems in this evaluation |
+|---|---|
+| JVM (HotSpot) | Spring Boot (JVM), Quarkus (JVM) |
+| GraalVM native image | Quarkus (Native); Spring Boot (Native) is scaffolded but deferred |
+| Non-JVM native | Go (`go-petclinic`) |
+
+This matrix is deliberately designed so that, for any observed performance difference, at least one contrast holds the framework constant while varying runtime class (Quarkus JVM vs Quarkus Native; Spring JVM vs Spring Native becomes available once the deferred Spring Native campaign lands) and at least one contrast holds runtime class roughly constant while varying framework (Go vs Quarkus Native as a non-JVM-native versus GraalVM-native contrast; Spring JVM vs Quarkus JVM as a pure framework contrast under equal runtime class). This design motivates RQ5, including the parts of it that are explicitly reserved for a follow-up dataset.
 
 ### Workload Scenarios
 
@@ -79,7 +94,7 @@ The notebook and evaluation README define the main independent variables:
 | Dimension | Levels |
 |---|---|
 | Treatment | `wrk2`, `slsbench` |
-| Framework/runtime | `spring`, `quarkus`, `quarkus-jvm` |
+| Framework/runtime | `spring`, `quarkus`, `quarkus-jvm`, `go` (Spring Native is scaffolded but deferred to a follow-up campaign on a larger builder) |
 | Scenario | `read-heavy`, `mixed`, `lifecycle` |
 | Phase | `cold`, `steady` |
 | Rate | 50, 200, 500, 1000 req/s |
@@ -95,17 +110,20 @@ The chapter's conclusions are tied not only to the benchmark logic, but also to 
 | Execution host | Single machine |
 | Run scheduling | Sequential execution, no concurrent benchmark workloads |
 | Network mode | Docker `--network=host` to reduce avoidable network overhead |
-| Spring storage stack | H2 in-memory |
-| Quarkus storage stack | PostgreSQL in Docker |
+| Storage stack (all analyzed apps) | PostgreSQL 14 in a sidecar container, pinned by digest |
 | `wrk2` image | `eval-wrk2:latest` |
-| Spring image | `aape2k/spring-petclinic-rest:v1.0.0` |
+| Spring Boot (JVM) image | `aape2k/spring-petclinic-rest:v2.0.0` |
 | Quarkus Native image | `aape2k/quarkus-petclinic:v1.0.0` |
 | Quarkus JVM image | `aape2k/quarkus-petclinic-jvm:v1.0.0` |
+| Go Petclinic image | `aape2k/go-petclinic:v1.0.0` |
 | `slsbench` image | `aape2k/slsbench:v3.0.0` |
+| Spring Boot (Native) image (deferred) | scaffolded via `benchmark-app/spring-petclinic-rest/Dockerfile.native`; not pinned as a published image in this release |
 | Steady-state duration | 30 seconds |
 | Cold-phase duration | 30 seconds |
 | Warm-up duration | 10 seconds |
 | `wrk2` threads / connections | 2 threads, 5 connections |
+
+The storage-stack row is worth calling out explicitly. In the earlier evaluation iteration, Spring Boot used an H2 in-memory database while Quarkus talked to PostgreSQL in a sidecar. That asymmetry meant that any Spring-vs-Quarkus latency or saturation difference could in principle be attributed either to framework/runtime effects or to the storage engine. The current setup removes this confound: every analyzed application (Spring JVM, Quarkus JVM, Quarkus Native, Go) now connects to a PostgreSQL 14 sidecar pinned by image digest, with identical schema initialization and identical credentials, so framework and runtime-class effects can be reasoned about independently from the database engine. The Spring Boot Native variant that is scaffolded for a follow-up campaign uses the same PostgreSQL sidecar pattern, so when its results land they will be directly comparable to the Spring JVM Postgres results without reintroducing the H2 confound.
 
 Presenting this setup explicitly matters for two reasons. First, it shows that the evaluation compares the treatments under a controlled, repeated environment rather than under opportunistic ad hoc runs. Second, it clarifies that the chapter's claims are grounded in a pinned artifact stack, which strengthens reproducibility even when the thesis does not attempt a hardware-scaling study.
 
@@ -115,15 +133,17 @@ The final analyzed dataset can be summarized compactly as follows.
 
 | Aspect | Final dataset summary |
 |---|---|
-| Frameworks | `quarkus`, `quarkus-jvm`, `spring` |
+| Frameworks/runtimes in the analyzed-to-date dataset | `quarkus`, `quarkus-jvm`, `spring` (H2 stack) |
+| Frameworks/runtimes added for the extended campaign | `spring` (Postgres stack, `v2.0.0`), `go` (`spring-native` is scaffolded and reserved for a follow-up campaign) |
 | Scenarios | `lifecycle`, `mixed`, `read-heavy` |
 | Phases | `cold`, `steady` |
-| Rates observed in the final notebook inventory | 200, 500 req/s |
+| Rates observed in the final notebook inventory | 50, 200, 500, 1000 req/s (the `go` full matrix populates all four; the earlier JVM/GraalVM-native campaign is restricted to 200, 500 req/s) |
 | Max repetitions | 3 per configuration |
-| Total result directories | 202 |
+| Total result directories (original campaign) | 202 |
+| Total runs contributed by the `go` full-matrix extension | 144 (72 slsbench + 72 wrk2) |
 | Main collected outputs | aggregate `wrk2` logs, `flow_stats`, per-step latencies, `first_request_result.json`, `benchmark-container-stats.jsonl` |
 
-This compact view complements the broader experiment design in the evaluation README. The chapter focuses on the slices that were actually present and analyzed in the final notebook rather than on the larger hypothetical matrix originally proposed during planning.
+This compact view complements the broader experiment design in the evaluation README. The chapter interprets two cleanly separable datasets: the original three-framework campaign on the earlier storage stack, and the extended four-runtime campaign on the unified PostgreSQL stack that supports the bulk of RQ5. The extended campaign is introduced for the runtime-class decomposition and the validity-under-fair-backend discussion; where a result can only be supported by the extended campaign, the chapter says so explicitly. A fifth-runtime extension (Spring Boot Native) is explicitly reserved for a follow-up campaign on a larger builder, and its open contrasts are framed conservatively rather than reported as present.
 
 ### Dataset Coverage And Completeness
 
@@ -131,11 +151,12 @@ The final notebook does not rely on the full theoretical cross-product of all va
 
 | Coverage dimension | What is fully represented in the analyzed dataset | Where coverage is partial |
 |---|---|---|
-| Frameworks | `spring`, `quarkus`, `quarkus-jvm` all appear in the final notebook inventory | Shared-operation overlap for three-way TP-D comparison is limited |
+| Frameworks | `spring`, `quarkus`, `quarkus-jvm` appear in the original campaign; `go` and a Postgres-backed `spring` are added for the extended campaign, with `go` exercised across the full matrix (four rates, both phases, three repetitions, all three scenarios); `spring-native` is scaffolded but reserved for a follow-up campaign | Shared-operation overlap for multi-way TP-D comparison is limited; the JVM and GraalVM-native anchor rows were last run across two rates (200 and 500 req/s) and will be re-executed at the same four rates as `go` when the deferred Spring Native host is available |
 | Scenarios | `read-heavy`, `mixed`, `lifecycle` all appear | Some framework-to-framework comparisons use narrower shared subsets |
 | Phases | Both `cold` and `steady` are represented | Not every TP requires both phases equally |
-| Rates | 200 and 500 req/s are directly observed in the final notebook inventory | The broader planned matrix also mentioned 50 and 1000 req/s, but the chapter only interprets the populated slices |
-| Repetitions | Up to 3 repetitions per configuration | Replication depth is not identical for every slice |
+| Rates | 200 and 500 req/s are present for every framework; `go` additionally populates 50 and 1000 req/s, giving the non-JVM native anchor the full four-point saturation curve | The JVM and GraalVM-native cells have not yet been re-collected at 50 and 1000 req/s, so the widest rate slice interpreted cross-framework remains 200/500 req/s |
+| Repetitions | Up to 3 repetitions per configuration across all populated cells | Replication depth is identical (3) for all `go` cells; one `go`/`lifecycle`/`steady`/R=1000 cell required a single automatic retry after a wrk2 HdrHistogram overflow, and this is the only cell with retry evidence on record |
+| Storage backend | Unified PostgreSQL 14 sidecar for the extended campaign; mixed H2/PostgreSQL in the original campaign | Direct latency numbers between the original-campaign Spring (H2) slice and the extended-campaign Spring (PostgreSQL) slice should not be read as a before/after Spring comparison |
 
 This coverage pattern is sufficient for the chapter's purpose because the strongest conclusions come from repeated patterns across multiple evidence types rather than from any one perfectly rectangular matrix. TP-A combines variance, saturation, and validity evidence; TP-B combines amortized cold penalties with first-response timing; TP-C combines latency sensitivity with operation-set overlap; and TP-D combines aggregate and per-operation framework comparisons. The chapter therefore makes claims at the level supported by the data that was actually collected.
 
@@ -145,7 +166,7 @@ One strength of the evaluation is that its artifacts are inspectable at every st
 
 The relevant artifacts are:
 
-- flow definitions in `evaluation/flows/spring/` and `evaluation/flows/quarkus/`,
+- flow definitions in `evaluation/flows/spring/`, `evaluation/flows/quarkus/`, and `evaluation/flows/go/` (with `quarkus-jvm` reusing the `quarkus` flow files, since within each framework the API surface is identical; when the deferred `spring-native` runtime is added, it reuses the `spring` flow files for the same reason),
 - OpenAPI specifications used by the applications,
 - `probe-bodies` outputs containing reusable `iteration-*.json` chains,
 - harness result directories under `evaluation/results/<app>/<treatment>/<scenario>/<phase>/R<rate>/run-<N>/`,
@@ -327,6 +348,18 @@ This result should be interpreted carefully because the notebook also notes a li
 
 TP-D therefore supports the thesis claim that scenario-based benchmarking improves decision-making compared to traditional microbenchmark-style load testing. The core improvement is not simply "more data," but workload-aware interpretability.
 
+### TP-E: Runtime-class decomposition (Quarkus JVM, Quarkus Native, Spring JVM, Go, with Spring Native as deferred future work)
+
+The fifth testing point extends the framework comparison along a second, orthogonal axis: *runtime class*. Once the four currently analyzed systems (Spring Boot on the JVM with PostgreSQL, Quarkus on the JVM, Quarkus compiled with GraalVM `native-image`, and a Go service built into a static distroless binary) share a common API surface and a common PostgreSQL sidecar, the evaluation can ask three distinct questions that the earlier dataset could only answer partially:
+
+1. **Within-framework runtime effect.** Holding the framework constant, how large is the effect of switching runtime class? In this release this contrast is supported for Quarkus (JVM versus GraalVM native image). The matching Spring JVM versus Spring Native contrast is reserved for a follow-up campaign: the Spring Boot 4 AOT + GraalVM CE native-image pipeline is already packaged (`benchmark-app/spring-petclinic-rest/Dockerfile.native`) but its analysis stage exceeds the reference host's memory envelope, so the comparison is framed as an open cell rather than as a reported measurement.
+2. **Cross-framework same-runtime-class effect.** Holding the runtime class roughly constant, how large is the framework effect? For the JVM class this is a direct comparison (Spring JVM versus Quarkus JVM) within the "JVM + PostgreSQL" cell of the matrix. For the GraalVM native class, the comparison will complete once the deferred Spring Native runtime joins the dataset; this release records its absence and reserves the cell rather than silently omitting it.
+3. **JVM-native versus non-JVM-native effect.** Does a statically compiled Go service sit in the same performance regime as the GraalVM-compiled Java services, or does it form its own cluster? This question is decidable in this release against Quarkus Native (Go on distroless versus Quarkus on GraalVM native image), with the second anchor (Go versus Spring Native) available once the deferred Spring Native campaign lands.
+
+The methodological advantage for RQ5 is that the scenario-based benchmark produces a per-operation latency distribution, a first-response timestamp, and a container-stat time-series for every cell of the matrix. This means that runtime-class effects can be localized to specific operations (for example, "the first listing after start") rather than averaged away into a single cold-versus-steady ratio. At the time of this release, the native-nonjvm anchor (Go) has been executed across the full matrix — three scenarios, two phases, three repetitions, four rates, two treatments (wrk2 aggregate baseline and slsbench scenario harness) — yielding 144 slsbench + wrk2 runs and a complete first-response-time population for the runtime-class. Per-framework run counts from the notebook's auto-detected inventory reflect this asymmetry: `go` contributes 144 runs, whereas `quarkus`, `quarkus-jvm`, and `spring` contribute between 59 and 72 runs each from the earlier two-rate campaign. The JVM and GraalVM-native anchors will be re-run at the same four rates as `go` once the deferred Spring Native build host is available; until then, the RQ5 contrasts involving `go` are interpreted over the rate slice that is populated in both halves of the contrast (200 and 500 req/s), while `go`'s standalone saturation behaviour is characterised against the full 50–1000 req/s curve.
+
+Because the statistical depth of the extended campaign is still narrower than that of the original three-framework campaign, and because one cell (Spring Native) is explicitly reserved for a follow-up dataset, the chapter frames TP-E conservatively. The scenario-based benchmark does not itself prove that one runtime class is universally superior; what it shows, consistent with TP-A through TP-D, is that runtime-class effects are visible at the per-operation and first-response level in a way that an aggregate microbenchmark cannot express, and that once storage-engine parity is enforced those effects can be interpreted without being confounded by database-engine differences. The deferred Spring Native cell is tracked as a separately actionable follow-up, so that RQ5 can be closed out in its complete, four-runtime-class form without backfilling ambiguous results from the current host.
+
 ## Synthesis Against The Thesis Abstract
 
 The evaluation results align closely with the abstract's main claims.
@@ -403,9 +436,13 @@ The evaluated systems are JVM-based Petclinic implementations. This is a useful 
 
 The experiments were executed in Dockerized environments on a single host, with host networking used to reduce avoidable network overhead. This improves repeatability but is not identical to a cloud-managed serverless environment. In particular, deployment lifecycle, autoscaling behavior, platform isolation, and managed networking overhead may differ in production serverless systems.
 
-### Framework asymmetry
+### Framework asymmetry and storage-backend parity
 
-The evaluation README notes that Spring and Quarkus do not use identical persistence and runtime stacks in every detail. Spring uses H2 in-memory storage, while Quarkus uses PostgreSQL in Docker. The Quarkus JVM image also differs in Java version from Spring. These differences mean that absolute cross-framework comparisons should be interpreted carefully. The strongest conclusions are therefore within-framework operation-level patterns and startup/runtime differences where the configuration contrast is itself the point.
+The original campaign used mixed storage backends: Spring Boot ran on H2 in-memory, while Quarkus ran on PostgreSQL in a Docker sidecar. The extended campaign eliminates this confound by running all four currently analyzed systems — Spring Boot JVM, Quarkus Native, Quarkus JVM, and Go — on PostgreSQL 14 sidecars pinned by image digest. The deferred Spring Boot Native runtime uses the same PostgreSQL sidecar pattern in its scaffolded compose file, so when it joins the dataset it extends, rather than re-fragments, the storage-parity guarantee. Some framework-internal choices still differ (for example, JPA/Hibernate in Spring Boot versus Quarkus's Hibernate ORM with Panache versus GORM in Go), but these differences are an intrinsic part of what it means to compare these runtimes; they are no longer mixed with a database-engine contrast. Absolute cross-framework latency numbers in the extended campaign can therefore be interpreted with stronger confidence than in the original campaign.
+
+### Spring Native image maturity and deferred runtime
+
+The Spring Boot Native variant is produced by the GraalVM Community Edition `native-image` toolchain through the Spring Boot AOT pipeline (`spring-boot-maven-plugin:process-aot` followed by `native-maven-plugin:compile-no-fork`). Because this pipeline is substantially newer than the corresponding Quarkus Native path, it is more sensitive to third-party library reflection metadata, to the runtime-base image's shared libraries (for example, `libz.so.1` for database drivers), and to the build host's memory envelope during the native-image analysis stage. Empirically, a Spring Boot 4 + Hibernate + Tomcat native-image analysis on the reference evaluation host repeatedly exceeded the available headroom even when the builder was explicitly heap-capped, which put reproducibility of the resulting image under doubt rather than the image's inherent correctness. For this reason, this release keeps the full Spring Native scaffolding in the repository (the pinned `benchmark-app/spring-petclinic-rest/Dockerfile.native`, the `evaluation/docker/spring-native-bench.yml` compose file, and the runner-script branching that already knows how to drive a `spring-native` app), but does not pin a `aape2k/spring-petclinic-rest-native:v1.0.0` image to the published artifact set. Conclusions that would require a Spring Native measurement are therefore reserved for a follow-up campaign that can be executed on a larger builder; the chapter treats that cell as an explicitly deferred contrast rather than as a silent omission.
 
 ### Partial cross-framework overlap
 
@@ -414,6 +451,14 @@ The TP-D three-way comparison only has a limited set of shared operations across
 ### Statistical depth
 
 The notebook contains multiple repetitions and uses thresholds that are reasonable for an engineering evaluation, but not every slice has identical replication depth. Some results are better supported than others, and the chapter does not claim formal statistical significance in the sense of a large-sample hypothesis-testing study. The conclusions are therefore best interpreted as consistent empirical evidence rather than definitive universal laws.
+
+### Rate-coverage asymmetry between the runtime-class anchors
+
+The `go` anchor for the non-JVM native runtime class was executed across the full four-rate matrix (50, 200, 500, 1000 req/s, both phases, three repetitions, all three scenarios — 144 slsbench+wrk2 runs in total), whereas the earlier JVM (Spring, Quarkus JVM) and GraalVM-native (Quarkus Native) campaigns populated only the 200 and 500 req/s points. This asymmetry does not bias the cross-runtime contrasts that matter for RQ5, because those contrasts are interpreted on the rate slice that is populated in *both* halves (200 and 500 req/s); but it does mean that `go`'s 50 and 1000 req/s observations are presented as a standalone saturation curve rather than as a side-by-side comparison. Re-running the JVM and GraalVM-native anchors at the same four rates is scheduled for the same follow-up campaign that lands the deferred Spring Native cell, so that the full-matrix, four-runtime-class dataset can be published in one consistent release.
+
+### Saturation-point wrk2 instability at R=1000 for lifecycle
+
+The `lifecycle` scenario at R=1000 req/s under `steady` occasionally tripped an HdrHistogram assertion inside wrk2 (`bucket_index < h->bucket_count`, SIGABRT) when a per-request latency exceeded the histogram's bucket range during saturation. This happened once across the nine `lifecycle`/`steady`/R=1000 cells (3 repetitions across 3 runs recorded, with run-1 re-executed automatically), and the retried cell succeeded. The underlying behaviour is a known failure mode of wrk2 under deep saturation with long flow chains, not a bug in the harness or in the benchmarked application. The retried cell is included in the analyzed dataset; no other cells were affected. Saturation-regime numbers for `lifecycle` should nevertheless be read as characterising behaviour near the load-generator's own stability boundary as well as the application's.
 
 ### Fairness of the `wrk2` baseline
 
@@ -462,6 +507,7 @@ The chapter's main quantitative results can be summarized compactly as follows.
 | RQ2: Execution-phase granularity | `Chart B1`, `Figure 5`, `Figure 6`; amortized penalty spread 1.6x; first-response spread 38x; Quarkus Native vs JVM startup gap about 13x | Cold-start behavior is multi-layered and cannot be captured well by one blended aggregate | For startup-sensitive systems, treat runtime choice and first-response evidence as first-class concerns |
 | RQ3: Scenario-shape sensitivity | `Figure 7`, `Figure 8`; mean CV 0.372; only 6/25 operations shared across all scenarios | Workload shape materially changes the performance profile and the exercised operation set | Do not assume that one microbenchmark or one synthetic path represents the whole application |
 | RQ4: Framework and runtime decision quality | `Table D1`, `Table D2`, `Figure 9`, `Figure 10`; per-operation winners differ from aggregate winner | Per-operation scenario evidence provides a better basis for framework/runtime selection than one aggregate metric | Choose technologies against dominant workload paths, not only against one global average |
+| RQ5: Runtime-class decomposition | Extended-campaign matrix over Spring JVM, Quarkus JVM, Quarkus Native, and Go on a unified PostgreSQL backend (with Spring Native scaffolded but deferred to a follow-up campaign); `go` is additionally exercised across the full four-rate, three-scenario, two-phase, three-repetition matrix (144 slsbench+wrk2 runs) so that the non-JVM-native anchor is itself a stable saturation curve, not a single-point estimate; within-framework runtime contrast for Quarkus; cross-framework same-runtime-class contrast for the JVM cell; JVM-native vs non-JVM-native contrast via Go versus Quarkus Native; first-response, amortized cold-penalty, and per-operation steady-state views | The scenario-based method localizes runtime-class effects to specific operations and to first-response behavior once storage-engine parity is enforced, which aggregate microbenchmarks cannot do. The deferred Spring Native cell is tracked explicitly rather than silently omitted, so RQ5 can be closed out in its complete four-runtime-class form once the follow-up campaign lands | Treat "runtime class" and "framework" as two separable decision axes, and evaluate candidate stacks against the operations that actually dominate the target workload |
 
 ## Chapter Conclusion
 

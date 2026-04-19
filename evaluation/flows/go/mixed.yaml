@@ -95,20 +95,31 @@ stages:
       - deleteVetCRUD:
         operationId: deleteVet
 
+      # The pet CRUD chain below intentionally uses the non-owner-scoped
+      # /pets/{petId} endpoints (getPet / updatePet / deletePet). The go openapi
+      # also exposes /owners/{ownerId}/pets/{petId} variants (getOwnersPet,
+      # updateOwnersPet) whose links source the next petId from
+      # `$request.path.petId`. probe-bodies only materialises links that source
+      # from `$response.body`, so the owner-scoped chain fails to transition
+      # updateOwnersPet -> deletePet during stateful-body generation. The
+      # /pets/{petId} variant returns the updated entity on PUT with
+      # `DeletePetAfterUpdate` → deletePet(petId=$response.body#/id), which
+      # probe-bodies can follow. This keeps the go `mixed` flow structurally
+      # equivalent to quarkus/spring and still exercises the pet CRUD cycle.
       - addPetToOwnerCRUD:
         operationId: addPetToOwner
         edges:
-          - to: getOwnersPetCRUD
+          - to: getPetCRUD
             weight: 1.0
 
-      - getOwnersPetCRUD:
-        operationId: getOwnersPet
+      - getPetCRUD:
+        operationId: getPet
         edges:
-          - to: updateOwnersPetCRUD
+          - to: updatePetCRUD
             weight: 1.0
 
-      - updateOwnersPetCRUD:
-        operationId: updateOwnersPet
+      - updatePetCRUD:
+        operationId: updatePet
         edges:
           - to: deletePetCRUD
             weight: 1.0

@@ -11,6 +11,11 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 EVAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 source "$EVAL_DIR/config.env"
 
+# NOTE: `spring-native` is a planned runtime class for RQ5 (see Dockerfile.native
+# and docker/spring-native-bench.yml) but is not part of the default matrix in
+# this release: building the native image reliably needs more RAM than the
+# reference evaluation host provides. Pass `--apps spring-native` explicitly on
+# a beefier host once aape2k/spring-petclinic-rest-native:v1.0.0 is published.
 APPS="spring quarkus quarkus-jvm go"
 SCENARIOS="read-heavy mixed lifecycle"
 PHASES="cold steady"
@@ -73,10 +78,11 @@ echo ""
 for APP in $APPS; do
     # Resolve compose file for teardown
     case "$APP" in
-        spring)      COMPOSE_FILE="$EVAL_DIR/$SPRING_COMPOSE" ;;
-        quarkus)     COMPOSE_FILE="$EVAL_DIR/$QUARKUS_COMPOSE" ;;
-        quarkus-jvm) COMPOSE_FILE="$EVAL_DIR/$QUARKUS_JVM_COMPOSE" ;;
-        go)          COMPOSE_FILE="$EVAL_DIR/$GO_COMPOSE" ;;
+        spring)        COMPOSE_FILE="$EVAL_DIR/$SPRING_COMPOSE" ;;
+        spring-native) COMPOSE_FILE="$EVAL_DIR/$SPRING_NATIVE_COMPOSE" ;;
+        quarkus)       COMPOSE_FILE="$EVAL_DIR/$QUARKUS_COMPOSE" ;;
+        quarkus-jvm)   COMPOSE_FILE="$EVAL_DIR/$QUARKUS_JVM_COMPOSE" ;;
+        go)            COMPOSE_FILE="$EVAL_DIR/$GO_COMPOSE" ;;
     esac
 
     for SCENARIO in $SCENARIOS; do

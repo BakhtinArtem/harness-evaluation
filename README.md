@@ -104,22 +104,34 @@ All Docker images used by the evaluation are pinned to explicit version tags for
 
 | Component | Image | Tag |
 |---|---|---|
-| Spring Petclinic REST | `aape2k/spring-petclinic-rest` | `v1.0.0` |
+| Spring Petclinic REST (JVM + PostgreSQL) | `aape2k/spring-petclinic-rest` | `v2.0.0` |
 | Quarkus Petclinic (native) | `aape2k/quarkus-petclinic` | `v1.0.0` |
 | Quarkus Petclinic (JVM) | `aape2k/quarkus-petclinic-jvm` | `v1.0.0` |
+| Go Petclinic (chi + GORM) | `aape2k/go-petclinic` | `v1.0.0` |
 | slsbench (DooD) | `aape2k/slsbench` | `v3.0.0` |
 | wrk2 | `eval-wrk2` | `latest` (built locally) |
 
 Pull the pre-built images before running the evaluation:
 
 ```bash
-docker pull aape2k/spring-petclinic-rest:v1.0.0
+docker pull aape2k/spring-petclinic-rest:v2.0.0
 docker pull aape2k/quarkus-petclinic:v1.0.0
 docker pull aape2k/quarkus-petclinic-jvm:v1.0.0
+docker pull aape2k/go-petclinic:v1.0.0
 docker pull aape2k/slsbench:v3.0.0
 ```
 
 The `eval-wrk2` image is built automatically by the runner scripts from `evaluation/docker/wrk2.Dockerfile` if it does not already exist locally.
+
+A fifth runtime, **Spring Boot (GraalVM Native)**, is scaffolded in the
+repository but not part of the published artifact set of this release. Its
+build pipeline (`benchmark-app/spring-petclinic-rest/Dockerfile.native`),
+compose file (`evaluation/docker/spring-native-bench.yml`), and runner-script
+branching are all in place, but the Spring Boot 4 + GraalVM CE native-image
+analysis stage requires more RAM than the reference evaluation host can
+reliably provide. Users with a larger builder can produce
+`aape2k/spring-petclinic-rest-native:v1.0.0` from that Dockerfile and re-run
+the evaluation with `--apps spring-native`.
 
 ## Dependencies and Related Repositories
 

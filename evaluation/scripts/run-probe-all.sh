@@ -16,6 +16,8 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 EVAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 source "$EVAL_DIR/config.env"
 
+# `spring-native` is supported via the case blocks below (reuses `spring` flows)
+# but is not part of the default APPS set; see run-all.sh for context.
 APPS="spring quarkus quarkus-jvm go"
 SCENARIOS="read-heavy mixed lifecycle"
 
@@ -44,6 +46,13 @@ for APP in $APPS; do
             PORT="$SPRING_PORT"
             OPENAPI_PATH="$EVAL_DIR/$SPRING_OPENAPI"
             READINESS_PATH="$SPRING_API_BASE/owners"
+            ;;
+        spring-native)
+            COMPOSE_FILE="$EVAL_DIR/$SPRING_NATIVE_COMPOSE"
+            SERVICE_NAME="$SPRING_NATIVE_SERVICE_NAME"
+            PORT="$SPRING_NATIVE_PORT"
+            OPENAPI_PATH="$EVAL_DIR/$SPRING_NATIVE_OPENAPI"
+            READINESS_PATH="$SPRING_NATIVE_API_BASE/owners"
             ;;
         quarkus)
             COMPOSE_FILE="$EVAL_DIR/$QUARKUS_COMPOSE"
@@ -75,6 +84,9 @@ for APP in $APPS; do
     FLOW_APP="$APP"
     if [ "$APP" = "quarkus-jvm" ]; then
         FLOW_APP="quarkus"
+    fi
+    if [ "$APP" = "spring-native" ]; then
+        FLOW_APP="spring"
     fi
 
     for SCENARIO in $SCENARIOS; do
