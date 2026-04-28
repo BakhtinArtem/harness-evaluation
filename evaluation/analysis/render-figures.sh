@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Render the chart_*.pdf files produced by evaluation.ipynb into the
-# figure-*.png images embedded in evaluation-chapter.md.
+# Render the figure-*.pdf files produced by evaluation.ipynb into the
+# matching figure-*.png images embedded in evaluation-chapter.md.
 #
 # Usage: ./render-figures.sh [DPI]
 #   DPI defaults to 200 (good balance of size / readability).
@@ -25,13 +25,13 @@ render() {
     echo "[ok]   $pdf -> $png"
 }
 
-render chart_a1_violin.pdf              figure-1-per-operation-violin.png
-render chart_a3_cdf.pdf                 figure-2-latency-cdf.png
-render chart_a2_saturation.pdf          figure-3-saturation-curves.png
-render chart_b1_cold_penalty.pdf        figure-4-cold-penalty.png
-render chart_b1b_cold_steady_absolute.pdf figure-5-cold-vs-steady.png
-render chart_b2_first_response.pdf      figure-6-first-response.png
-render chart_c1_scenario_sensitivity.pdf figure-7-scenario-sensitivity.png
-render chart_c2_operation_overlap.pdf   figure-8-operation-overlap.png
-render chart_d3_framework_comparison.pdf figure-9-framework-comparison.png
-render chart_d4_cpu_timeseries.pdf      figure-10-cpu-timeseries.png
+render figure-01-per-operation-latency-distribution.pdf figure-01-per-operation-latency-distribution.png
+render figure-02-latency-cdf-comparison.pdf             figure-02-latency-cdf-comparison.png
+render figure-03-saturation-curves.pdf                  figure-03-saturation-curves.png
+render figure-04-cold-start-penalty.pdf                 figure-04-cold-start-penalty.png
+render figure-05-cold-vs-steady-latency.pdf             figure-05-cold-vs-steady-latency.png
+render figure-06-first-response-time.pdf                figure-06-first-response-time.png
+render figure-07-scenario-sensitivity.pdf               figure-07-scenario-sensitivity.png
+render figure-08-operation-overlap.pdf                  figure-08-operation-overlap.png
+render figure-09-framework-comparison.pdf               figure-09-framework-comparison.png
+render figure-10-cpu-timeseries.pdf                     figure-10-cpu-timeseries.png

@@ -260,17 +260,17 @@ The first testing point asks whether high-level scenario benchmarks reveal inter
 
 The evidence is visible first in `Table A1`, which contrasts one aggregate `wrk2` value with a full per-operation breakdown for the lifecycle steady-state slice, and in `Figure 1`, which visualizes the spread of per-operation latency distributions. `Figure 2` reinforces the same point by plotting the latency CDFs for individual operations against the single aggregate `wrk2` distribution. In the final notebook output, the per-operation latency spread reaches 8.8x, above the predefined 2x threshold. The fastest observed operation in the tested slice is `addOwner` at roughly 1,657 microseconds, while the slowest is `listPets` at roughly 14,625 microseconds. A microbenchmark aggregate cannot express this internal variation. Even if two scenarios or two frameworks report similar overall flow-completion time, they may still contain radically different internal bottlenecks.
 
-![Figure 1 - Per-operation latency distributions](./figure-1-per-operation-violin.png)
+![Figure 1 - Per-operation latency distributions](./figure-01-per-operation-latency-distribution.png)
 
 Figure 1 makes the latency spread visually obvious: the lifecycle scenario does not behave like one homogeneous workload, but like a collection of operations with distinct timing profiles. This directly supports the claim that aggregate microbenchmark reporting compresses away the structure that scenario-based benchmarking preserves.
 
-![Figure 2 - Latency CDF comparison](./figure-2-latency-cdf.png)
+![Figure 2 - Latency CDF comparison](./figure-02-latency-cdf-comparison.png)
 
 Figure 2 complements the violin plot by comparing the aggregate `wrk2` flow-completion distribution with `slsbench` per-operation distributions. The visual separation shows why one aggregate CDF is insufficient to explain where latency comes from inside a realistic chained workflow.
 
 This difference becomes more important under load. `Figure 3` shows the saturation behavior directly by comparing per-operation p99 growth against the `wrk2` aggregate view. The notebook reports a saturation jump spread of 1.9x, which confirms that operations do not degrade uniformly as request rate increases. Some steps remain comparatively stable while others become disproportionately expensive. This is exactly the kind of insight that motivates scenario-based benchmarking: optimization decisions should be driven by the specific operation that saturates first, not by the average of the whole chain.
 
-![Figure 3 - Per-operation saturation curves](./figure-3-saturation-curves.png)
+![Figure 3 - Per-operation saturation curves](./figure-03-saturation-curves.png)
 
 Figure 3 shows that load increase does not affect all operations equally. Instead of one generic saturation threshold, the application exhibits operation-specific degradation, which is exactly the behavior a scenario benchmark is meant to uncover.
 
@@ -284,19 +284,19 @@ TP-A therefore supports two thesis claims at once. First, high-level scenario be
 
 The second testing point examines whether the scenario-based approach offers a better view of cold and steady execution phases.
 
-The notebook presents this evidence in two complementary views. The per-operation cold-penalty comparison is shown in `Chart B1`, while `Figure 5` presents absolute cold versus steady latency by operation, and `Figure 6` shows first-response time directly. At first glance, the per-operation cold penalties in the notebook may seem modest. The amortized penalty range is reported as 0.7x to 1.1x, with a spread of 1.6x. This is enough to cross the notebook's 1.5x threshold and therefore confirms that phase effects are not uniform across operations. However, the notebook also explicitly warns that these per-operation averages are amortized over a full 30-second window. In other words, once the service warms up, later requests dilute the impact of the initial startup period.
+The notebook presents this evidence in two complementary views. The per-operation cold-penalty comparison is shown in `Figure 4`, while `Figure 5` presents absolute cold versus steady latency by operation, and `Figure 6` shows first-response time directly. At first glance, the per-operation cold penalties in the notebook may seem modest. The amortized penalty range is reported as 0.7x to 1.1x, with a spread of 1.6x. This is enough to cross the notebook's 1.5x threshold and therefore confirms that phase effects are not uniform across operations. However, the notebook also explicitly warns that these per-operation averages are amortized over a full 30-second window. In other words, once the service warms up, later requests dilute the impact of the initial startup period.
 
-![Figure 4 - Per-operation cold penalty](./figure-4-cold-penalty.png)
+![Figure 4 - Per-operation cold penalty](./figure-04-cold-start-penalty.png)
 
 The cold-penalty view isolates the phase effect for each operation instead of collapsing cold behavior into one blended flow metric. Even though the range is amortized over a 30-second window, the figure still shows that phase sensitivity is not uniform across the request chain.
 
-![Figure 5 - Absolute cold vs steady latency](./figure-5-cold-vs-steady.png)
+![Figure 5 - Absolute cold vs steady latency](./figure-05-cold-vs-steady-latency.png)
 
 Figure 5 is useful because it replaces ratios with absolute values. This makes it easier to compare frameworks directly and to see whether a modest ratio still corresponds to operationally meaningful latency in milliseconds.
 
 This is why the first-response measurements are crucial. They capture the actual startup penalty before warm execution dominates the mean. The notebook reports a dramatic cross-runtime spread: the slowest runtime reaches roughly 36.8 seconds on first response, while the fastest is about 0.97 seconds, a 38x difference. The most important comparison for the thesis is Quarkus Native versus Quarkus JVM. Here the notebook reports that Quarkus Native starts in roughly 0.96 to 0.97 seconds, while Quarkus JVM requires about 12.5 to 12.7 seconds, which is approximately 13x slower.
 
-![Figure 6 - Cold-start first response time](./figure-6-first-response.png)
+![Figure 6 - Cold-start first response time](./figure-06-first-response-time.png)
 
 Figure 6 provides the clearest cold-start evidence in the chapter. It captures the startup penalty before warm requests dilute the signal, which is why it is more informative for runtime comparison than the aggregate cold-versus-steady ratio alone.
 
@@ -312,11 +312,11 @@ The third testing point examines whether different high-level usage scenarios ac
 
 The relevant evidence is visualized in `Figure 7`, which combines the per-operation scenario view with the aggregate `wrk2` perspective, and in `Figure 8`, which shows the operation-set overlap across scenarios. The notebook confirms scenario sensitivity in two ways. First, the mean coefficient of variation across shared operations is 0.372, well above the 0.15 threshold. This indicates that the same operation can behave differently depending on the surrounding scenario context. Second, the structural overlap across the three scenarios is low: only 6 of 25 operations are shared by all three scenarios, or about 24%. This means that the scenarios are not merely cosmetic variants with different labels; they exercise substantially different parts of the application.
 
-![Figure 7 - Scenario shape sensitivity](./figure-7-scenario-sensitivity.png)
+![Figure 7 - Scenario shape sensitivity](./figure-07-scenario-sensitivity.png)
 
 Figure 7 shows why scenario shape is analytically useful: the same application exhibits different per-operation profiles under read-heavy, mixed, and lifecycle behavior. The aggregate baseline is still present for comparison, but the scenario-aware view exposes differences that the single-number baseline cannot localize.
 
-![Figure 8 - Operation overlap across scenarios](./figure-8-operation-overlap.png)
+![Figure 8 - Operation overlap across scenarios](./figure-08-operation-overlap.png)
 
 Figure 8 adds structural evidence to the latency evidence. It shows that the scenarios differ not only in timing but also in which operations they exercise, reinforcing the claim that realistic workload modeling must include usage structure rather than only request rate.
 
@@ -332,7 +332,7 @@ The fourth testing point evaluates perhaps the most consequential practical ques
 
 The strongest anchors for this section are `Table D1`, `Table D2`, and `Figure 9`. `Table D1` gives the per-operation cross-framework latency breakdown, while `Table D2` shows the aggregate `wrk2` comparison, and `Figure 9` visualizes the per-operation framework ranking. The notebook's final framework comparison shows a particularly instructive contrast. For the shared-operation subset available across all three frameworks, `quarkus` is fastest on 3 out of 3 operations, while `quarkus-jvm` and `spring` are fastest on none of the shared operations. The operations listed in the notebook are `addOwner`, `addVet`, and `listVets`, where Quarkus Native achieves approximately 1,158 microseconds, 1,089 microseconds, and 1,115 microseconds respectively. The corresponding Quarkus JVM figures are around 1,381 microseconds, 1,324 microseconds, and 1,297 microseconds, while Spring reports approximately 2,340 microseconds, 3,450 microseconds, and 4,460 microseconds.
 
-![Figure 9 - Per-operation framework comparison](./figure-9-framework-comparison.png)
+![Figure 9 - Per-operation framework comparison](./figure-09-framework-comparison.png)
 
 Figure 9 turns the cross-framework comparison into an immediately interpretable visual ranking. Instead of one framework-wide average, the figure shows which framework leads on each shared operation and how large those margins are.
 
@@ -504,7 +504,7 @@ The chapter's main quantitative results can be summarized compactly as follows.
 | Research question | Key evidence | Conclusion | Practical implication |
 |---|---|---|---|
 | RQ1: Per-operation characterization and validity | `Table A1`, `Figure 1`, `Figure 2`, `Figure 3`, `Table A3`; 8.8x variance spread; 1.9x saturation spread; lower non-2xx rates for `slsbench` | Aggregate measurements hide bottlenecks, saturation asymmetry, and invalid traffic effects | Use scenario-based per-operation benchmarking when diagnosis and optimization matter |
-| RQ2: Execution-phase granularity | `Chart B1`, `Figure 5`, `Figure 6`; amortized penalty spread 1.6x; first-response spread 38x; Quarkus Native vs JVM startup gap about 13x | Cold-start behavior is multi-layered and cannot be captured well by one blended aggregate | For startup-sensitive systems, treat runtime choice and first-response evidence as first-class concerns |
+| RQ2: Execution-phase granularity | `Figure 4`, `Figure 5`, `Figure 6`; amortized penalty spread 1.6x; first-response spread 38x; Quarkus Native vs JVM startup gap about 13x | Cold-start behavior is multi-layered and cannot be captured well by one blended aggregate | For startup-sensitive systems, treat runtime choice and first-response evidence as first-class concerns |
 | RQ3: Scenario-shape sensitivity | `Figure 7`, `Figure 8`; mean CV 0.372; only 6/25 operations shared across all scenarios | Workload shape materially changes the performance profile and the exercised operation set | Do not assume that one microbenchmark or one synthetic path represents the whole application |
 | RQ4: Framework and runtime decision quality | `Table D1`, `Table D2`, `Figure 9`, `Figure 10`; per-operation winners differ from aggregate winner | Per-operation scenario evidence provides a better basis for framework/runtime selection than one aggregate metric | Choose technologies against dominant workload paths, not only against one global average |
 | RQ5: Runtime-class decomposition | Extended-campaign matrix over Spring JVM, Quarkus JVM, Quarkus Native, and Go on a unified PostgreSQL backend (with Spring Native scaffolded but deferred to a follow-up campaign); `go` is additionally exercised across the full four-rate, three-scenario, two-phase, three-repetition matrix (144 slsbench+wrk2 runs) so that the non-JVM-native anchor is itself a stable saturation curve, not a single-point estimate; within-framework runtime contrast for Quarkus; cross-framework same-runtime-class contrast for the JVM cell; JVM-native vs non-JVM-native contrast via Go versus Quarkus Native; first-response, amortized cold-penalty, and per-operation steady-state views | The scenario-based method localizes runtime-class effects to specific operations and to first-response behavior once storage-engine parity is enforced, which aggregate microbenchmarks cannot do. The deferred Spring Native cell is tracked explicitly rather than silently omitted, so RQ5 can be closed out in its complete four-runtime-class form once the follow-up campaign lands | Treat "runtime class" and "framework" as two separable decision axes, and evaluate candidate stacks against the operations that actually dominate the target workload |
